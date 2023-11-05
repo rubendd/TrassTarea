@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- "Mark Favorite", must appear as action button if possible. -->
+
+    <item
+        android:id="@+id/action_addTarea"
+        android:checkable="true"
+        android:icon="@drawable/baseline_add_task_24"
+        android:title="@string/add_tarea"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/baseline_stars_24_black"
+        android:title="@string/action_favorite"
+        app:showAsAction="ifRoom"/>
+
+    <!-- Settings, must always be in the overflow. -->
+    <item android:id="@+id/action_acercade"
+        android:title="@string/action_acercade"
+        app:showAsAction="never"/>
+
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+
+
+
+
+</menu>

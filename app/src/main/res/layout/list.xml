@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/todo"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:src="@drawable/baseline_stars_24_black" />
+
+
+
+    <TextView
+        android:id="@+id/titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="19sp"
+        android:layout_toEndOf="@id/imageView"
+        android:layout_marginStart="20dp"
+        android:layout_centerVertical="true"
+        android:text="@string/titulo" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="120dp"
+        android:layout_marginTop="42dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titulo"
+        android:layout_alignStart="@id/imageView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/fecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titulo"
+        android:layout_marginTop="38dp"
+        android:layout_toEndOf="@id/progressBar"
+        android:layout_marginStart="10dp"
+        android:textSize="17sp"
+        android:text="@string/fecha" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/fecha"
+        android:layout_below="@id/titulo"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="38dp"
+        android:textSize="17sp"
+        android:text="@string/quedan" />
+
+    <TextView
+        android:id="@+id/tiempoRestante"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/textView7"
+        android:layout_below="@id/titulo"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="38dp"
+        android:textSize="17sp"
+        android:text="@string/dias" />
+
+    <TextView
+        android:id="@+id/dias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/tiempoRestante"
+        android:layout_below="@id/titulo"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="38dp"
+        android:textSize="17sp"
+        android:text="@string/d_as" />
+
+
+</RelativeLayout>

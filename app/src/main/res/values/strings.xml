@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">TrassTarea</string>
+    <string name="empezar">Empezar</string>
+    <string name="tus_tareas_tu_ritmo_tu_xito">Tus tareas, tu ritmo, tu éxito.</string>
+    <string name="icono_de_la_aplicacion">Icono de la aplicacion</string>
+    <string name="todo">TODO</string>
+    <string name="d_as">días</string>
+    <string name="quedan">Quedan:</string>
+    <string name="titulo">Título</string>
+    <string name="fecha">00/00/00</string>
+    <string name="dias">00</string>
+    <string name="notareas">No hay tareas disponibles amigo</string>
+    <string name="action_settings">Salir</string>
+    <string name="action_favorite">favorite\n</string>
+    <string name="action_acercade">Acerca de\n</string>
+    <string name="add_tarea">Add tarea</string>
+</resources>
