@@ -1,4 +1,4 @@
-package com.rdd.trasstarea.listactivity.recycler.viewholder;
+package com.rdd.trasstarea.activities.listactivity.recycler.viewholder;
 
 import android.graphics.Color;
 import android.view.View;

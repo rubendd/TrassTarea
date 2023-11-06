@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.rdd.trasstarea.listactivity.ListActivity;
+import com.rdd.trasstarea.activities.listactivity.ListActivity;
 
 public class MainActivity extends AppCompatActivity {
 

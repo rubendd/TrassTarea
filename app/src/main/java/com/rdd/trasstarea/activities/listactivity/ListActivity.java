@@ -1,4 +1,4 @@
-package com.rdd.trasstarea.listactivity;
+package com.rdd.trasstarea.activities.listactivity;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
-import com.rdd.trasstarea.listactivity.recycler.CustomAdapter;
+import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 

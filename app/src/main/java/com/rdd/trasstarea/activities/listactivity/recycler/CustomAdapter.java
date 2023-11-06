@@ -1,4 +1,4 @@
-package com.rdd.trasstarea.listactivity.recycler;
+package com.rdd.trasstarea.activities.listactivity.recycler;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
-import com.rdd.trasstarea.listactivity.recycler.viewholder.ViewHolder;
+import com.rdd.trasstarea.activities.listactivity.recycler.viewholder.ViewHolder;
 import com.rdd.trasstarea.model.Task;
 
 import java.util.List;

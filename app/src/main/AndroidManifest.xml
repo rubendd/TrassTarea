@@ -21,7 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.rdd.trasstarea.listactivity.ListActivity" />
+        <activity android:name="com.rdd.trasstarea.activities.listactivity.ListActivity" />
+        <activity android:name="com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity" />
+
     </application>
 
 </manifest>
