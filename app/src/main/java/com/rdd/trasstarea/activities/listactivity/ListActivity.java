@@ -70,7 +70,6 @@ public class ListActivity extends AppCompatActivity {
         //TODO Cargar animacion
         // cargarAnimacion();
 
-
         initialList();
 
     }
@@ -132,7 +131,7 @@ public class ListActivity extends AppCompatActivity {
         // Cambiar el estado de la variable de bandera
         favorite = !favorite;
 
-        // Realizar acciones según el estado actual de la variable de bandera
+        // Realizar acciones según el estado actual de la variable favorite
         if (!favorite) {
             initialList();
         } else {
