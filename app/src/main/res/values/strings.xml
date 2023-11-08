@@ -14,4 +14,6 @@
     <string name="action_favorite">favorite\n</string>
     <string name="action_acercade">Acerca de\n</string>
     <string name="add_tarea">Add tarea</string>
+    <string name="about">Rubén Díaz Dugo</string>
+
 </resources>

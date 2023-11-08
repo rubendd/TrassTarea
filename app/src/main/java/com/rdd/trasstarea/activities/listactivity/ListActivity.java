@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -116,8 +118,8 @@ public class ListActivity extends AppCompatActivity {
             return true; // Indica que el evento ha sido manejado
         }
         if (item.getItemId() == R.id.action_acercade) {
-            // Puedes agregar aquí las acciones que deseas realizar cuando se selecciona "Acerca de"
-            return true; // Indica que el evento ha sido manejado
+                new AboutDialog(this);
+                return true; // Indica que el evento ha sido manejado
         }
         if (item.getItemId() == R.id.action_settings) {
             Toast.makeText(this, "Adios", Toast.LENGTH_SHORT).show(); // Muestra un mensaje de despedida cuando se selecciona "Configuración"
