@@ -13,8 +13,8 @@
         android:contentDescription="@string/todo"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
         android:src="@drawable/baseline_stars_24_black" />
 
 
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:textSize="19sp"
         android:layout_toEndOf="@id/imageView"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_centerVertical="true"
         android:text="@string/titulo" />
 
@@ -47,7 +47,7 @@
         android:layout_marginTop="38dp"
         android:layout_toEndOf="@id/progressBar"
         android:layout_marginStart="10dp"
-        android:textSize="17sp"
+        android:textSize="15sp"
         android:text="@string/fecha" />
 
     <TextView
@@ -58,7 +58,7 @@
         android:layout_below="@id/titulo"
         android:layout_marginStart="15dp"
         android:layout_marginTop="38dp"
-        android:textSize="17sp"
+        android:textSize="15sp"
         android:text="@string/quedan" />
 
     <TextView
@@ -69,7 +69,7 @@
         android:layout_below="@id/titulo"
         android:layout_marginStart="4dp"
         android:layout_marginTop="38dp"
-        android:textSize="17sp"
+        android:textSize="15sp"
         android:text="@string/dias" />
 
     <TextView
@@ -80,7 +80,7 @@
         android:layout_below="@id/titulo"
         android:layout_marginStart="6dp"
         android:layout_marginTop="38dp"
-        android:textSize="17sp"
+        android:textSize="15sp"
         android:text="@string/d_as" />
 
 
