@@ -7,18 +7,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
+import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
+import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
@@ -48,6 +47,7 @@ public class ListActivity extends AppCompatActivity {
         actualizarLista();
         lanzarMensajeNoTareas();
         configureRecyclerView();
+
     }
 
     private void actualizarLista(){
@@ -118,11 +118,11 @@ public class ListActivity extends AppCompatActivity {
             return true; // Indica que el evento ha sido manejado
         }
         if (item.getItemId() == R.id.action_acercade) {
-                new AboutDialog(this);
+                new AboutDialog(this, "Rubén Díaz Dugo"+"\n"+"IES TRASSIERRA 2023");
                 return true; // Indica que el evento ha sido manejado
         }
         if (item.getItemId() == R.id.action_settings) {
-            Toast.makeText(this, "Adios", Toast.LENGTH_SHORT).show(); // Muestra un mensaje de despedida cuando se selecciona "Configuración"
+            new ExitDialog(this);
             return true; // Indica que el evento ha sido manejado
         }
         return super.onOptionsItemSelected(item); // Delega el manejo del evento al comportamiento predeterminado
@@ -144,7 +144,6 @@ public class ListActivity extends AppCompatActivity {
         int iconResource = favorite ? R.drawable.baseline_stars_24 : R.drawable.baseline_stars_24_black;
         item.setIcon(iconResource);
     }
-
 
 
 }

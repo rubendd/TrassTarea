@@ -6,18 +6,28 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Task {
-    private String titulo;
+    private String titulo, description;
     private boolean prioritaria;
     private int daysLeft;
     private LocalDate dateEnd;
     private int state;
 
-    public Task(String titulo, boolean prioritaria, LocalDate dateEnd, int state) {
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Task(String titulo, boolean prioritaria, LocalDate dateEnd, int state, String description) {
         this.titulo = titulo;
         this.prioritaria = prioritaria;
         this.dateEnd = dateEnd;
         this.state = state;
         this.daysLeft = getDaysLeft();
+        this.description = description;
     }
 
     public int getState() {

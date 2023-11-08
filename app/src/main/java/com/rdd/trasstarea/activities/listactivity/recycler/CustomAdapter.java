@@ -35,7 +35,7 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.list, viewGroup, false);
 
-        return new ViewHolder(view);
+        return new ViewHolder(view,tasksDataSet);
     }
 
 
