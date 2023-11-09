@@ -19,15 +19,17 @@ import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
+import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity implements IComunicator {
 
     private final ListController listController = new ListController();
-    private List<Task> listTareas;
+    private List<Task> listTareas = listController.getListTask();
     private View mensaje;
 
     private CustomAdapter customAdapter;
@@ -44,15 +46,30 @@ public class ListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Configurar
-        actualizarLista();
         lanzarMensajeNoTareas();
         configureRecyclerView();
-
     }
 
-    private void actualizarLista(){
-        listTareas = listController.getListTask();
+    @Override
+    public void deleteList(int position) {
+        listTareas.remove(position+1);
+        customAdapter.notifyItemRemoved(position);
+        System.out.println("Hecho");
     }
+
+    private void initialList(){
+        customAdapter = new CustomAdapter(listTareas, this);
+        recyclerView.scheduleLayoutAnimation(); // Lanzar la animación cuando se asigna el adaptador
+        recyclerView.setAdapter(customAdapter);
+    }
+
+    private void filtrarFavoritos(){
+        // Filtra la lista de tareas utilizando el método filtarLista() de listController y crea un nuevo adaptador con los resultados
+        customAdapter = new CustomAdapter(listController.filtarLista(), this);
+        // Asigna el nuevo adaptador al RecyclerView para mostrar las tareas filtradas
+        recyclerView.setAdapter(customAdapter);
+    }
+
 
     private void lanzarMensajeNoTareas() {
         if (listTareas.isEmpty()) {
@@ -84,18 +101,7 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
-    private void initialList(){
-        customAdapter = new CustomAdapter(listTareas);
-        recyclerView.scheduleLayoutAnimation(); // Lanzar la animación cuando se asigna el adaptador
-        recyclerView.setAdapter(customAdapter);
-    }
 
-    private void filtrarFavoritos(){
-        // Filtra la lista de tareas utilizando el método filtarLista() de listController y crea un nuevo adaptador con los resultados
-        customAdapter = new CustomAdapter(listController.filtarLista());
-        // Asigna el nuevo adaptador al RecyclerView para mostrar las tareas filtradas
-        recyclerView.setAdapter(customAdapter);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,6 +150,7 @@ public class ListActivity extends AppCompatActivity {
         int iconResource = favorite ? R.drawable.baseline_stars_24 : R.drawable.baseline_stars_24_black;
         item.setIcon(iconResource);
     }
+
 
 
 }

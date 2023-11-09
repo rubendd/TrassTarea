@@ -1,7 +1,6 @@
 package com.rdd.trasstarea.activities.listactivity.recycler.viewholder;
 
 import android.graphics.Color;
-import android.text.Layout;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,11 +12,11 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rdd.trasstarea.activities.listactivity.ListActivity;
+import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.DeleteDialog;
+import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.model.Task;
-import com.rdd.trasstarea.R;
 
 import java.util.List;
 
@@ -26,11 +25,12 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private final ImageView prioritaria;
     private final ProgressBar duracion;
     private Task actualTask;
-    private List<Task> taskList;
+    private final List<Task> taskList;
+    private final View view;
+    private int position;
+    private final IComunicator comunicator;
 
-    private View view;
-
-    public ViewHolder(View view, List<Task> taskList) {
+    public ViewHolder(View view, List<Task> taskList, IComunicator comunicator) {
         super(view);
         // Define click listener for the ViewHolder's View
         prioritaria = view.findViewById(R.id.imageView);
@@ -40,14 +40,14 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tiempoRestante = view.findViewById(R.id.tiempoRestante);
         this.taskList = taskList;
         this.view = view;
+        this.comunicator = comunicator;
         view.setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View v) {
         // Acciones a realizar cuando se hace clic en el RelativeLayout
-        int position = getAdapterPosition();
+        position = getAdapterPosition();
         if (position != RecyclerView.NO_POSITION) {
             actualTask = taskList.get(position);
             // Si la posición es válida, puedes obtener el objeto Task correspondiente a la posición
@@ -71,36 +71,18 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
             return true;
         }
         if (item.getItemId() == R.id.delete) {
-            if (new DeleteDialog(view.getContext()).isAceptar()){
-              taskList.remove(actualTask);
+            DeleteDialog deleteDialog = new DeleteDialog();
+            if (deleteDialog.showDelete(view.getContext())){
+                if (comunicator != null){
+                    System.out.println("Hola");
+                    comunicator.deleteList(position);
+                }
             }
             return true;
         }
         return false;
     }
 
-
-
-
-    public TextView getTitulo() {
-        return titulo;
-    }
-
-    public ImageView getPrioritaria() {
-        return prioritaria;
-    }
-
-    public ProgressBar getDuracion() {
-        return duracion;
-    }
-
-    public TextView getFecha() {
-        return fecha;
-    }
-
-    public TextView getTiempoRestante() {
-        return tiempoRestante;
-    }
 
     public void bindTask(Task c) {
         titulo.setText(c.getTitulo());
