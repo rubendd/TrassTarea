@@ -1,5 +1,6 @@
 package com.rdd.trasstarea.activities.listactivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
+import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
@@ -23,15 +25,13 @@ import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListActivity extends AppCompatActivity implements IComunicator {
 
     private final ListController listController = new ListController();
-    private List<Task> listTareas = listController.getListTask();
+    private final List<Task> listTareas = listController.getListTask();
     private View mensaje;
-
     private CustomAdapter customAdapter;
     private RecyclerView recyclerView;
 
@@ -50,11 +50,19 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
         configureRecyclerView();
     }
 
+    /**
+     * Este método se comunica con el viewholder para borrar la tarea mediante una interfaz.
+     */
     @Override
     public void deleteList(int position) {
-        listTareas.remove(position+1);
-        customAdapter.notifyItemRemoved(position);
-        System.out.println("Hecho");
+        listTareas.remove(position); // Aunque hayamos borrado la tarea de la lista del viewholder, tenemos que borrarla de esta lista ya que no se guardaría los cambios
+        customAdapter.notifyItemRemoved(position); //Notificamos que ha habido un cambio.
+    }
+
+    @Override
+    public void addTask(Task task) {
+        listTareas.add(task);
+        customAdapter.notifyItemInserted(customAdapter.getItemCount()+1);
     }
 
     private void initialList(){
@@ -116,7 +124,7 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Verifica qué opción del menú ha sido seleccionada
         if (item.getItemId() == R.id.action_addTarea) {
-            System.out.println("Hola"); // Imprime un mensaje en la consola cuando se selecciona "Añadir Tarea"
+            initCreateTask();
             return true; // Indica que el evento ha sido manejado
         }
         if (item.getItemId() == R.id.action_favorite) {
@@ -151,6 +159,10 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
         item.setIcon(iconResource);
     }
 
+    private void initCreateTask() {
+        Intent intent = new Intent(this, CreateTaskActivity.class);
+        startActivity(intent);
+    }
 
 
 }

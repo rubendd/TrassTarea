@@ -2,41 +2,45 @@ package com.rdd.trasstarea.activities.listactivity.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import com.rdd.trasstarea.R;
 
-public class DeleteDialog {
-    AlertDialog.Builder builder;
-    AlertDialog dialog;
+public class DeleteDialog extends DialogFragment {
 
-    private boolean aceptar;
-
-    public boolean isAceptar() {
-        return aceptar;
+    public interface DeleteDialogListener{
+        void onPositiveBtn();
     }
 
+    public void setDeleteDialogListener(DeleteDialogListener listener) {
+        mListener = listener;
+    }
+
+    private DeleteDialogListener mListener;
+
     public boolean showDelete(Context activity){
-        aceptar = false;
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Eliminar")
+                .setMessage("¿Estás seguro de que deseas eliminar?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    if (mListener != null) {
+                        mListener.onPositiveBtn();
+                    }
+                    // Dismiss the dialog if needed
+                    dialog.dismiss();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    // Dismiss the dialog if needed
+                    dialog.dismiss();
+                });
 
-        builder = new AlertDialog.Builder(activity);
-
-        // 2. Chain together various setter methods to set the dialog characteristics.
-        builder.setMessage("Seguro que quieres borrar la tarea?")
-                .setTitle(R.string.borrar);
-
-        builder.setPositiveButton(R.string.borrar,(dialog1, which) ->{
-            aceptar = true;
-        });
-
-        builder.setNegativeButton(R.string.cancelar, (dialog1, which) ->
-                dialog.dismiss());
-
-        // 3. Get the AlertDialog.
-        dialog = builder.create();
+        AlertDialog dialog = builder.create();
         dialog.show();
 
+        // Indica que el diálogo está en pantalla
         return true;
     }
 

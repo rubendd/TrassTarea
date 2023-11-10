@@ -7,4 +7,5 @@ import java.util.List;
 public interface IComunicator {
     void deleteList(int position);
 
+    void  addTask(Task task);
 }

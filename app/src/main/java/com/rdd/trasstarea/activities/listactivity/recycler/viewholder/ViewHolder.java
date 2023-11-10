@@ -27,6 +27,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private Task actualTask;
     private final List<Task> taskList;
     private final View view;
+    //La variable posición indicará la posición del viewholder que se ha hecho click.
     private int position;
     private final IComunicator comunicator;
 
@@ -55,6 +56,10 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
     }
 
+    /**
+     * Menú contextual.
+     * @param v
+     */
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         popup.setOnMenuItemClickListener(this);
@@ -63,7 +68,10 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         popup.show();
     }
 
-
+    /**
+     * Controla los eventos del menú.
+     * @param item the menu item that was clicked
+     */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.description) {
@@ -71,18 +79,26 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
             return true;
         }
         if (item.getItemId() == R.id.delete) {
-            DeleteDialog deleteDialog = new DeleteDialog();
-            if (deleteDialog.showDelete(view.getContext())){
-                if (comunicator != null){
-                    System.out.println("Hola");
-                    comunicator.deleteList(position);
-                }
-            }
+            deleteTask();
             return true;
         }
         return false;
     }
 
+    /**
+     * Método que se establece en la interfaz del deleteDialog para llamar
+     * a la interfaz de comunicator.
+     */
+    private void deleteTask(){
+        DeleteDialog deleteDialog = new DeleteDialog();
+        deleteDialog.setDeleteDialogListener(() -> { // Para que sea sincrona tenemos que crear un listener.
+            if (comunicator != null) {
+                taskList.remove(position); // Borramos la tarea del viewholder.
+                comunicator.deleteList(position); //Llamamos al deleteList del comunicador.
+            }
+        });
+        deleteDialog.showDelete(view.getContext()); //Mostramos
+    }
 
     public void bindTask(Task c) {
         titulo.setText(c.getTitulo());
@@ -101,7 +117,6 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
             tiempoRestante.setTextColor(Color.RED);
         }
     }
-
 
 }
 

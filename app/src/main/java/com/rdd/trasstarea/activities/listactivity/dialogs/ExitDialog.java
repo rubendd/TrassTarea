@@ -1,5 +1,7 @@
 package com.rdd.trasstarea.activities.listactivity.dialogs;
 
+import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,8 +19,10 @@ public class ExitDialog {
         builder.setMessage("Seguro que quieres salir?")
                 .setTitle(R.string.salir);
 
-        builder.setPositiveButton(R.string.salir,(dialog1, which) ->
-                activity.finishAffinity());
+        builder.setPositiveButton(R.string.salir,(dialog1, which) -> {
+                    activity.finishAffinity();
+                    Toast.makeText(activity, "Hasta pronto", Toast.LENGTH_SHORT).show();
+                });
 
         builder.setNegativeButton(R.string.cancelar, (dialog1, which) ->
                 dialog.hide());

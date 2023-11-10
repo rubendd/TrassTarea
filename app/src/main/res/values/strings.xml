@@ -20,6 +20,11 @@
     <string name="Descripcion">Descripcion\n</string>
     <string name="edit">Editar\n</string>
     <string name="borrar">Borrar\n</string>
+    <string name="add_task">Añadir tarea</string>
+    <string name="prioritaria">Prioritaria?</string>
+    <string name="siguiente">Siguiente</string>
+    <string name="fechacreacion">FechaCreacion</string>
+    <string name="fecha_objetivo">Fecha Objetivo</string>
 
 
 </resources>
