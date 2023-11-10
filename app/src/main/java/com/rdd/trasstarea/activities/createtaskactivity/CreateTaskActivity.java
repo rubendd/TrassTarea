@@ -14,8 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.dialogs.DatePicker;
+import com.rdd.trasstarea.activities.createtaskactivity.dialogs.IDatePicker;
 
-public class CreateTaskActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class CreateTaskActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, IDatePicker {
 
     private Spinner spinner;
     private Button cancelar, siguiente;
@@ -59,18 +60,27 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        Toast.makeText(this, "Debes elegir una opcion", Toast.LENGTH_SHORT).show();
+
     }
 
     private void attachDatePicker(){
         findViewById(R.id.date2).setOnClickListener(v -> {
             DatePicker date = new DatePicker();
+            date.setDatePickerListener(this);
             date.show(getSupportFragmentManager(), "datePicker2");
+
         });
 
         findViewById(R.id.date1).setOnClickListener(v -> {
             DatePicker date = new DatePicker();
             date.show(getSupportFragmentManager(), "datePicker1");
         });
+
+    }
+
+
+    @Override
+    public void dateSelectedListener(int year, int month, int day) {
+        System.out.println("Hola");
     }
 }

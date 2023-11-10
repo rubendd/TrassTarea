@@ -110,7 +110,6 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
 
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Infla el menú de la barra de herramientas usando el archivo de recursos toolbarmenu.xml

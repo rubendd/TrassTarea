@@ -10,26 +10,31 @@ import androidx.fragment.app.DialogFragment;
 
 import java.time.LocalDate;
 
-public class DatePicker extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+public class DatePicker extends DialogFragment {
 
+    private IDatePicker datePicker;
+
+    public void setDatePickerListener(IDatePicker listener){
+        datePicker = listener;
+    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        // Use the current date as the default date in the picker.
         LocalDate currentDate = LocalDate.now();
         int year = currentDate.getYear();
-        int month = currentDate.getMonthValue(); // No es necesario sumar 1
+        int month = currentDate.getMonthValue();
         int day = currentDate.getDayOfMonth();
 
-        return new DatePickerDialog(requireContext(), this, year, month, day);
+        return new DatePickerDialog(requireContext(), (view, year1, month1, dayOfMonth1) -> {
+            if (datePicker != null) {
+                datePicker.dateSelectedListener(year1, month1, dayOfMonth1);
+            }
+        }, year, month, day);
     }
 
 
 
 
-    @Override
-    public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
 
-    }
 }
