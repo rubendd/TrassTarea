@@ -63,7 +63,7 @@
             android:layout_marginTop="50dp" />
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/prioritaria"
             android:layout_width="133dp"
             android:layout_height="50dp"
             android:layout_marginStart="110dp"
