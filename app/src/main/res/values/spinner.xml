@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="progress">
-        <item>No iniciada</item>
-        <item>Iniciada</item>
-        <item>Avanazda</item>
-        <item>Casi finalizada</item>
-        <item>Finalizada</item>
+        <item>NOTSTARTED</item>
+        <item>STARTED</item>
+        <item>ADVANCED</item>
+        <item>ALMOSFINALIZED</item>
+        <item>FINALIZED</item>
     </string-array>
 </resources>

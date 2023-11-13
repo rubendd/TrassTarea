@@ -12,14 +12,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.CheckTask;
 import com.rdd.trasstarea.activities.createtaskactivity.ComunicateFragments;
@@ -33,7 +29,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     private Button cancelar, siguiente;
     private EditText titulo,date1,date2;
     private CheckBox prioritaria;
-    String select = "";
+    String select;
 
     public CreateTaskFragment() {
     }
@@ -41,16 +37,12 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         createSecondTaskFrag = new CreateSecondTaskFrag();
         compartirViewModel = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View fragmento1 = inflater.inflate(R.layout.create_task, container, false);
 
         //Configure
@@ -77,9 +69,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
                    prioritaria.setActivated(da);
                });
         }
-
     }
-
 
 
     private void initComponents(View fragmento1){
@@ -92,7 +82,9 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         prioritaria = fragmento1.findViewById(R.id.prioritaria);
 
         siguiente.setOnClickListener(this::nextActivity);
-        cancelar.setOnClickListener(view-> getActivity().finish());
+        cancelar.setOnClickListener(view -> getActivity().finish());
+        spinner.setOnItemSelectedListener(this);
+
     }
 
 

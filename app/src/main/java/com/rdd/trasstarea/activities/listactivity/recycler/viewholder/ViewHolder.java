@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.DeleteDialog;
-import com.rdd.trasstarea.comunicator.IComunicator;
+import com.rdd.trasstarea.comunicator.ICreateTask;
+import com.rdd.trasstarea.comunicator.IDeleteTask;
 import com.rdd.trasstarea.model.Task;
 
 import java.util.List;
@@ -29,9 +30,10 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private final View view;
     //La variable posición indicará la posición del viewholder que se ha hecho click.
     private int position;
-    private final IComunicator comunicator;
+    private final IDeleteTask deleteTaskListener;
+    private final ICreateTask createTaskListener;
 
-    public ViewHolder(View view, List<Task> taskList, IComunicator comunicator) {
+    public ViewHolder(View view, List<Task> taskList, IDeleteTask comunicator, ICreateTask createTaskListener) {
         super(view);
         // Define click listener for the ViewHolder's View
         prioritaria = view.findViewById(R.id.imageView);
@@ -41,7 +43,8 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tiempoRestante = view.findViewById(R.id.tiempoRestante);
         this.taskList = taskList;
         this.view = view;
-        this.comunicator = comunicator;
+        this.deleteTaskListener = comunicator;
+        this.createTaskListener = createTaskListener;
         view.setOnClickListener(this);
     }
 
@@ -92,18 +95,18 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private void deleteTask(){
         DeleteDialog deleteDialog = new DeleteDialog();
         deleteDialog.setDeleteDialogListener(() -> { // Para que sea sincrona tenemos que crear un listener.
-            if (comunicator != null) {
+            if (deleteTaskListener != null) {
                 taskList.remove(position); // Borramos la tarea del viewholder.
-                comunicator.deleteList(position); //Llamamos al deleteList del comunicador.
+                deleteTaskListener.deleteList(position); //Llamamos al deleteList del comunicador.
             }
         });
         deleteDialog.showDelete(view.getContext()); //Mostramos
     }
 
     private void createTask(Task task){
-        if (comunicator != null){
+        if (deleteTaskListener != null){
             taskList.add(task);
-            comunicator.createTask(task);
+            createTaskListener.createTask(task);
         }
     }
 

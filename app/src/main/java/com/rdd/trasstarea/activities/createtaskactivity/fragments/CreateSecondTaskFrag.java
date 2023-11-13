@@ -9,24 +9,29 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.ComunicateFragments;
+import com.rdd.trasstarea.comunicator.ICreateTask;
+import com.rdd.trasstarea.listcontroller.ListController;
+import com.rdd.trasstarea.model.Task;
 
 public class CreateSecondTaskFrag extends Fragment {
 
-    private String titulo, date1, date2, state;
+    private String titulo, date1, date2, state = "";
+    private Task task = new Task();
     private EditText descripcion;
     private boolean prioritaria;
     private Button btnSalir, btnCreateTask;
     private CreateTaskFragment createTaskFragment;
 
+    private ComunicateFragments comunicateFragments;
 
+    private ICreateTask createTaskListener;
 
-    public CreateSecondTaskFrag() {
-
+    public CreateSecondTaskFrag(ICreateTask createTaskListener) {
+        this.createTaskListener = createTaskListener;
     }
 
     @Override
@@ -35,30 +40,18 @@ public class CreateSecondTaskFrag extends Fragment {
         createTaskFragment = new CreateTaskFragment();
 
         //Obtenemos una referencia del ViewModel
-        ComunicateFragments compartirViewModel = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
+         comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
 
-        //Creamos un observador (de String) para implementar el método onChanged()
-        Observer<String> tituloObserver = new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-
-            }
-        };
-
-
-        //Asignamos un observador al MutableLiveData
-        compartirViewModel.getTitulo().observe(this, tituloObserver);
-
-        //O bien, creamos el observador dentro de la asignación de forma anónima y con lambda
-        //compartirViewModel.getNombre().observe(this, s -> textoRecibido.setText(s));
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmento2 = inflater.inflate(R.layout.create_task2, container, false);
+
         initComponents(fragmento2);
+        recuperarDatos();
         return fragmento2;
     }
 
@@ -66,6 +59,10 @@ public class CreateSecondTaskFrag extends Fragment {
         btnSalir = fragmento2.findViewById(R.id.back);
         btnCreateTask = fragmento2.findViewById(R.id.create);
         btnSalir.setOnClickListener(this::backFragment);
+        btnCreateTask.setOnClickListener(v -> {
+            createTaskListener.createTask(task);
+            getActivity().finish();
+        });
     }
 
     private void backFragment(View view) {
@@ -83,6 +80,26 @@ public class CreateSecondTaskFrag extends Fragment {
     }
 
 
+    private void recuperarDatos(){
+        if (comunicateFragments.getTitulo().isInitialized()) {
+            comunicateFragments.getTitulo().observe(getViewLifecycleOwner(), nuevoTitulo -> {
+                task.setTitulo(nuevoTitulo);
+            });
+            comunicateFragments.getDate1().observe(getViewLifecycleOwner(), da -> {
+                date1 = da;
+                System.out.println(date1);
+            });
+            comunicateFragments.getDate2().observe(getViewLifecycleOwner(), da -> {
+                task.setDateEnd(ListController.convertirFecha(da));
+            });
+            comunicateFragments.getPrioritario().observe(getViewLifecycleOwner(), da -> {
+                task.setPrioritaria(da);
+            });
+            comunicateFragments.getState().observe(getViewLifecycleOwner(), da -> {
+                task.setStatesNumber(Task.States.valueOf(String.valueOf(da)));
+            });
+        }
+    }
 
 
 

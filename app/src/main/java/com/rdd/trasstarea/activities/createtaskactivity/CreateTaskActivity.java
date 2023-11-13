@@ -20,6 +20,7 @@ import com.rdd.trasstarea.activities.createtaskactivity.dialogs.datepicker.DateP
 import com.rdd.trasstarea.activities.createtaskactivity.fragments.CreateSecondTaskFrag;
 import com.rdd.trasstarea.activities.createtaskactivity.fragments.CreateTaskFragment;
 import com.rdd.trasstarea.activities.listactivity.ListActivity;
+import com.rdd.trasstarea.comunicator.ICreateTask;
 
 public class CreateTaskActivity extends AppCompatActivity {
 
@@ -34,10 +35,12 @@ public class CreateTaskActivity extends AppCompatActivity {
     private CreateTaskFragment createTaskFragment;
     private CreateSecondTaskFrag createSecondTaskFrag;
     private ComunicateFragments comunicateFragments;
-    private Spinner spinner;
-    private Button cancelar, siguiente;
-    private EditText titulo,date1,date2;
-    private CheckBox prioritaria;
+
+    private ICreateTask createTaskListener;
+
+    public CreateTaskActivity(ICreateTask createTaskListener) {
+        this.createTaskListener = createTaskListener;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +50,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         comunicateFragments = new ViewModelProvider(this).get(ComunicateFragments.class);
 
         createTaskFragment = new CreateTaskFragment();
-        createSecondTaskFrag = new CreateSecondTaskFrag();
+        createSecondTaskFrag = new CreateSecondTaskFrag(createTaskListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createTaskFragment).addToBackStack(null).commit();
 
@@ -55,23 +58,9 @@ public class CreateTaskActivity extends AppCompatActivity {
 
 
 
-    public void sendData(View view) {
-        Intent intent = new Intent(this, SecondCreateTaskActv.class);
-        //Seteamos strings y datos
-        String s_titulo = titulo.getText().toString();
-        String s_date = date1.getText().toString();
-        String s_date2 = date2.getText().toString();
-        int estado = spinner.getBaseline();
-        boolean b_prioritaria = prioritaria.isActivated();
 
-        //Lo metemos en el intent.
-        intent.putExtra(TITULO, s_titulo);
-        intent.putExtra(DATE1, s_date);
-        intent.putExtra(DATE2, s_date2);
-        intent.putExtra(STATE, estado);
-        intent.putExtra(PRIORITAIO, b_prioritaria);
-        startActivity(intent);
-    }
+
+
 
 
 }

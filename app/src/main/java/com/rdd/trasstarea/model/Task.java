@@ -17,7 +17,7 @@ public class Task {
     private long daysLeft;
     private Calendar dateEnd;
 
-    private final int progresState;
+    private  int progresState;
     public String getDescription() {
         return description;
     }
@@ -38,6 +38,9 @@ public class Task {
         this.progresState = setStatesNumber(state);
         this.daysLeft = getDaysLeft();
         this.description = description;
+    }
+
+    public Task() {
     }
 
     public int getProgresState() {

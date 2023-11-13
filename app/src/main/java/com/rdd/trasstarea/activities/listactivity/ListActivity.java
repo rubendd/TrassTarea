@@ -21,13 +21,14 @@ import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
-import com.rdd.trasstarea.comunicator.IComunicator;
+import com.rdd.trasstarea.comunicator.ICreateTask;
+import com.rdd.trasstarea.comunicator.IDeleteTask;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements IComunicator{
+public class ListActivity extends AppCompatActivity implements IDeleteTask, ICreateTask {
 
 
     private final ListController listController = new ListController();
@@ -67,14 +68,13 @@ public class ListActivity extends AppCompatActivity implements IComunicator{
     }
 
     private void initialList(){
-        customAdapter = new CustomAdapter(listTareas, this);
-        recyclerView.scheduleLayoutAnimation(); // Lanzar la animación cuando se asigna el adaptador
+        customAdapter = new CustomAdapter(listTareas, this, this);
         recyclerView.setAdapter(customAdapter);
     }
 
     private void filtrarFavoritos(){
         // Filtra la lista de tareas utilizando el método filtarLista() de listController y crea un nuevo adaptador con los resultados
-        customAdapter = new CustomAdapter(listController.filtarLista(), this);
+        customAdapter = new CustomAdapter(listController.filtarLista(), this, this);
         // Asigna el nuevo adaptador al RecyclerView para mostrar las tareas filtradas
         recyclerView.setAdapter(customAdapter);
     }
