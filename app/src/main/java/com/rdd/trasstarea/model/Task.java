@@ -2,16 +2,22 @@ package com.rdd.trasstarea.model;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
+import android.os.Build;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Objects;
 
 public class Task {
     private String titulo, description;
     private boolean prioritaria;
-    private int daysLeft;
-    private LocalDate dateEnd;
+    private long daysLeft;
+    private Calendar dateEnd;
 
-    private int progresState;
+    private final int progresState;
     public String getDescription() {
         return description;
     }
@@ -22,10 +28,10 @@ public class Task {
 
     public enum States{
         NOTSTARTED, STARTED, ADVANCED, ALMOSFINALIZED, FINALIZED
-    };
+    }
 
 
-    public Task(String titulo, boolean prioritaria, LocalDate dateEnd, States state, String description) {
+    public Task(String titulo, boolean prioritaria, Calendar dateEnd, States state, String description) {
         this.titulo = titulo;
         this.prioritaria = prioritaria;
         this.dateEnd = dateEnd;
@@ -75,19 +81,28 @@ public class Task {
         this.prioritaria = prioritaria;
     }
 
-    public int getDaysLeft() {
-        return (int) DAYS.between(LocalDate.now(),getDateEnd());
+    //TODO Solucionar problemas apis
+    public long getDaysLeft() {
+            return fechasDiferencia();
     }
 
     public void setDaysLeft(int daysLeft) {
         this.daysLeft = daysLeft;
     }
 
-    public LocalDate getDateEnd() {
+    public Calendar getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(LocalDate dateEnd) {
+    public String calendar() {
+        try {
+            return calendarToText();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setDateEnd(Calendar dateEnd) {
         this.dateEnd = dateEnd;
     }
 
@@ -103,4 +118,32 @@ public class Task {
     public int hashCode() {
         return Objects.hash(titulo, prioritaria, daysLeft, dateEnd);
     }
+
+
+    private long fechasDiferencia(){
+        // Obtener la fecha actual
+        Calendar fechaActual = Calendar.getInstance();
+
+        // Definir una fecha futura
+        Calendar fechaFutura = Calendar.getInstance();
+        fechaFutura.set(getDateEnd().get(Calendar.YEAR), getDateEnd().get(Calendar.MONTH), getDateEnd().get(Calendar.DAY_OF_YEAR));  // Por ejemplo, 31 de diciembre de 2023
+
+        // Calcular la diferencia en milisegundos
+        long diferenciaEnMillis = fechaFutura.getTimeInMillis() - fechaActual.getTimeInMillis();
+
+        // Calcular la diferencia en días
+        return diferenciaEnMillis / (24 * 60 * 60 * 1000);
+    }
+
+    private String calendarToText() throws ParseException {
+        Calendar cal = getDateEnd();
+        cal.add(Calendar.DATE, 1);
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+
+
+        return format1.format(cal.getTime());
+
+
+    }
+
 }

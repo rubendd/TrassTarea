@@ -27,7 +27,8 @@ import com.rdd.trasstarea.model.Task;
 
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements IComunicator {
+public class ListActivity extends AppCompatActivity implements IComunicator{
+
 
     private final ListController listController = new ListController();
     private final List<Task> listTareas = listController.getListTask();

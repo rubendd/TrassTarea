@@ -113,7 +113,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         if (c.isPrioritaria()) {
             prioritaria.setImageResource(R.drawable.baseline_stars_24);
         }
-        fecha.setText(String.valueOf(c.getDateEnd()));
+        fecha.setText(c.calendar());
         changeColorDaysLeft(c);
         tiempoRestante.setText(String.valueOf(c.getDaysLeft()));
         duracion.setProgress(c.getProgresState());
