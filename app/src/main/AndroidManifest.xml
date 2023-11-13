@@ -23,6 +23,8 @@
         </activity>
         <activity android:name="com.rdd.trasstarea.activities.listactivity.ListActivity" />
         <activity android:name="com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity" />
+        <activity android:name="com.rdd.trasstarea.activities.createtaskactivity.SecondCreateTaskActv"
+            android:windowSoftInputMode="adjustResize"/>
 
     </application>
 

@@ -32,10 +32,10 @@ public class ListController {
 
     private void setListTareas() {
         // Agregar tareas a la lista
-        listTask.add(new Task("Cumple adrian", true, LocalDate.of(2023, Month.DECEMBER, 3), 25, "Hola pepe"));
-        listTask.add(new Task("Hacer tareas", false, LocalDate.of(2023, Month.AUGUST, 3), 55, "Hola pepe"));
-        listTask.add(new Task("Ir al gimnasio", false, LocalDate.of(2023, Month.JULY, 15), 12, "Hola pepe"));
-        listTask.add(new Task("Leer un libro", true, LocalDate.of(2023, Month.OCTOBER, 10), 8, "Hola pepe"));
+        listTask.add(new Task("Cumple adrian", true, LocalDate.of(2023, Month.DECEMBER, 3), Task.States.STARTED, "Hola pepe"));
+        listTask.add(new Task("Hacer tareas", false, LocalDate.of(2023, Month.AUGUST, 3), Task.States.FINALIZED, "Hola pepe"));
+        listTask.add(new Task("Ir al gimnasio", false, LocalDate.of(2023, Month.JULY, 15), Task.States.ADVANCED, "Hola pepe"));
+        listTask.add(new Task("Leer un libro", true, LocalDate.of(2023, Month.OCTOBER, 10), Task.States.NOTSTARTED, "Hola pepe"));
         // Agrega más tareas según sea necesario
     }
 }

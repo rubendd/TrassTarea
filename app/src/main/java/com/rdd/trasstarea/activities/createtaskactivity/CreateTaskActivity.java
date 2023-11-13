@@ -102,10 +102,9 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
 
     private void nextPage(){
         if (nextPageCheck()){
-            Intent intent = new Intent(this, ListActivity.class);
+            Intent intent = new Intent(this, SecondCreateTaskActv.class);
             startActivity(intent);
         }
-
     }
 
 

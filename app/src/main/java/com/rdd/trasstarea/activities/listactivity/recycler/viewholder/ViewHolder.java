@@ -100,6 +100,14 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         deleteDialog.showDelete(view.getContext()); //Mostramos
     }
 
+    private void createTask(Task task){
+        if (comunicator != null){
+            taskList.add(task);
+            comunicator.createTask(task);
+        }
+    }
+
+
     public void bindTask(Task c) {
         titulo.setText(c.getTitulo());
         if (c.isPrioritaria()) {
@@ -108,7 +116,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         fecha.setText(String.valueOf(c.getDateEnd()));
         changeColorDaysLeft(c);
         tiempoRestante.setText(String.valueOf(c.getDaysLeft()));
-        duracion.setProgress(c.getState());
+        duracion.setProgress(c.getProgresState());
 
     }
 

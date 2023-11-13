@@ -10,9 +10,8 @@ public class Task {
     private boolean prioritaria;
     private int daysLeft;
     private LocalDate dateEnd;
-    private int state;
 
-
+    private int progresState;
     public String getDescription() {
         return description;
     }
@@ -21,22 +20,44 @@ public class Task {
         this.description = description;
     }
 
-    public Task(String titulo, boolean prioritaria, LocalDate dateEnd, int state, String description) {
+    public enum States{
+        NOTSTARTED, STARTED, ADVANCED, ALMOSFINALIZED, FINALIZED
+    };
+
+
+    public Task(String titulo, boolean prioritaria, LocalDate dateEnd, States state, String description) {
         this.titulo = titulo;
         this.prioritaria = prioritaria;
         this.dateEnd = dateEnd;
-        this.state = state;
+        this.progresState = setStatesNumber(state);
         this.daysLeft = getDaysLeft();
         this.description = description;
     }
 
-    public int getState() {
-        return state;
+    public int getProgresState() {
+        return progresState;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public int setStatesNumber(States states) {
+        if (states == States.NOTSTARTED){
+            return 0;
+        }
+        if (states == States.STARTED){
+            return 25;
+        }
+        if (states == States.ADVANCED){
+            return 50;
+        }
+        if (states == States.ALMOSFINALIZED){
+            return 75;
+        }
+        if (states == States.FINALIZED){
+            return 100;
+        }
+        return 0;
     }
+
+
 
     public String getTitulo() {
         return titulo;

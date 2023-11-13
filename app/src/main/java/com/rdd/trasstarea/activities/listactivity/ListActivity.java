@@ -60,7 +60,7 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
     }
 
     @Override
-    public void addTask(Task task) {
+    public void createTask(Task task) {
         listTareas.add(task);
         customAdapter.notifyItemInserted(customAdapter.getItemCount()+1);
     }

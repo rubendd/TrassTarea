@@ -17,7 +17,7 @@
     <string name="aceptar">Aceptar</string>
     <string name="salir">Salir</string>
     <string name="cancelar">Cancelar</string>
-    <string name="Descripcion">Descripcion\n</string>
+    <string name="Descripcion">Descripción\n</string>
     <string name="edit">Editar\n</string>
     <string name="borrar">Borrar\n</string>
     <string name="add_task">Añadir tarea</string>
@@ -25,6 +25,9 @@
     <string name="siguiente">Siguiente</string>
     <string name="fechacreacion">FechaCreacion</string>
     <string name="fecha_objetivo">Fecha Objetivo</string>
+    <string name="hintDescription">Escribe la descripción aquí…</string>
+    <string name="volver">Volver</string>
+    <string name="crear_tarea">Crear tarea</string>
 
 
 </resources>
