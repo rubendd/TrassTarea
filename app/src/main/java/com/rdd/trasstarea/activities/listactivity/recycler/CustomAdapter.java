@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.listactivity.recycler.viewholder.ViewHolder;
-import com.rdd.trasstarea.comunicator.ICreateTask;
-import com.rdd.trasstarea.comunicator.IDeleteTask;
+import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.model.Task;
 
 import java.util.ArrayList;
@@ -19,8 +18,7 @@ import java.util.List;
 public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final List<Task> tasksDataSet;
-    private final IDeleteTask comunicator;
-    private final ICreateTask createTaskListener;
+    private final IComunicator comunicator;
 
     /**
      * Initialize the dataset of the Adapter.
@@ -28,10 +26,9 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
      * @param dataSet ArrayList<Task> containing the data to populate views to be used
      * by RecyclerView.
      */
-    public CustomAdapter(List<Task> dataSet, IDeleteTask comunicator, ICreateTask createTaskListener) {
+    public CustomAdapter(List<Task> dataSet, IComunicator comunicator) {
         tasksDataSet = new ArrayList<>(dataSet);
         this.comunicator = comunicator;
-        this.createTaskListener = createTaskListener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -42,7 +39,7 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.list, viewGroup, false);
 
-        return new ViewHolder(view,tasksDataSet,comunicator, createTaskListener);
+        return new ViewHolder(view,tasksDataSet,comunicator);
     }
 
 

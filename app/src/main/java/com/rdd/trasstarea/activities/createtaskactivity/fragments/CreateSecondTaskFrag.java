@@ -1,5 +1,6 @@
 package com.rdd.trasstarea.activities.createtaskactivity.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.ComunicateFragments;
-import com.rdd.trasstarea.comunicator.ICreateTask;
+import com.rdd.trasstarea.activities.listactivity.ListActivity;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
@@ -28,11 +29,8 @@ public class CreateSecondTaskFrag extends Fragment {
 
     private ComunicateFragments comunicateFragments;
 
-    private ICreateTask createTaskListener;
 
-    public CreateSecondTaskFrag(ICreateTask createTaskListener) {
-        this.createTaskListener = createTaskListener;
-    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +58,7 @@ public class CreateSecondTaskFrag extends Fragment {
         btnCreateTask = fragmento2.findViewById(R.id.create);
         btnSalir.setOnClickListener(this::backFragment);
         btnCreateTask.setOnClickListener(v -> {
-            createTaskListener.createTask(task);
+            createTask();
             getActivity().finish();
         });
     }
@@ -82,23 +80,23 @@ public class CreateSecondTaskFrag extends Fragment {
 
     private void recuperarDatos(){
         if (comunicateFragments.getTitulo().isInitialized()) {
-            comunicateFragments.getTitulo().observe(getViewLifecycleOwner(), nuevoTitulo -> {
-                task.setTitulo(nuevoTitulo);
-            });
+            comunicateFragments.getTitulo().observe(getViewLifecycleOwner(), nuevoTitulo -> task.setTitulo(nuevoTitulo));
             comunicateFragments.getDate1().observe(getViewLifecycleOwner(), da -> {
                 date1 = da;
                 System.out.println(date1);
             });
-            comunicateFragments.getDate2().observe(getViewLifecycleOwner(), da -> {
-                task.setDateEnd(ListController.convertirFecha(da));
-            });
-            comunicateFragments.getPrioritario().observe(getViewLifecycleOwner(), da -> {
-                task.setPrioritaria(da);
-            });
-            comunicateFragments.getState().observe(getViewLifecycleOwner(), da -> {
-                task.setStatesNumber(Task.States.valueOf(String.valueOf(da)));
-            });
+            comunicateFragments.getDate2().observe(getViewLifecycleOwner(), da -> task.setDateEnd(ListController.convertirFecha(da)));
+            comunicateFragments.getPrioritario().observe(getViewLifecycleOwner(), da -> task.setPrioritaria(da));
+            comunicateFragments.getState().observe(getViewLifecycleOwner(), da -> task.setStatesNumber(Task.States.valueOf(String.valueOf(da))));
         }
+    }
+
+    private void createTask(){
+        Intent intent = new Intent(getActivity(), ListActivity.class);
+        System.out.println(task.toString());
+        System.out.println("Pasando...");
+        intent.putExtra("proyecto", task);
+        startActivity(intent);
     }
 
 

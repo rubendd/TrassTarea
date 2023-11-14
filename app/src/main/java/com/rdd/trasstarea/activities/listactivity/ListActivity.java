@@ -21,14 +21,13 @@ import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
-import com.rdd.trasstarea.comunicator.ICreateTask;
-import com.rdd.trasstarea.comunicator.IDeleteTask;
+import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements IDeleteTask, ICreateTask {
+public class ListActivity extends AppCompatActivity implements IComunicator {
 
 
     private final ListController listController = new ListController();
@@ -36,7 +35,7 @@ public class ListActivity extends AppCompatActivity implements IDeleteTask, ICre
     private View mensaje;
     private CustomAdapter customAdapter;
     private RecyclerView recyclerView;
-
+    private Task createTask;
     private boolean favorite = false;
 
     @Override
@@ -61,20 +60,54 @@ public class ListActivity extends AppCompatActivity implements IDeleteTask, ICre
         customAdapter.notifyItemRemoved(position); //Notificamos que ha habido un cambio.
     }
 
-    @Override
+
     public void createTask(Task task) {
-        listTareas.add(task);
-        customAdapter.notifyItemInserted(customAdapter.getItemCount()+1);
+
+            System.out.println(createTask);
+            listTareas.add(createTask);
+            customAdapter.notifyDataSetChanged();
+            System.out.println("Lanzado");
+             // Llama a addTask después de actualizar la lista
+
+
     }
 
+    private void obtenerTask(){
+        Intent intent = getIntent();
+        if (intent.hasExtra("proyecto")) {
+            createTask = (Task) getIntent().getSerializableExtra("proyecto");
+            createTask(createTask);
+        }
+
+    }
+
+    private void configureRecyclerView() {
+        recyclerView = findViewById(R.id.recyclerView);
+
+        // Configurar el layout manager, el adaptador y otros aspectos.
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        //TODO Cargar animacion
+        // cargarAnimacion();
+
+        initialList();
+
+    }
+
+
+
     private void initialList(){
-        customAdapter = new CustomAdapter(listTareas, this, this);
+        customAdapter = new CustomAdapter(listTareas, this);
+        obtenerTask();
         recyclerView.setAdapter(customAdapter);
     }
 
+
+
     private void filtrarFavoritos(){
         // Filtra la lista de tareas utilizando el método filtarLista() de listController y crea un nuevo adaptador con los resultados
-        customAdapter = new CustomAdapter(listController.filtarLista(), this, this);
+        customAdapter = new CustomAdapter(listController.filtarLista(), this);
         // Asigna el nuevo adaptador al RecyclerView para mostrar las tareas filtradas
         recyclerView.setAdapter(customAdapter);
     }
@@ -88,19 +121,6 @@ public class ListActivity extends AppCompatActivity implements IDeleteTask, ICre
         }
     }
 
-    private void configureRecyclerView() {
-         recyclerView = findViewById(R.id.recyclerView);
-
-        // Configurar el layout manager, el adaptador y otros aspectos.
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        //TODO Cargar animacion
-        // cargarAnimacion();
-
-        initialList();
-
-    }
 
 
     private void cargarAnimacion() {

@@ -4,6 +4,9 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 import android.os.Build;
 
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -11,7 +14,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Serializable {
     private String titulo, description;
     private boolean prioritaria;
     private long daysLeft;
@@ -149,4 +152,16 @@ public class Task {
 
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "Task{" +
+                "titulo='" + titulo + '\'' +
+                ", description='" + description + '\'' +
+                ", prioritaria=" + prioritaria +
+                ", daysLeft=" + daysLeft +
+                ", dateEnd=" + dateEnd +
+                ", progresState=" + progresState +
+                '}';
+    }
 }
