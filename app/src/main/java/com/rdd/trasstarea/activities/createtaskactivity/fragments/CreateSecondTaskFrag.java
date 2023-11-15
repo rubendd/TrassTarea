@@ -76,7 +76,6 @@ public class CreateSecondTaskFrag extends Fragment {
         btnCreateTask = fragmento2.findViewById(R.id.create);
         btnSalir.setOnClickListener(this::backFragment);
         btnCreateTask.setOnClickListener(v -> {
-            createTask();
             comunicador.mandarTask();
         });
     }

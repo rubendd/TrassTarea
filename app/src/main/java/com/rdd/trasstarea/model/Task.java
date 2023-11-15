@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Objects;
 
-public class Task implements Parcelable {
+public class Task implements Serializable {
     private String titulo, description;
     private boolean prioritaria;
     private long daysLeft;
@@ -24,25 +24,7 @@ public class Task implements Parcelable {
 
     private  int progresState;
 
-    protected Task(Parcel in) {
-        titulo = in.readString();
-        description = in.readString();
-        prioritaria = in.readByte() != 0;
-        daysLeft = in.readLong();
-        progresState = in.readInt();
-    }
 
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel in) {
-            return new Task(in);
-        }
-
-        @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
-        }
-    };
 
     public String getDescription() {
         return description;
@@ -52,19 +34,7 @@ public class Task implements Parcelable {
         this.description = description;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(titulo);
-        dest.writeString(description);
-        dest.writeByte((byte) (prioritaria ? 1 : 0));
-        dest.writeLong(daysLeft);
-        dest.writeInt(progresState);
-    }
 
     public enum States{
         NOTSTARTED, STARTED, ADVANCED, ALMOSFINALIZED, FINALIZED

@@ -67,6 +67,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
                });
                compartirViewModel.getPrioritario().observe(getViewLifecycleOwner(), da -> {
                    prioritaria.setActivated(da);
+
                });
         }
     }

@@ -27,6 +27,7 @@ import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
 import com.rdd.trasstarea.activities.createtaskactivity.fragments.CreateSecondTaskFrag;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
+import com.rdd.trasstarea.activities.listactivity.dialogs.DeleteDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.comunicator.IComunicator;
@@ -35,7 +36,7 @@ import com.rdd.trasstarea.model.Task;
 
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements IComunicator, CreateSecondTaskFrag.mandarTarea {
+public class ListActivity extends AppCompatActivity implements IComunicator {
 
 
     private final ListController listController = new ListController();
@@ -54,9 +55,12 @@ public class ListActivity extends AppCompatActivity implements IComunicator, Cre
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Configurar
+
+
         lanzarMensajeNoTareas();
         configureRecyclerView();
+
+
     }
 
     /**
@@ -128,6 +132,7 @@ public class ListActivity extends AppCompatActivity implements IComunicator, Cre
     }
 
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Verifica qué opción del menú ha sido seleccionada
@@ -173,9 +178,11 @@ public class ListActivity extends AppCompatActivity implements IComunicator, Cre
             if (result.getResultCode() == RESULT_OK) {
                 Intent intentDevuelto = result.getData();
                 if (intentDevuelto != null) {
-                    Task task = intentDevuelto.getParcelableExtra("tareaNueva");
+                    Task task = (Task) intentDevuelto.getExtras().get("tareaNueva");
                     if (task != null) {
-                        createTask = task;
+
+                        listTareas.add(task);
+
                     } else {
                         Toast.makeText(ListActivity.this, "Tarea nueva es nula", Toast.LENGTH_SHORT).show();
                     }
@@ -184,6 +191,7 @@ public class ListActivity extends AppCompatActivity implements IComunicator, Cre
                     Toast.makeText(ListActivity.this, "El intent es nulo", Toast.LENGTH_SHORT).show();
                 }
             }
+            customAdapter.notifyDataSetChanged();
         }
     });
 
@@ -198,10 +206,5 @@ public class ListActivity extends AppCompatActivity implements IComunicator, Cre
     }
 
 
-    @Override
-    public void mandarTask() {
-        listTareas.add(createTask);
-        int position = listTareas.size() - 1; // Obtener la posición de la tarea recién agregada
-        customAdapter.notifyItemInserted(position); // Not
-    }
+
 }
