@@ -1,6 +1,7 @@
 package com.rdd.trasstarea.activities.listactivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -8,7 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
+import com.rdd.trasstarea.activities.createtaskactivity.fragments.CreateSecondTaskFrag;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
@@ -27,7 +35,7 @@ import com.rdd.trasstarea.model.Task;
 
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements IComunicator {
+public class ListActivity extends AppCompatActivity implements IComunicator, CreateSecondTaskFrag.mandarTarea {
 
 
     private final ListController listController = new ListController();
@@ -61,25 +69,6 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
     }
 
 
-    public void createTask(Task task) {
-
-            System.out.println(createTask);
-            listTareas.add(createTask);
-            customAdapter.notifyDataSetChanged();
-            System.out.println("Lanzado");
-             // Llama a addTask después de actualizar la lista
-
-
-    }
-
-    private void obtenerTask(){
-        Intent intent = getIntent();
-        if (intent.hasExtra("proyecto")) {
-            createTask = (Task) getIntent().getSerializableExtra("proyecto");
-            createTask(createTask);
-        }
-
-    }
 
     private void configureRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
@@ -99,7 +88,6 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
 
     private void initialList(){
         customAdapter = new CustomAdapter(listTareas, this);
-        obtenerTask();
         recyclerView.setAdapter(customAdapter);
     }
 
@@ -179,10 +167,41 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
         item.setIcon(iconResource);
     }
 
+    ActivityResultLauncher<Intent> mlauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intentDevuelto = result.getData();
+                if (intentDevuelto != null) {
+                    Task task = intentDevuelto.getParcelableExtra("tareaNueva");
+                    if (task != null) {
+                        createTask = task;
+                    } else {
+                        Toast.makeText(ListActivity.this, "Tarea nueva es nula", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Manejar el caso donde el Intent devuelto es nulo
+                    Toast.makeText(ListActivity.this, "El intent es nulo", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    });
+
+
+
+
     private void initCreateTask() {
         Intent intent = new Intent(this, CreateTaskActivity.class);
-        startActivity(intent);
+        if (mlauncher != null) {
+            mlauncher.launch(intent);
+        }
     }
 
 
+    @Override
+    public void mandarTask() {
+        listTareas.add(createTask);
+        int position = listTareas.size() - 1; // Obtener la posición de la tarea recién agregada
+        customAdapter.notifyItemInserted(position); // Not
+    }
 }

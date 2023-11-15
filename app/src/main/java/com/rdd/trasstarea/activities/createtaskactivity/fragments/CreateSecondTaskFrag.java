@@ -1,5 +1,6 @@
 package com.rdd.trasstarea.activities.createtaskactivity.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,12 +32,25 @@ public class CreateSecondTaskFrag extends Fragment {
     private ComunicateFragments comunicateFragments;
 
 
+    public interface mandarTarea{
+        void mandarTask();
+    }
 
+    private mandarTarea comunicador;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof mandarTarea){
+            comunicador = (mandarTarea) context;
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createTaskFragment = new CreateTaskFragment();
+
 
         //Obtenemos una referencia del ViewModel
          comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
@@ -48,24 +63,25 @@ public class CreateSecondTaskFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmento2 = inflater.inflate(R.layout.create_task2, container, false);
 
+
+
         initComponents(fragmento2);
         recuperarDatos();
         return fragmento2;
     }
 
     private void initComponents(View fragmento2){
+        descripcion = fragmento2.findViewById(R.id.editTextDescription);
         btnSalir = fragmento2.findViewById(R.id.back);
         btnCreateTask = fragmento2.findViewById(R.id.create);
         btnSalir.setOnClickListener(this::backFragment);
         btnCreateTask.setOnClickListener(v -> {
             createTask();
-            getActivity().finish();
+            comunicador.mandarTask();
         });
     }
 
     private void backFragment(View view) {
-        requireActivity().getSupportFragmentManager().popBackStack();
-
         // Intenta encontrar la instancia existente del CreateTaskFragment por su tag
         CreateTaskFragment existingFragment = (CreateTaskFragment) getActivity().getSupportFragmentManager().findFragmentByTag("CreateTaskFragment");
 
@@ -92,12 +108,9 @@ public class CreateSecondTaskFrag extends Fragment {
     }
 
     private void createTask(){
-        Intent intent = new Intent(getActivity(), ListActivity.class);
-        System.out.println(task.toString());
-        System.out.println("Pasando...");
-        intent.putExtra("proyecto", task);
-        startActivity(intent);
+        task.setDescription(descripcion.getText().toString());
     }
+
 
 
 
