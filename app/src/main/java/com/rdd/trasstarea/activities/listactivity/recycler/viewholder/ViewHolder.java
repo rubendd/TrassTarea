@@ -30,7 +30,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     //La variable posición indicará la posición del viewholder que se ha hecho click.
     private int position;
     private final IComunicator comunicator;
-    private Task taskCreate;
+        private Task taskCreate;
 
     public ViewHolder(View view, List<Task> taskList, IComunicator comunicator) {
         super(view);

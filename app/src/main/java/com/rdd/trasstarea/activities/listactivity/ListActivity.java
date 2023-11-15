@@ -69,7 +69,8 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
     @Override
     public void deleteList(int position) {
         listTareas.remove(position); // Aunque hayamos borrado la tarea de la lista del viewholder, tenemos que borrarla de esta lista ya que no se guardaría los cambios
-        customAdapter.notifyItemRemoved(position); //Notificamos que ha habido un cambio.
+        customAdapter.notifyItemRemoved(position);
+        //Notificamos que ha habido un cambio.
     }
 
 
