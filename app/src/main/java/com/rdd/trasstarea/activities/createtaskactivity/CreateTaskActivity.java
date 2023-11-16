@@ -20,7 +20,7 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
     public  String TITULO = "titulo";
     public   String DATE2 = "fecha2";
     public   String STATE = "estado";
-    public  boolean PRIORITAIO;
+    public  boolean PRIORITAIO = true;
 
 
     private CreateTaskFragment createTaskFragment;
@@ -51,7 +51,7 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         TITULO = comunicateFragments.getTitulo().getValue();
         DATE2 = comunicateFragments.getDate2().getValue();
         STATE = comunicateFragments.getState().getValue();
-        PRIORITAIO = Boolean.TRUE.equals(comunicateFragments.getPrioritario().getValue());
+        PRIORITAIO = comunicateFragments.getPrioritario().getValue();
 
         Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2), Task.States.valueOf(STATE), "preuba");
 

@@ -55,6 +55,7 @@ public class ListActivity extends AppCompatActivity{
         @Override
         public void createTask() {
             listTareas.add(createTask);
+            System.out.println(createTask);
             customAdapter.updateData(listTareas);
         }
     };
