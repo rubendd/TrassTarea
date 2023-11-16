@@ -1,31 +1,78 @@
 package com.rdd.trasstarea.activities.listactivity.recycler;
 
-import static java.security.AccessController.getContext;
-
+import android.content.Context;
+import android.graphics.Color;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
-import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
-import com.rdd.trasstarea.activities.listactivity.recycler.viewholder.ViewHolder;
 import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder>  {
 
     private final List<Task> tasksDataSet;
     private final IComunicator comunicator;
     private int posicion;
+
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        private final TextView titulo, fecha, tiempoRestante;
+        private final ImageView prioritaria;
+        private final ProgressBar duracion;
+        private final View view;
+        //La variable posición indicará la posición del viewholder que se ha hecho click.
+        private int position;
+        private Task taskCreate;
+
+        public MyViewHolder(View view) {
+            super(view);
+            // Define click listener for the MyViewHolder's View
+            prioritaria = view.findViewById(R.id.imageView);
+            titulo = view.findViewById(R.id.titulo);
+            duracion = view.findViewById(R.id.progressBar);
+            fecha = view.findViewById(R.id.fecha);
+            tiempoRestante = view.findViewById(R.id.tiempoRestante);
+            this.view = view;
+
+            view.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+                Context context = v.getContext();
+                MenuInflater inflater = new MenuInflater(context);
+                inflater.inflate(R.menu.taskmenu, menu);
+            });
+        }
+
+        public void bindTask(Task c) {
+            titulo.setText(c.getTitulo());
+            if (c.isPrioritaria()) {
+                prioritaria.setImageResource(R.drawable.baseline_stars_24);
+            }
+            fecha.setText(c.calendar());
+            changeColorDaysLeft(c);
+            tiempoRestante.setText(String.valueOf(c.getDaysLeft()));
+            duracion.setProgress(c.getProgresState());
+
+        }
+
+        private void changeColorDaysLeft(Task c) {
+            if (c.getDaysLeft() < 0) {
+                tiempoRestante.setTextColor(Color.RED);
+            }
+        }
+    }
+
 
     /**
      * Initialize the dataset of the Adapter.
@@ -38,27 +85,30 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> implements V
         this.comunicator = comunicator;
     }
 
+    public void updateData(List<Task> newData) {
+        tasksDataSet.clear();
+        tasksDataSet.addAll(newData);
+    }
+
+
+
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.list, viewGroup, false);
 
-        return new ViewHolder(view,tasksDataSet,comunicator);
+        return new MyViewHolder(view);
     }
 
-
-
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        viewHolder.bindTask(tasksDataSet.get(position));
-        posicion = position;
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        holder.bindTask(tasksDataSet.get(position));
     }
+
+
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
@@ -66,38 +116,11 @@ public class CustomAdapter extends RecyclerView.Adapter<ViewHolder> implements V
         return tasksDataSet.size();
     }
 
-    @Override
-    public void onClick(View v) {
-        // Acciones a realizar cuando se hace clic en el RelativeLayout
-        if (posicion != RecyclerView.NO_POSITION) {
-            actualTask = taskList.get(position);
-            // Si la posición es válida, puedes obtener el objeto Task correspondiente a la posición
-            showPopup(v);
-        }
-    }
 
-
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(v.getContext(), v);
-        popup.setOnMenuItemClickListener(this);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.taskmenu, popup.getMenu());
-        popup.show();
-    }
 
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.description) {
-            new AboutDialog(getContext(), actualTask.getDescription());
-            return true;
-        }
-        if (item.getItemId() == R.id.delete) {
-            deleteTask();
-            return true;
-        }
-        return false;
+    public long getItemId(int position) {
+        return super.getItemId(position);
     }
-
-
 }

@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +37,7 @@ import com.rdd.trasstarea.model.Task;
 
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements IComunicator {
+public class ListActivity extends AppCompatActivity{
 
 
     private final ListController listController = new ListController();
@@ -44,6 +45,21 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
     private View mensaje;
     private CustomAdapter customAdapter;
     private RecyclerView recyclerView;
+    private IComunicator comunicator = new IComunicator() {
+        @Override
+        public void deleteList(int position) {
+            listTareas.remove(position); // Aunque hayamos borrado la tarea de la lista del viewholder, tenemos que borrarla de esta lista ya que no se guardaría los cambios
+            customAdapter.notifyItemRemoved(position);
+        }
+
+        @Override
+        public void createTask() {
+            listTareas.add(createTask);
+            customAdapter.updateData(listTareas);
+        }
+    };
+
+
     private Task createTask;
     private boolean favorite = false;
 
@@ -59,19 +75,11 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
 
         lanzarMensajeNoTareas();
         configureRecyclerView();
-
-
     }
 
     /**
      * Este método se comunica con el viewholder para borrar la tarea mediante una interfaz.
      */
-    @Override
-    public void deleteList(int position) {
-        listTareas.remove(position); // Aunque hayamos borrado la tarea de la lista del viewholder, tenemos que borrarla de esta lista ya que no se guardaría los cambios
-        customAdapter.notifyItemRemoved(position);
-        //Notificamos que ha habido un cambio.
-    }
 
 
 
@@ -92,18 +100,19 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
 
 
     private void initialList(){
-        customAdapter = new CustomAdapter(listTareas, this);
+        customAdapter = new CustomAdapter(listTareas, comunicator);
         recyclerView.setAdapter(customAdapter);
     }
 
 
 
     private void filtrarFavoritos(){
-        // Filtra la lista de tareas utilizando el método filtarLista() de listController y crea un nuevo adaptador con los resultados
-        customAdapter = new CustomAdapter(listController.filtarLista(), this);
-        // Asigna el nuevo adaptador al RecyclerView para mostrar las tareas filtradas
-        recyclerView.setAdapter(customAdapter);
+        List<Task> filteredList = listController.filtarLista();
+        customAdapter.updateData(filteredList);
+        customAdapter.notifyDataSetChanged();
     }
+
+
 
 
     private void lanzarMensajeNoTareas() {
@@ -181,9 +190,9 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
                 if (intentDevuelto != null) {
                     Task task = (Task) intentDevuelto.getExtras().get("tareaNueva");
                     if (task != null) {
-
-                        listTareas.add(task);
-
+                        createTask = task;
+                        comunicator.createTask();
+                        customAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(ListActivity.this, "Tarea nueva es nula", Toast.LENGTH_SHORT).show();
                     }
@@ -192,7 +201,6 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
                     Toast.makeText(ListActivity.this, "El intent es nulo", Toast.LENGTH_SHORT).show();
                 }
             }
-            customAdapter.notifyDataSetChanged();
         }
     });
 
@@ -207,5 +215,46 @@ public class ListActivity extends AppCompatActivity implements IComunicator {
     }
 
 
+//    @Override
+  /*  public void onClick(View v) {
+        // Acciones a realizar cuando se hace clic en el RelativeLayout
+        if (customAdapter. != RecyclerView.NO_POSITION) {
+            actualTask = taskList.get(position);
+            // Si la posición es válida, puedes obtener el objeto Task correspondiente a la posición
+            showPopup(v);
+        }
+    } */
 
+    /* @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.description) {
+            new AboutDialog(this, actualTask.getDescription());
+            return true;
+        }
+        if (item.getItemId() == R.id.delete) {
+            deleteTask();
+            return true;
+        }
+        return false;
+    } */
+
+
+   /* private void deleteTask(){
+        DeleteDialog deleteDialog = new DeleteDialog();
+        deleteDialog.setDeleteDialogListener(() -> { // Para que sea sincrona tenemos que crear un listener.
+            if (comunicator != null) {
+                taskList.remove(position); // Borramos la tarea del viewholder.
+                comunicator.deleteList(position); //Llamamos al deleteList del comunicador.
+            }
+        });
+        deleteDialog.showDelete(view.getContext()); //Mostramos
+    } */
+
+   /* public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(v.getContext(), v);
+        popup.setOnMenuItemClickListener(this);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.taskmenu, popup.getMenu());
+        popup.show();
+    }*/
 }

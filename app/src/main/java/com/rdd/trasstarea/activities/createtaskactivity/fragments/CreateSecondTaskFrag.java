@@ -54,7 +54,6 @@ public class CreateSecondTaskFrag extends Fragment {
 
         //Obtenemos una referencia del ViewModel
          comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
-
     }
 
 
