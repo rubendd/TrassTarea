@@ -50,6 +50,7 @@ public class Task implements Serializable {
         this.description = description;
     }
 
+
     public Task() {
     }
 
@@ -134,18 +135,27 @@ public class Task implements Serializable {
 
 
     private long fechasDiferencia(){
-        // Obtener la fecha actual
+        // Obtain the current date
         Calendar fechaActual = Calendar.getInstance();
 
-        // Definir una fecha futura
-        Calendar fechaFutura = Calendar.getInstance();
-        fechaFutura.set(getDateEnd().get(Calendar.YEAR), getDateEnd().get(Calendar.MONTH), getDateEnd().get(Calendar.DAY_OF_YEAR));  // Por ejemplo, 31 de diciembre de 2023
+        // Set the time fields to 0 to compare only the dates
+        fechaActual.set(Calendar.HOUR_OF_DAY, 0);
+        fechaActual.set(Calendar.MINUTE, 0);
+        fechaActual.set(Calendar.SECOND, 0);
+        fechaActual.set(Calendar.MILLISECOND, 0);
 
-        // Calcular la diferencia en milisegundos
+        // Obtain the due date
+        Calendar fechaFutura = getDateEnd();
+
+        // Set the time fields to 0 to compare only the dates
+        fechaFutura.set(Calendar.HOUR_OF_DAY, 0);
+        fechaFutura.set(Calendar.MINUTE, 0);
+        fechaFutura.set(Calendar.SECOND, 0);
+        fechaFutura.set(Calendar.MILLISECOND, 0);
+
+        // Calculate the difference in days
         long diferenciaEnMillis = fechaFutura.getTimeInMillis() - fechaActual.getTimeInMillis();
-
-        // Calcular la diferencia en días
-        return diferenciaEnMillis / (24 * 60 * 60 * 1000);
+        return diferenciaEnMillis / (24 * 60 * 60 * 1000)-1;
     }
 
     private String calendarToText() throws ParseException {

@@ -66,8 +66,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
                    date2.setText(da);
                });
                compartirViewModel.getPrioritario().observe(getViewLifecycleOwner(), da -> {
-                   prioritaria.setActivated(da);
-
+                   prioritaria.setChecked(da);
                });
         }
     }
@@ -101,7 +100,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         compartirViewModel.setDate2(date2.getText().toString());
         compartirViewModel.setDate1(date1.getText().toString());
         compartirViewModel.setState(select);
-        compartirViewModel.setPrioritario(prioritaria.isActivated());
+        compartirViewModel.setPrioritario(prioritaria.isChecked());
     }
 
     private boolean nextPageCheck(){

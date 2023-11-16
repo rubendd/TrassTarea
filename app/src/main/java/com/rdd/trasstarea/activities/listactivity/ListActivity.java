@@ -48,15 +48,17 @@ public class ListActivity extends AppCompatActivity{
     private IComunicator comunicator = new IComunicator() {
         @Override
         public void deleteList(int position) {
-            listTareas.remove(position); // Aunque hayamos borrado la tarea de la lista del viewholder, tenemos que borrarla de esta lista ya que no se guardaría los cambios
+            listTareas.remove(position);
+            customAdapter.deleteList(listTareas);
             customAdapter.notifyItemRemoved(position);
+            lanzarMensajeNoTareas();
         }
 
         @Override
         public void createTask() {
             listTareas.add(createTask);
-            System.out.println(createTask);
             customAdapter.updateData(listTareas);
+            customAdapter.notifyItemInserted(customAdapter.getItemCount());
         }
     };
 
@@ -193,7 +195,6 @@ public class ListActivity extends AppCompatActivity{
                     if (task != null) {
                         createTask = task;
                         comunicator.createTask();
-                        customAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(ListActivity.this, "Tarea nueva es nula", Toast.LENGTH_SHORT).show();
                     }
@@ -206,8 +207,6 @@ public class ListActivity extends AppCompatActivity{
     });
 
 
-
-
     private void initCreateTask() {
         Intent intent = new Intent(this, CreateTaskActivity.class);
         if (mlauncher != null) {
@@ -216,46 +215,4 @@ public class ListActivity extends AppCompatActivity{
     }
 
 
-//    @Override
-  /*  public void onClick(View v) {
-        // Acciones a realizar cuando se hace clic en el RelativeLayout
-        if (customAdapter. != RecyclerView.NO_POSITION) {
-            actualTask = taskList.get(position);
-            // Si la posición es válida, puedes obtener el objeto Task correspondiente a la posición
-            showPopup(v);
-        }
-    } */
-
-    /* @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.description) {
-            new AboutDialog(this, actualTask.getDescription());
-            return true;
-        }
-        if (item.getItemId() == R.id.delete) {
-            deleteTask();
-            return true;
-        }
-        return false;
-    } */
-
-
-   /* private void deleteTask(){
-        DeleteDialog deleteDialog = new DeleteDialog();
-        deleteDialog.setDeleteDialogListener(() -> { // Para que sea sincrona tenemos que crear un listener.
-            if (comunicator != null) {
-                taskList.remove(position); // Borramos la tarea del viewholder.
-                comunicator.deleteList(position); //Llamamos al deleteList del comunicador.
-            }
-        });
-        deleteDialog.showDelete(view.getContext()); //Mostramos
-    } */
-
-   /* public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(v.getContext(), v);
-        popup.setOnMenuItemClickListener(this);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.taskmenu, popup.getMenu());
-        popup.show();
-    }*/
 }

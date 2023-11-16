@@ -10,6 +10,12 @@ public class ComunicateFragments extends ViewModel {
     private final MutableLiveData<String> state = new MutableLiveData<>();
     private final MutableLiveData<Boolean> prioritario = new MutableLiveData<>();
 
+    private final MutableLiveData<String> description = new MutableLiveData<>();
+
+    public MutableLiveData<String> getDescription() {
+        return description;
+    }
+
     public MutableLiveData<String> getTitulo() {
         return titulo;
     }
@@ -44,5 +50,8 @@ public class ComunicateFragments extends ViewModel {
     }
     public void setPrioritario(boolean nomb) {
         prioritario.setValue(nomb);
+    }
+    public void setDescription(String nomb) {
+        description.setValue(nomb);
     }
 }

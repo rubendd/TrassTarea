@@ -75,6 +75,7 @@ public class CreateSecondTaskFrag extends Fragment {
         btnCreateTask = fragmento2.findViewById(R.id.create);
         btnSalir.setOnClickListener(this::backFragment);
         btnCreateTask.setOnClickListener(v -> {
+            sendData();
             comunicador.mandarTask();
         });
     }
@@ -103,6 +104,10 @@ public class CreateSecondTaskFrag extends Fragment {
             comunicateFragments.getPrioritario().observe(getViewLifecycleOwner(), da -> task.setPrioritaria(da));
             comunicateFragments.getState().observe(getViewLifecycleOwner(), da -> task.setStatesNumber(Task.States.valueOf(String.valueOf(da))));
         }
+    }
+
+    private void sendData(){
+        comunicateFragments.setDescription(descripcion.getText().toString());
     }
 
     private void createTask(){
