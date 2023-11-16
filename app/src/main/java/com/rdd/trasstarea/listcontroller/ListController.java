@@ -24,8 +24,7 @@ public class ListController {
     }
 
     public List<Task> filtarLista(){
-        Stream<Task> streamlista = listTask.stream().filter(Task::isPrioritaria);
-        return streamlista.collect(Collectors.toList());
+        return listTask.stream().filter(Task::isPrioritaria).collect(Collectors.toList());
     }
 
 

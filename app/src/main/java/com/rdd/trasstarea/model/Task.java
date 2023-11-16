@@ -155,18 +155,14 @@ public class Task implements Serializable {
 
         // Calculate the difference in days
         long diferenciaEnMillis = fechaFutura.getTimeInMillis() - fechaActual.getTimeInMillis();
-        return diferenciaEnMillis / (24 * 60 * 60 * 1000)-1;
+        return diferenciaEnMillis / (24 * 60 * 60 * 1000);
     }
 
     private String calendarToText() throws ParseException {
         Calendar cal = getDateEnd();
-        cal.add(Calendar.DATE, 1);
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 
-
         return format1.format(cal.getTime());
-
-
     }
 
     @NonNull
