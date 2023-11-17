@@ -28,9 +28,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     private final List<Task> tasksDataSet;
     private static IComunicator comunicator;
 
-    public void deleteList(List<Task> listTareas) {
-        tasksDataSet.clear();
-        tasksDataSet.addAll(listTareas);
+
+    public static IComunicator getComunicator() {
+        return comunicator;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -128,7 +128,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             }
             if (item.getItemId() == R.id.edit){
                 int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
-
+                CustomAdapter.comunicator.editTask(task, position);
+                return true;
             }
             return false;
         });

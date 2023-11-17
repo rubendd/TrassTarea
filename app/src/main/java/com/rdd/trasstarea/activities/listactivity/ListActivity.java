@@ -1,7 +1,6 @@
 package com.rdd.trasstarea.activities.listactivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,42 +13,41 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
-import com.rdd.trasstarea.activities.createtaskactivity.fragments.CreateSecondTaskFrag;
+import com.rdd.trasstarea.activities.editTaskActivity.EditTaskActivity;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
-import com.rdd.trasstarea.activities.listactivity.dialogs.DeleteDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListActivity extends AppCompatActivity{
-
 
     private final ListController listController = new ListController();
     private final List<Task> listTareas = listController.getListTask();
     private View mensaje;
     private CustomAdapter customAdapter;
     private RecyclerView recyclerView;
+    private int positionTask;
+
     private IComunicator comunicator = new IComunicator() {
         @Override
         public void deleteList(int position) {
             listTareas.remove(position);
-            customAdapter.deleteList(listTareas);
+            customAdapter.updateData(listTareas);
             customAdapter.notifyItemRemoved(position);
             lanzarMensajeNoTareas();
         }
@@ -59,6 +57,13 @@ public class ListActivity extends AppCompatActivity{
             listTareas.add(createTask);
             customAdapter.updateData(listTareas);
             customAdapter.notifyItemInserted(customAdapter.getItemCount());
+        }
+
+        @Override
+        public void editTask(Task task, int position) {
+            positionTask = position;
+            initEditTask(task);
+
         }
     };
 
@@ -75,9 +80,28 @@ public class ListActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
 
-
+        saveData(savedInstanceState);
         lanzarMensajeNoTareas();
         configureRecyclerView();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Guardar si la lista está filtrada por favoritos
+        outState.putBoolean("favorite", favorite);
+        outState.putSerializable("taskList", new ArrayList<>(listTareas));
+    }
+
+    private void saveData(Bundle savedInstanceState){
+        if (savedInstanceState != null) {
+            listTareas.clear(); // Limpia la lista actual antes de restaurar
+            List<Task> savedTaskList = (List<Task>) savedInstanceState.getSerializable("taskList");
+            if (savedTaskList != null) {
+                listTareas.addAll(savedTaskList);
+            }
+            checkFiltrado();
+        }
     }
 
     /**
@@ -170,6 +194,13 @@ public class ListActivity extends AppCompatActivity{
 
 
     private void filtrarRecycler(@NonNull MenuItem item){
+        checkFiltrado();
+        // Cambiar el icono del botón según el estado actual de la variable de bandera
+        int iconResource = favorite ? R.drawable.baseline_stars_24 : R.drawable.baseline_stars_24_black;
+        item.setIcon(iconResource);
+    }
+
+    private void checkFiltrado(){
         // Cambiar el estado de la variable de bandera
         favorite = !favorite;
 
@@ -179,13 +210,9 @@ public class ListActivity extends AppCompatActivity{
         } else {
             filtrarFavoritos();
         }
-
-        // Cambiar el icono del botón según el estado actual de la variable de bandera
-        int iconResource = favorite ? R.drawable.baseline_stars_24 : R.drawable.baseline_stars_24_black;
-        item.setIcon(iconResource);
     }
 
-    ActivityResultLauncher<Intent> mlauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+    ActivityResultLauncher<Intent> createTaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
             if (result.getResultCode() == RESULT_OK) {
@@ -207,10 +234,42 @@ public class ListActivity extends AppCompatActivity{
     });
 
 
+    ActivityResultLauncher<Intent> editTaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intentDevuelto = result.getData();
+                if (intentDevuelto != null) {
+                    Task task = (Task) intentDevuelto.getExtras().get("tareaNueva");
+                    if (task != null) {
+                        createTask = task;
+                        listTareas.set(positionTask, createTask);
+                        customAdapter.updateData(listTareas);
+                        customAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(ListActivity.this, "Tarea nueva es nula", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Manejar el caso donde el Intent devuelto es nulo
+                    Toast.makeText(ListActivity.this, "El intent es nulo", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    });
+
+
     private void initCreateTask() {
         Intent intent = new Intent(this, CreateTaskActivity.class);
-        if (mlauncher != null) {
-            mlauncher.launch(intent);
+        if (createTaskLauncher != null) {
+            createTaskLauncher.launch(intent);
+        }
+    }
+
+    private void initEditTask(Task task){
+        Intent intent = new Intent(this, EditTaskActivity.class);
+        if (editTaskLauncher != null){
+            intent.putExtra("tareaEditar", task);
+            editTaskLauncher.launch(intent);
         }
     }
 

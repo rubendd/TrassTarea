@@ -28,6 +28,7 @@
     <string name="hintDescription">Escribe la descripción aquí…</string>
     <string name="volver">Volver</string>
     <string name="crear_tarea">Crear tarea</string>
+    <string name="confirmar">Confirmar</string>
 
 
 </resources>

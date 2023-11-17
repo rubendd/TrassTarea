@@ -1,7 +1,6 @@
-package com.rdd.trasstarea.activities.createtaskactivity.fragments;
+package com.rdd.trasstarea.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
-import com.rdd.trasstarea.activities.createtaskactivity.ComunicateFragments;
-import com.rdd.trasstarea.activities.listactivity.ListActivity;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
+
+import java.util.Calendar;
 
 public class CreateSecondTaskFrag extends Fragment {
 
@@ -47,6 +46,11 @@ public class CreateSecondTaskFrag extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createTaskFragment = new CreateTaskFragment();
@@ -56,7 +60,14 @@ public class CreateSecondTaskFrag extends Fragment {
          comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
     }
 
-
+    private void putDataTask(){
+        if (comunicateFragments.getTaskLiveData().isInitialized()){
+            btnCreateTask.setText(R.string.confirmar);
+            comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
+                descripcion.setText(task.getDescription());
+            });
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +76,7 @@ public class CreateSecondTaskFrag extends Fragment {
 
 
         initComponents(fragmento2);
+        putDataTask();
         recuperarDatos();
         return fragmento2;
     }

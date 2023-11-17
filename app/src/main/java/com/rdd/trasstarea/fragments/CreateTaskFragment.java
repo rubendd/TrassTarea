@@ -1,4 +1,4 @@
-package com.rdd.trasstarea.activities.createtaskactivity.fragments;
+package com.rdd.trasstarea.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,16 +10,22 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.CheckTask;
-import com.rdd.trasstarea.activities.createtaskactivity.ComunicateFragments;
 import com.rdd.trasstarea.activities.createtaskactivity.dialogs.datepicker.DatePickerHandle;
+import com.rdd.trasstarea.listcontroller.ListController;
+import com.rdd.trasstarea.model.Task;
+
+import java.util.Arrays;
+import java.util.Calendar;
 
 public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private ComunicateFragments compartirViewModel;
@@ -29,10 +35,22 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     private Button cancelar, siguiente;
     private EditText titulo,date1,date2;
     private CheckBox prioritaria;
+    private TextView text;
     String select;
 
     public CreateTaskFragment() {
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("titulo", titulo.getText().toString());
+        outState.putString("date1", date1.getText().toString());
+        outState.putString("date2", date2.getText().toString());
+        outState.putBoolean("prioritaria", prioritaria.isChecked());
+        outState.putString("select", select);
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,11 +64,53 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         View fragmento1 = inflater.inflate(R.layout.create_task, container, false);
 
         //Configure
+        saveData(savedInstanceState);
         initComponents(fragmento1);
         initSpinner();
         onClickDate();
+        putDataTask();
         recuperarDatos();
         return fragmento1;
+    }
+
+
+    private void saveData(Bundle savedInstanceState){
+        // Restaurar datos si hay un estado guardado
+        if (savedInstanceState != null) {
+            titulo.setText(savedInstanceState.getString("titulo", ""));
+            date1.setText(savedInstanceState.getString("date1", ""));
+            date2.setText(savedInstanceState.getString("date2", ""));
+            prioritaria.setChecked(savedInstanceState.getBoolean("prioritaria", false));
+
+            // También restaura la selección del Spinner
+            select = savedInstanceState.getString("select", "");
+            int position = Arrays.asList(getResources().getStringArray(R.array.progress)).indexOf(select);
+            spinner.setSelection(position);
+        }
+    }
+
+    private void putDataTask(){
+        if (compartirViewModel.getTaskLiveData().isInitialized()){
+            text.setText("Editar tarea");
+            compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
+                titulo.setText(task.getTitulo());
+                date1.setText(ListController.calendarToText(Calendar.getInstance()));
+                date2.setText(ListController.calendarToText(task.getDateEnd()));
+                prioritaria.setChecked(task.isPrioritaria());
+                obtenerState(task);
+            });
+        }
+    }
+
+    private void obtenerState(Task task){
+        // Obtener el array de opciones del Spinner
+        String[] options = getResources().getStringArray(R.array.progress);
+
+        // Encontrar la posición del estado en el array
+        int position = Arrays.asList(options).indexOf(task.getProgresState());
+
+        // Establecer la selección en el Spinner
+        spinner.setSelection(position);
     }
 
     private void recuperarDatos(){
@@ -80,6 +140,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         cancelar = fragmento1.findViewById(R.id.cancelar);
         siguiente = fragmento1.findViewById(R.id.siguiente);
         prioritaria = fragmento1.findViewById(R.id.prioritaria);
+        text = fragmento1.findViewById(R.id.texto);
 
         siguiente.setOnClickListener(this::nextActivity);
         cancelar.setOnClickListener(view -> getActivity().finish());

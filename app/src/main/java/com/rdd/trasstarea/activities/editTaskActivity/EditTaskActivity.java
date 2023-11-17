@@ -1,4 +1,4 @@
-package com.rdd.trasstarea.activities.createtaskactivity;
+package com.rdd.trasstarea.activities.editTaskActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +14,7 @@ import com.rdd.trasstarea.fragments.CreateTaskFragment;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
-public class CreateTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea{
-
+public class EditTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea{
 
     public  String TITULO = "titulo";
     public   String DATE2 = "fecha2";
@@ -28,11 +27,7 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
     private CreateTaskFragment createTaskFragment;
     private CreateSecondTaskFrag createSecondTaskFrag;
     private ComunicateFragments comunicateFragments;
-
-
-    public CreateTaskActivity() {
-
-    }
+    private Task editTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,10 +38,13 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         createTaskFragment = new CreateTaskFragment();
         createSecondTaskFrag = new CreateSecondTaskFrag();
 
+
+        editTask = (Task) getIntent().getSerializableExtra("tareaEditar");
+        comunicateFragments.setTask(editTask);
+
         getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createTaskFragment).addToBackStack(null).commit();
 
     }
-
 
     @Override
     public void mandarTask() {

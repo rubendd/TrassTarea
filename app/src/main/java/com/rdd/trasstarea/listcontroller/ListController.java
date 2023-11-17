@@ -32,6 +32,14 @@ public class ListController {
         return listTask;
     }
 
+
+    public static String calendarToText(Calendar calendar) {
+        Calendar cal = calendar;
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yy");
+
+        return format1.format(cal.getTime());
+    }
+
     private void setListTareas() {
         // Agregar tareas a la lista
         listTask.add(new Task("Cumple adrian", true, convertirFecha("03/12/23"), Task.States.STARTED, "Hola adrian"));

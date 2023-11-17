@@ -1,9 +1,22 @@
-package com.rdd.trasstarea.activities.createtaskactivity;
+package com.rdd.trasstarea.fragments;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.rdd.trasstarea.model.Task;
+
 public class ComunicateFragments extends ViewModel {
+
+    private final MutableLiveData<Task> taskLiveData = new MutableLiveData<>();
+
+    public LiveData<Task> getTaskLiveData() {
+        return taskLiveData;
+    }
+
+    public void setTask(Task task) {
+        taskLiveData.setValue(task);
+    }
     private final MutableLiveData<String> titulo = new MutableLiveData<>();
     private final MutableLiveData<String> date1 = new MutableLiveData<>();
     private final MutableLiveData<String> date2 = new MutableLiveData<>();
