@@ -16,6 +16,8 @@ import com.rdd.trasstarea.model.Task;
 
 public class EditTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea{
 
+    public static final String TAREA_NUEVA = "tareaNueva";
+    public static final String TAREA_EDITAR = "tareaEditar";
     public  String TITULO = "titulo";
     public   String DATE2 = "fecha2";
     public   String STATE = "estado";
@@ -24,10 +26,7 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
     public String DESCRIPTION = "";
 
 
-    private CreateTaskFragment createTaskFragment;
-    private CreateSecondTaskFrag createSecondTaskFrag;
     private ComunicateFragments comunicateFragments;
-    private Task editTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,11 +34,10 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
         setContentView(R.layout.main_create_task);
 
         comunicateFragments = new ViewModelProvider(this).get(ComunicateFragments.class);
-        createTaskFragment = new CreateTaskFragment();
-        createSecondTaskFrag = new CreateSecondTaskFrag();
+        CreateTaskFragment createTaskFragment = new CreateTaskFragment();
 
 
-        editTask = (Task) getIntent().getSerializableExtra("tareaEditar");
+        Task editTask = (Task) getIntent().getSerializableExtra(TAREA_EDITAR);
         comunicateFragments.setTask(editTask);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createTaskFragment).addToBackStack(null).commit();
@@ -56,13 +54,9 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
 
         Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2), Task.States.valueOf(STATE), DESCRIPTION);
 
-        if (task != null) {
-            Intent intent = new Intent();
-            intent.putExtra("tareaNueva", task);
-            setResult(RESULT_OK, intent);
-        } else {
-            setResult(RESULT_CANCELED); // Indica que la operación fue cancelada debido a un error
-        }
+        Intent intent = new Intent();
+        intent.putExtra(TAREA_NUEVA, task);
+        setResult(RESULT_OK, intent);
 
         finish();
     }

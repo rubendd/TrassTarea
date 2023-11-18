@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
+import com.rdd.trasstarea.activities.editTaskActivity.EditTaskActivity;
 import com.rdd.trasstarea.fragments.ComunicateFragments;
 import com.rdd.trasstarea.fragments.CreateSecondTaskFrag;
 import com.rdd.trasstarea.fragments.CreateTaskFragment;
@@ -25,8 +26,6 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
     public String DESCRIPTION = "";
 
 
-    private CreateTaskFragment createTaskFragment;
-    private CreateSecondTaskFrag createSecondTaskFrag;
     private ComunicateFragments comunicateFragments;
 
 
@@ -40,8 +39,7 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         setContentView(R.layout.main_create_task);
 
         comunicateFragments = new ViewModelProvider(this).get(ComunicateFragments.class);
-        createTaskFragment = new CreateTaskFragment();
-        createSecondTaskFrag = new CreateSecondTaskFrag();
+        CreateTaskFragment createTaskFragment = new CreateTaskFragment();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createTaskFragment).addToBackStack(null).commit();
 
@@ -58,13 +56,9 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
 
         Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2), Task.States.valueOf(STATE), DESCRIPTION);
 
-        if (task != null) {
-            Intent intent = new Intent();
-            intent.putExtra("tareaNueva", task);
-            setResult(RESULT_OK, intent);
-        } else {
-            setResult(RESULT_CANCELED); // Indica que la operación fue cancelada debido a un error
-        }
+        Intent intent = new Intent();
+        intent.putExtra(EditTaskActivity.TAREA_NUEVA, task);
+        setResult(RESULT_OK, intent);
 
         finish();
     }

@@ -32,7 +32,6 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     private CreateSecondTaskFrag createSecondTaskFrag;
 
     private Spinner spinner;
-    private Button cancelar, siguiente;
     private EditText titulo,date1,date2;
     private CheckBox prioritaria;
     private TextView text;
@@ -119,15 +118,9 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
                     // Actualiza la interfaz de usuario con el nuevo título
                     titulo.setText(nuevoTitulo);
                 });
-               compartirViewModel.getDate1().observe(getViewLifecycleOwner(), da -> {
-                   date1.setText(da);
-               });
-               compartirViewModel.getDate2().observe(getViewLifecycleOwner(), da -> {
-                   date2.setText(da);
-               });
-               compartirViewModel.getPrioritario().observe(getViewLifecycleOwner(), da -> {
-                   prioritaria.setChecked(da);
-               });
+               compartirViewModel.getDate1().observe(getViewLifecycleOwner(), da -> date1.setText(da));
+               compartirViewModel.getDate2().observe(getViewLifecycleOwner(), da -> date2.setText(da));
+               compartirViewModel.getPrioritario().observe(getViewLifecycleOwner(), da -> prioritaria.setChecked(da));
         }
     }
 
@@ -137,13 +130,13 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         date1 = fragmento1.findViewById(R.id.date1);
         date2 = fragmento1.findViewById(R.id.date2);
         spinner = fragmento1.findViewById(R.id.spinner);
-        cancelar = fragmento1.findViewById(R.id.cancelar);
-        siguiente = fragmento1.findViewById(R.id.siguiente);
+        Button cancelar = fragmento1.findViewById(R.id.cancelar);
+        Button siguiente = fragmento1.findViewById(R.id.siguiente);
         prioritaria = fragmento1.findViewById(R.id.prioritaria);
         text = fragmento1.findViewById(R.id.texto);
 
         siguiente.setOnClickListener(this::nextActivity);
-        cancelar.setOnClickListener(view -> getActivity().finish());
+        cancelar.setOnClickListener(view -> requireActivity().finish());
         spinner.setOnItemSelectedListener(this);
 
     }
@@ -152,7 +145,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     private void nextActivity(View view){
         if (nextPageCheck()) {
             sendData();
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createSecondTaskFrag, "CreateSecondTaskFrag").commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createSecondTaskFrag, "CreateSecondTaskFrag").commit();
         }
     }
 
@@ -191,7 +184,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     }
 
     private void initSpinner(){
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.progress, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

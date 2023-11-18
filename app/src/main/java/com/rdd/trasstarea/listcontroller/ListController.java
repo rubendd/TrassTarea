@@ -5,15 +5,12 @@ import com.rdd.trasstarea.model.Task;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ListController {
 
@@ -34,10 +31,9 @@ public class ListController {
 
 
     public static String calendarToText(Calendar calendar) {
-        Calendar cal = calendar;
         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yy");
 
-        return format1.format(cal.getTime());
+        return format1.format(calendar.getTime());
     }
 
     private void setListTareas() {

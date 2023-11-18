@@ -1,8 +1,6 @@
 package com.rdd.trasstarea.activities.listactivity.recycler;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -29,16 +27,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     private static IComunicator comunicator;
 
 
-    public static IComunicator getComunicator() {
-        return comunicator;
-    }
-
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextView titulo, fecha, tiempoRestante;
         private final ImageView prioritaria;
         private final ProgressBar duracion;
         private final View view;
-        private int position;
 
         public MyViewHolder(View view) {
             super(view);

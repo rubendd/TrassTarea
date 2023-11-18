@@ -1,19 +1,11 @@
 package com.rdd.trasstarea.model;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Objects;
 
 public class Task implements Serializable {
@@ -29,11 +21,6 @@ public class Task implements Serializable {
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
 
 
     public enum States{
@@ -100,9 +87,7 @@ public class Task implements Serializable {
             return fechasDiferencia();
     }
 
-    public void setDaysLeft(int daysLeft) {
-        this.daysLeft = daysLeft;
-    }
+
 
     public Calendar getDateEnd() {
         return dateEnd;

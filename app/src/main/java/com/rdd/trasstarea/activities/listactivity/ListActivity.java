@@ -6,8 +6,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -33,9 +31,13 @@ import com.rdd.trasstarea.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListActivity extends AppCompatActivity{
 
+    public static final String TASK_LIST = "taskList";
+    public static final String TAREA_NUEVA_ES_NULA = "Tarea nueva es nula";
+    public static final String EL_INTENT_ES_NULO = "El intent es nulo";
     private final ListController listController = new ListController();
     private final List<Task> listTareas = listController.getListTask();
     private View mensaje;
@@ -43,7 +45,7 @@ public class ListActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private int positionTask;
 
-    private IComunicator comunicator = new IComunicator() {
+    private final IComunicator comunicator = new IComunicator() {
         @Override
         public void deleteList(int position) {
             listTareas.remove(position);
@@ -90,13 +92,13 @@ public class ListActivity extends AppCompatActivity{
         super.onSaveInstanceState(outState);
         // Guardar si la lista está filtrada por favoritos
         outState.putBoolean("favorite", favorite);
-        outState.putSerializable("taskList", new ArrayList<>(listTareas));
+        outState.putSerializable(TASK_LIST, new ArrayList<>(listTareas));
     }
 
     private void saveData(Bundle savedInstanceState){
         if (savedInstanceState != null) {
             listTareas.clear(); // Limpia la lista actual antes de restaurar
-            List<Task> savedTaskList = (List<Task>) savedInstanceState.getSerializable("taskList");
+            List<Task> savedTaskList = (List<Task>) savedInstanceState.getSerializable(TASK_LIST);
             if (savedTaskList != null) {
                 listTareas.addAll(savedTaskList);
             }
@@ -151,12 +153,6 @@ public class ListActivity extends AppCompatActivity{
     }
 
 
-
-    private void cargarAnimacion() {
-        int resId = R.anim.fall_down; // Ruta al recurso de animación
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-        recyclerView.setLayoutAnimation(animation);
-    }
 
 
 
@@ -218,16 +214,16 @@ public class ListActivity extends AppCompatActivity{
             if (result.getResultCode() == RESULT_OK) {
                 Intent intentDevuelto = result.getData();
                 if (intentDevuelto != null) {
-                    Task task = (Task) intentDevuelto.getExtras().get("tareaNueva");
+                    Task task = (Task) Objects.requireNonNull(intentDevuelto.getExtras()).get(EditTaskActivity.TAREA_NUEVA);
                     if (task != null) {
                         createTask = task;
                         comunicator.createTask();
                     } else {
-                        Toast.makeText(ListActivity.this, "Tarea nueva es nula", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ListActivity.this, TAREA_NUEVA_ES_NULA, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     // Manejar el caso donde el Intent devuelto es nulo
-                    Toast.makeText(ListActivity.this, "El intent es nulo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListActivity.this, EL_INTENT_ES_NULO, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -240,18 +236,18 @@ public class ListActivity extends AppCompatActivity{
             if (result.getResultCode() == RESULT_OK) {
                 Intent intentDevuelto = result.getData();
                 if (intentDevuelto != null) {
-                    Task task = (Task) intentDevuelto.getExtras().get("tareaNueva");
+                    Task task = (Task) Objects.requireNonNull(intentDevuelto.getExtras()).get(EditTaskActivity.TAREA_NUEVA);
                     if (task != null) {
                         createTask = task;
                         listTareas.set(positionTask, createTask);
                         customAdapter.updateData(listTareas);
                         customAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(ListActivity.this, "Tarea nueva es nula", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ListActivity.this, TAREA_NUEVA_ES_NULA, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     // Manejar el caso donde el Intent devuelto es nulo
-                    Toast.makeText(ListActivity.this, "El intent es nulo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListActivity.this, EL_INTENT_ES_NULO, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -268,7 +264,7 @@ public class ListActivity extends AppCompatActivity{
     private void initEditTask(Task task){
         Intent intent = new Intent(this, EditTaskActivity.class);
         if (editTaskLauncher != null){
-            intent.putExtra("tareaEditar", task);
+            intent.putExtra(EditTaskActivity.TAREA_EDITAR, task);
             editTaskLauncher.launch(intent);
         }
     }
