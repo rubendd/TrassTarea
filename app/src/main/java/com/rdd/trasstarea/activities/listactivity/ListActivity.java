@@ -81,7 +81,7 @@ public class ListActivity extends AppCompatActivity{
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        //Configure
         saveData(savedInstanceState);
         lanzarMensajeNoTareas();
         configureRecyclerView();
