@@ -1,18 +1,15 @@
 package com.rdd.trasstarea.activities.listactivity.dialogs;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-
-import com.rdd.trasstarea.R;
 
 public class DeleteDialog extends DialogFragment {
 
     public interface DeleteDialogListener{
         void onPositiveBtn();
+        void  onNegativeBtn();
     }
 
     public void setDeleteDialogListener(DeleteDialogListener listener) {

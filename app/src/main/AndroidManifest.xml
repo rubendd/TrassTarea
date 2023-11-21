@@ -14,17 +14,22 @@
         tools:targetApi="s">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.rdd.trasstarea.activities.listactivity.ListActivity" />
+        <activity android:name="com.rdd.trasstarea.activities.listactivity.ListActivity"/>
         <activity android:name="com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity" />
         <activity android:name="com.rdd.trasstarea.activities.editTaskActivity.EditTaskActivity"
             android:windowSoftInputMode="adjustResize"/>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
     </application>
 

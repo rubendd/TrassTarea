@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
@@ -22,7 +23,7 @@ public class CreateSecondTaskFrag extends Fragment {
     private String date1;
     private final Task task = new Task();
     private EditText descripcion;
-    private Button btnCreateTask;
+    private LottieAnimationView btnCreateTask;
 
     private ComunicateFragments comunicateFragments;
 
@@ -50,14 +51,12 @@ public class CreateSecondTaskFrag extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         //Obtenemos una referencia del ViewModel
          comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
     }
 
     private void putDataTask(){
         if (comunicateFragments.getTaskLiveData().isInitialized()){
-            btnCreateTask.setText(R.string.confirmar);
             comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> descripcion.setText(task.getDescription()));
         }
     }

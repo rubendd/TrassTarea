@@ -15,8 +15,6 @@ import com.rdd.trasstarea.fragments.CreateTaskFragment;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
-import java.util.Calendar;
-
 public class CreateTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea{
 
 
@@ -61,7 +59,7 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2), Task.States.valueOf(STATE), DESCRIPTION, ListController.convertirFecha(String.valueOf(DATE1)));
 
         Intent intent = new Intent();
-        intent.putExtra(EditTaskActivity.TAREA_NUEVA, task);
+        intent.putExtra(EditTaskActivity.TAREA_NUEVA,task);
         setResult(RESULT_OK, intent);
 
         finish();

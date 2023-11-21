@@ -29,7 +29,6 @@ import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +38,7 @@ public class ListActivity extends AppCompatActivity{
     public static final String TAREA_NUEVA_ES_NULA = "Tarea nueva es nula";
     public static final String EL_INTENT_ES_NULO = "El intent es nulo";
     private final ListController listController = new ListController();
-    private final List<Task> listTareas = listController.getListTask();
+    private List<Task> listTareas = listController.getListTask();
     private View mensaje;
     private CustomAdapter customAdapter;
     private RecyclerView recyclerView;
@@ -65,10 +64,8 @@ public class ListActivity extends AppCompatActivity{
         public void editTask(Task task, int position) {
             positionTask = position;
             initEditTask(task);
-
         }
     };
-
 
     private Task createTask;
     private boolean favorite = false;
@@ -82,7 +79,6 @@ public class ListActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         //Configure
-        saveData(savedInstanceState);
         lanzarMensajeNoTareas();
         configureRecyclerView();
     }
@@ -92,19 +88,17 @@ public class ListActivity extends AppCompatActivity{
         super.onSaveInstanceState(outState);
         // Guardar si la lista está filtrada por favoritos
         outState.putBoolean("favorite", favorite);
-        outState.putSerializable(TASK_LIST, new ArrayList<>(listTareas));
+        //outState.putParcelableArrayList(TASK_LIST, (ArrayList<? extends Parcelable>) listTareas);
     }
 
-    private void saveData(Bundle savedInstanceState){
-        if (savedInstanceState != null) {
-            listTareas.clear(); // Limpia la lista actual antes de restaurar
-            List<Task> savedTaskList = (List<Task>) savedInstanceState.getSerializable(TASK_LIST);
-            if (savedTaskList != null) {
-                listTareas.addAll(savedTaskList);
-            }
-            checkFiltrado();
-        }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //listTareas = savedInstanceState.getParcelableArrayList(TASK_LIST);
     }
+
+
 
     /**
      * Este método se comunica con el viewholder para borrar la tarea mediante una interfaz.

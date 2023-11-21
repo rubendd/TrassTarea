@@ -1,6 +1,7 @@
 package com.rdd.trasstarea.activities.listactivity.recycler;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
+import com.rdd.trasstarea.activities.listactivity.dialogs.DeleteDialog;
 import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.model.Task;
 
@@ -25,7 +27,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     private final List<Task> tasksDataSet;
     private static IComunicator comunicator;
-
+    private boolean aceptar = false;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextView titulo, fecha, tiempoRestante;
@@ -45,18 +47,21 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
         public void bindTask(Task c) {
             titulo.setText(c.getTitulo());
-            if (c.isPrioritaria()) {
-                prioritaria.setImageResource(R.drawable.baseline_stars_24);
-            }
             fecha.setText(c.calendar());
             changeColorDaysLeft(c);
             tiempoRestante.setText(String.valueOf(c.getDaysLeft()));
             duracion.setProgress(c.getProgresState());
 
-            // Set click listener on the view
+            //Comprobaciones
+            if (c.getProgresState() == 100){
+                titulo.setPaintFlags(titulo.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+            if (c.isPrioritaria()) {
+                prioritaria.setImageResource(R.drawable.baseline_stars_24);
+            }
+
+            // Click listener
             view.setOnClickListener(v -> {
-                // Handle click event here
-                // You can perform an action or show a menu
                 showPopupMenu(v, c);
             });
         }
@@ -116,16 +121,31 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             if (item.getItemId() == R.id.delete) {
                 // Get the adapter position and pass it to the deleteList method
                 int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
-                CustomAdapter.comunicator.deleteList(position);
+                if (iniciarDelete(view)){
+                    CustomAdapter.comunicator.deleteList(position);
+                }
+
                 return true;
             }
             if (item.getItemId() == R.id.edit){
                 int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
-                CustomAdapter.comunicator.editTask(task, position);
+                    CustomAdapter.comunicator.editTask(task, position);
+
                 return true;
             }
             return false;
         });
         popup.show();
+    }
+
+
+    private static boolean iniciarDelete(View view){
+
+        DeleteDialog deleteDialog = new DeleteDialog();
+        boolean userAccepted = deleteDialog.showDelete(view.getContext());
+
+        return userAccepted;
+
+
     }
 }
