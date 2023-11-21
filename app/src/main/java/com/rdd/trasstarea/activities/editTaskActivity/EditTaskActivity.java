@@ -20,6 +20,7 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
     public static final String TAREA_EDITAR = "tareaEditar";
     public  String TITULO = "titulo";
     public   String DATE2 = "fecha2";
+    public   String DATE1 = "fecha1";
     public   String STATE = "estado";
     public  boolean PRIORITAIO = true;
 
@@ -47,12 +48,13 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
     @Override
     public void mandarTask() {
         TITULO = comunicateFragments.getTitulo().getValue();
+
         DATE2 = comunicateFragments.getDate2().getValue();
         STATE = comunicateFragments.getState().getValue();
         PRIORITAIO = Boolean.TRUE.equals(comunicateFragments.getPrioritario().getValue());
         DESCRIPTION = comunicateFragments.getDescription().getValue();
 
-        Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2), Task.States.valueOf(STATE), DESCRIPTION);
+        Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2), Task.States.valueOf(STATE), DESCRIPTION, ListController.convertirFecha(DATE1));
 
         Intent intent = new Intent();
         intent.putExtra(TAREA_NUEVA, task);

@@ -13,6 +13,7 @@ public class Task implements Serializable {
     private boolean prioritaria;
     private long daysLeft;
     private Calendar dateEnd;
+    private Calendar fechaInicio;
 
     private  int progresState;
 
@@ -28,13 +29,14 @@ public class Task implements Serializable {
     }
 
 
-    public Task(String titulo, boolean prioritaria, Calendar dateEnd, States state, String description) {
+    public Task(String titulo, boolean prioritaria, Calendar dateEnd, States state, String description, Calendar fechaInicio) {
         this.titulo = titulo;
         this.prioritaria = prioritaria;
         this.dateEnd = dateEnd;
         this.progresState = setStatesNumber(state);
         this.daysLeft = getDaysLeft();
         this.description = description;
+        this.fechaInicio = fechaInicio;
     }
 
 
@@ -87,7 +89,9 @@ public class Task implements Serializable {
             return fechasDiferencia();
     }
 
-
+    public Calendar getFechaInicio() {
+        return fechaInicio;
+    }
 
     public Calendar getDateEnd() {
         return dateEnd;
@@ -144,7 +148,7 @@ public class Task implements Serializable {
     }
 
     private String calendarToText() throws ParseException {
-        Calendar cal = getDateEnd();
+        Calendar cal = getFechaInicio();
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 
         return format1.format(cal.getTime());
