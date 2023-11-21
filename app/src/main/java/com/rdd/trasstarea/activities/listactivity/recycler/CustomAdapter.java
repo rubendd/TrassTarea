@@ -121,9 +121,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             if (item.getItemId() == R.id.delete) {
                 // Get the adapter position and pass it to the deleteList method
                 int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
-                if (iniciarDelete(view)){
+
                     CustomAdapter.comunicator.deleteList(position);
-                }
+
 
                 return true;
             }
