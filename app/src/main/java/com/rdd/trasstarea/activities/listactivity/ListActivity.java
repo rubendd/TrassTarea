@@ -2,8 +2,6 @@ package com.rdd.trasstarea.activities.listactivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,7 +30,6 @@ import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,6 +41,7 @@ public class ListActivity extends AppCompatActivity{
     private final ListController listController = new ListController();
     private List<Task> listTareas = listController.getListTask();
     private View mensaje;
+    private MenuItem item;
     private CustomAdapter customAdapter;
     private RecyclerView recyclerView;
     private int positionTask;
@@ -82,14 +80,15 @@ public class ListActivity extends AppCompatActivity{
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         //Configure
         lanzarMensajeNoTareas();
-        if(savedInstanceState == null) {
-            configureRecyclerView();
+        if (savedInstanceState != null){
+            configureSaveStance(savedInstanceState,toolbar);
         } else {
-            listTareas = (List<Task>) savedInstanceState.getSerializable(TASK_LIST);
             configureRecyclerView();
         }
+
 
     }
 
@@ -99,6 +98,9 @@ public class ListActivity extends AppCompatActivity{
         // Guardar si la lista está filtrada por favoritos
         outState.putBoolean("favorite", favorite);
         outState.putSerializable(TASK_LIST, (Serializable) listTareas);
+        // Guardar el resource del icono
+        int iconResource = favorite ? R.drawable.baseline_stars_24 : R.drawable.baseline_stars_24_black;
+        outState.putInt("iconResource", iconResource);
     }
 
 
@@ -106,7 +108,9 @@ public class ListActivity extends AppCompatActivity{
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        favorite = savedInstanceState.getBoolean("favorite");
     }
+
 
 
 
@@ -114,6 +118,16 @@ public class ListActivity extends AppCompatActivity{
      * Este método se comunica con el viewholder para borrar la tarea mediante una interfaz.
      */
 
+
+    private void configureSaveStance(Bundle savedInstanceState, Toolbar toolbar){
+            // Restaurar el estado de la variable 'favorite'
+            favorite = savedInstanceState.getBoolean("favorite");
+            listTareas = (List<Task>) savedInstanceState.getSerializable(TASK_LIST);
+            configureRecyclerView();
+            if (favorite){
+                filtrarFavoritos();
+            }
+    }
 
 
     private void configureRecyclerView() {
@@ -125,25 +139,16 @@ public class ListActivity extends AppCompatActivity{
 
         //TODO Cargar animacion
         // cargarAnimacion();
-        initialList();
+        setearLista();
 
     }
 
 
 
-    private void initialList(){
+    private void setearLista(){
         customAdapter = new CustomAdapter(listTareas, comunicator);
         recyclerView.setAdapter(customAdapter);
     }
-
-
-
-    private void filtrarFavoritos(){
-        List<Task> filteredList = listController.filtarLista();
-        customAdapter.updateData(filteredList);
-        customAdapter.notifyDataSetChanged();
-    }
-
 
 
 
@@ -162,9 +167,11 @@ public class ListActivity extends AppCompatActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Infla el menú de la barra de herramientas usando el archivo de recursos toolbarmenu.xml
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbarmenu, menu);
-        return true; // Indica que el menú ha sido creado exitosamente
+        getMenuInflater().inflate(R.menu.toolbarmenu, menu);
+        item = menu.findItem(R.id.action_favorite);
+        int iconResource = favorite ? R.drawable.baseline_stars_24 : R.drawable.baseline_stars_24_black;
+        item.setIcon(iconResource);
+        return true;
     }
 
 
@@ -192,12 +199,14 @@ public class ListActivity extends AppCompatActivity{
     }
 
 
-    private void filtrarRecycler(@NonNull MenuItem item){
+    private void filtrarRecycler(MenuItem item){
         checkFiltrado();
         // Cambiar el icono del botón según el estado actual de la variable de bandera
         int iconResource = favorite ? R.drawable.baseline_stars_24 : R.drawable.baseline_stars_24_black;
         item.setIcon(iconResource);
+
     }
+
 
     private void checkFiltrado(){
         // Cambiar el estado de la variable de bandera
@@ -205,11 +214,19 @@ public class ListActivity extends AppCompatActivity{
 
         // Realizar acciones según el estado actual de la variable favorite
         if (!favorite) {
-            initialList();
+            setearLista();
         } else {
             filtrarFavoritos();
         }
     }
+
+    private void filtrarFavoritos(){
+        List<Task> filteredList = listController.filtarLista();
+        customAdapter.updateData(filteredList);
+        customAdapter.notifyDataSetChanged();
+
+    }
+
 
     ActivityResultLauncher<Intent> createTaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override

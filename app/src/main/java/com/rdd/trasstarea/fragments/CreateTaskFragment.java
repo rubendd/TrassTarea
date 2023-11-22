@@ -52,6 +52,12 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
 
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createSecondTaskFrag = new CreateSecondTaskFrag();
@@ -69,6 +75,14 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         putDataTask();
         recuperarDatos();
         return fragmento1;
+    }
+
+    private void addDatosDelBundle(Bundle savedInstance){
+        titulo.setText(savedInstance.getString("titulo"));
+        date1.setText(savedInstance.getString("date1"));
+        date2.setText(savedInstance.getString("date2"));
+        prioritaria.setChecked(savedInstance.getBoolean("prioritaria"));
+
     }
 
 

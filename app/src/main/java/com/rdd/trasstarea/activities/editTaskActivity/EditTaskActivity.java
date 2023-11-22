@@ -41,10 +41,11 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
         CreateTaskFragment createTaskFragment = new CreateTaskFragment();
 
         if (savedInstanceState == null){
-            editTask = (Task) getIntent().getSerializableExtra(TAREA_EDITAR);
-        } else {
-            editTask = (Task) savedInstanceState.getSerializable("task");
+                editTask = (Task) getIntent().getSerializableExtra(TAREA_EDITAR);
         }
+
+
+
 
         comunicateFragments.setTask(editTask);
 
@@ -59,7 +60,11 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
         outState.putSerializable("task", editTask);
     }
 
-
+    @Override
+    public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+        editTask = (Task) savedInstanceState.getSerializable("task");
+    }
 
     @Override
     public void mandarTask() {
