@@ -63,7 +63,6 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         View fragmento1 = inflater.inflate(R.layout.create_task, container, false);
 
         //Configure
-        saveData(savedInstanceState);
         initComponents(fragmento1);
         initSpinner();
         onClickDate();
@@ -73,7 +72,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     }
 
 
-    private void saveData(Bundle savedInstanceState){
+   /* private void saveData(Bundle savedInstanceState){
         // Restaurar datos si hay un estado guardado
         if (savedInstanceState != null) {
             titulo.setText(savedInstanceState.getString("titulo", ""));
@@ -86,7 +85,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
             int position = Arrays.asList(getResources().getStringArray(R.array.progress)).indexOf(select);
             spinner.setSelection(position);
         }
-    }
+    }*/
 
     private void putDataTask(){
         if (compartirViewModel.getTaskLiveData().isInitialized()){

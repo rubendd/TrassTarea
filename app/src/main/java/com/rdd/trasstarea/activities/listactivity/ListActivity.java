@@ -2,6 +2,8 @@ package com.rdd.trasstarea.activities.listactivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +31,8 @@ import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -80,7 +84,13 @@ public class ListActivity extends AppCompatActivity{
 
         //Configure
         lanzarMensajeNoTareas();
-        configureRecyclerView();
+        if(savedInstanceState == null) {
+            configureRecyclerView();
+        } else {
+            listTareas = (List<Task>) savedInstanceState.getSerializable(TASK_LIST);
+            configureRecyclerView();
+        }
+
     }
 
     @Override
@@ -88,14 +98,14 @@ public class ListActivity extends AppCompatActivity{
         super.onSaveInstanceState(outState);
         // Guardar si la lista está filtrada por favoritos
         outState.putBoolean("favorite", favorite);
-        //outState.putParcelableArrayList(TASK_LIST, (ArrayList<? extends Parcelable>) listTareas);
+        outState.putSerializable(TASK_LIST, (Serializable) listTareas);
     }
+
 
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        //listTareas = savedInstanceState.getParcelableArrayList(TASK_LIST);
     }
 
 
@@ -115,7 +125,6 @@ public class ListActivity extends AppCompatActivity{
 
         //TODO Cargar animacion
         // cargarAnimacion();
-
         initialList();
 
     }

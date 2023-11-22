@@ -2,7 +2,9 @@ package com.rdd.trasstarea.activities.editTaskActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,6 +30,7 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
 
 
     private ComunicateFragments comunicateFragments;
+     private Task editTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,13 +40,26 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
         comunicateFragments = new ViewModelProvider(this).get(ComunicateFragments.class);
         CreateTaskFragment createTaskFragment = new CreateTaskFragment();
 
+        if (savedInstanceState == null){
+            editTask = (Task) getIntent().getSerializableExtra(TAREA_EDITAR);
+        } else {
+            editTask = (Task) savedInstanceState.getSerializable("task");
+        }
 
-        Task editTask = (Task) getIntent().getSerializableExtra(TAREA_EDITAR);
         comunicateFragments.setTask(editTask);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createTaskFragment).addToBackStack(null).commit();
 
     }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putSerializable("task", editTask);
+    }
+
+
 
     @Override
     public void mandarTask() {
