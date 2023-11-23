@@ -23,9 +23,13 @@
             </intent-filter>
         </activity>
         <activity android:name="com.rdd.trasstarea.activities.listactivity.ListActivity"/>
-        <activity android:name="com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity" />
+        <activity android:name="com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity"
+            android:screenOrientation="portrait"
+            />
         <activity android:name="com.rdd.trasstarea.activities.editTaskActivity.EditTaskActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            />
 
         <meta-data
             android:name="preloaded_fonts"

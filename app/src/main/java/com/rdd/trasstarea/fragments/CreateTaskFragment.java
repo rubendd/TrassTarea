@@ -43,19 +43,25 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("titulo", titulo.getText().toString());
-        outState.putString("date1", date1.getText().toString());
-        outState.putString("date2", date2.getText().toString());
-        outState.putBoolean("prioritaria", prioritaria.isChecked());
-        outState.putString("select", select);
+
+        if (compartirViewModel.getTaskLiveData().isInitialized()){
+            text.setText("Editar tarea");
+            compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
+                if (task != null) {
+                    titulo.setText(task.getTitulo());
+                    date1.setText(ListController.calendarToText(Calendar.getInstance()));
+                    date2.setText(ListController.calendarToText(task.getDateEnd()));
+                    prioritaria.setChecked(task.isPrioritaria());
+                    obtenerState(task);
+                    outState.putSerializable("task", task);
+                }
+            });
+        }
+
     }
 
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
 
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,16 +78,26 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         initComponents(fragmento1);
         initSpinner();
         onClickDate();
-        putDataTask();
-        recuperarDatos();
+        if (savedInstanceState != null) {
+            addDatosDelBundle(savedInstanceState);
+        } else {
+            putDataTask();
+            recuperarDatos();
+        }
         return fragmento1;
     }
 
     private void addDatosDelBundle(Bundle savedInstance){
-        titulo.setText(savedInstance.getString("titulo"));
-        date1.setText(savedInstance.getString("date1"));
-        date2.setText(savedInstance.getString("date2"));
-        prioritaria.setChecked(savedInstance.getBoolean("prioritaria"));
+        // Retrieve the Task object directly
+        Task task = (Task) savedInstance.getSerializable("task");
+
+        if (task != null) {
+            titulo.setText(task.getTitulo());
+            date1.setText(ListController.calendarToText(task.getFechaInicio()));
+            date2.setText(ListController.calendarToText(task.getDateEnd()));
+            prioritaria.setChecked(task.isPrioritaria());
+            obtenerState(task);
+        }
 
     }
 
@@ -105,11 +121,13 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         if (compartirViewModel.getTaskLiveData().isInitialized()){
             text.setText("Editar tarea");
             compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
-                titulo.setText(task.getTitulo());
-                date1.setText(ListController.calendarToText(Calendar.getInstance()));
-                date2.setText(ListController.calendarToText(task.getDateEnd()));
-                prioritaria.setChecked(task.isPrioritaria());
-                obtenerState(task);
+                if (task != null) {
+                    titulo.setText(task.getTitulo());
+                    date1.setText(ListController.calendarToText(Calendar.getInstance()));
+                    date2.setText(ListController.calendarToText(task.getDateEnd()));
+                    prioritaria.setChecked(task.isPrioritaria());
+                    obtenerState(task);
+                }
             });
         }
     }
@@ -138,6 +156,8 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     }
 
 
+
+
     private void initComponents(View fragmento1){
         titulo = fragmento1.findViewById(R.id.tituloAdd);
         date1 = fragmento1.findViewById(R.id.date1);
@@ -158,7 +178,12 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     private void nextActivity(View view){
         if (nextPageCheck()) {
             sendData();
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createSecondTaskFrag, "CreateSecondTaskFrag").commit();
+            if (requireActivity().getSupportFragmentManager().findFragmentByTag("CreateSecond") == null) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.main_task_create, createSecondTaskFrag, "CreateSecond")
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     }
 

@@ -3,7 +3,6 @@ package com.rdd.trasstarea.activities.listactivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -52,7 +51,6 @@ public class ListActivity extends AppCompatActivity{
             listTareas.remove(position);
             customAdapter.updateData(listTareas);
             customAdapter.notifyItemRemoved(position);
-            lanzarMensajeNoTareas();
         }
 
         @Override
@@ -82,13 +80,12 @@ public class ListActivity extends AppCompatActivity{
 
 
         //Configure
-        lanzarMensajeNoTareas();
         if (savedInstanceState != null){
             configureSaveStance(savedInstanceState,toolbar);
         } else {
             configureRecyclerView();
         }
-
+        lanzarMensajeNoTareas();
 
     }
 
@@ -153,7 +150,7 @@ public class ListActivity extends AppCompatActivity{
 
 
     private void lanzarMensajeNoTareas() {
-        if (listTareas.isEmpty()) {
+        if (customAdapter.getTasksDataSet().isEmpty()) {
             mensaje.setVisibility(View.VISIBLE);
         } else {
             mensaje.setVisibility(View.INVISIBLE);
@@ -208,71 +205,73 @@ public class ListActivity extends AppCompatActivity{
     }
 
 
-    private void checkFiltrado(){
+    private void checkFiltrado() {
         // Cambiar el estado de la variable de bandera
         favorite = !favorite;
 
         // Realizar acciones según el estado actual de la variable favorite
         if (!favorite) {
             setearLista();
+            lanzarMensajeNoTareas();
         } else {
             filtrarFavoritos();
         }
     }
 
-    private void filtrarFavoritos(){
+    private void filtrarFavoritos() {
         List<Task> filteredList = listController.filtarLista();
         customAdapter.updateData(filteredList);
         customAdapter.notifyDataSetChanged();
-
+        lanzarMensajeNoTareas();
     }
 
-
-    ActivityResultLauncher<Intent> createTaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == RESULT_OK) {
-                Intent intentDevuelto = result.getData();
-                if (intentDevuelto != null) {
-                    Task task = (Task) Objects.requireNonNull(intentDevuelto.getExtras()).get(EditTaskActivity.TAREA_NUEVA);
-                    if (task != null) {
-                        createTask = task;
-                        comunicator.createTask();
-                    } else {
-                        Toast.makeText(ListActivity.this, TAREA_NUEVA_ES_NULA, Toast.LENGTH_SHORT).show();
+    ActivityResultLauncher<Intent> createTaskLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent intentDevuelto = result.getData();
+                        if (intentDevuelto != null) {
+                            Task task = (Task) Objects.requireNonNull(intentDevuelto.getExtras()).get(EditTaskActivity.TAREA_NUEVA);
+                            if (task != null) {
+                                createTask = task;
+                                comunicator.createTask();
+                            } else {
+                                Toast.makeText(ListActivity.this, TAREA_NUEVA_ES_NULA, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // Manejar el caso donde el Intent devuelto es nulo
+                            Toast.makeText(ListActivity.this, EL_INTENT_ES_NULO, Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    // Manejar el caso donde el Intent devuelto es nulo
-                    Toast.makeText(ListActivity.this, EL_INTENT_ES_NULO, Toast.LENGTH_SHORT).show();
                 }
-            }
-        }
-    });
+            });
 
-
-    ActivityResultLauncher<Intent> editTaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == RESULT_OK) {
-                Intent intentDevuelto = result.getData();
-                if (intentDevuelto != null) {
-                    Task task = (Task) Objects.requireNonNull(intentDevuelto.getExtras()).get(EditTaskActivity.TAREA_NUEVA);
-                    if (task != null) {
-                        createTask = task;
-                        listTareas.set(positionTask, createTask);
-                        customAdapter.updateData(listTareas);
-                        customAdapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(ListActivity.this, TAREA_NUEVA_ES_NULA, Toast.LENGTH_SHORT).show();
+    ActivityResultLauncher<Intent> editTaskLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent intentDevuelto = result.getData();
+                        if (intentDevuelto != null) {
+                            Task task = (Task) Objects.requireNonNull(intentDevuelto.getExtras()).get(EditTaskActivity.TAREA_NUEVA);
+                            if (task != null) {
+                                createTask = task;
+                                listTareas.set(positionTask, createTask);
+                                customAdapter.updateData(listTareas);
+                                customAdapter.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(ListActivity.this, TAREA_NUEVA_ES_NULA, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // Manejar el caso donde el Intent devuelto es nulo
+                            Toast.makeText(ListActivity.this, EL_INTENT_ES_NULO, Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    // Manejar el caso donde el Intent devuelto es nulo
-                    Toast.makeText(ListActivity.this, EL_INTENT_ES_NULO, Toast.LENGTH_SHORT).show();
                 }
-            }
-        }
-    });
-
+            });
 
     private void initCreateTask() {
         Intent intent = new Intent(this, CreateTaskActivity.class);
@@ -281,13 +280,11 @@ public class ListActivity extends AppCompatActivity{
         }
     }
 
-    private void initEditTask(Task task){
+    private void initEditTask(Task task) {
         Intent intent = new Intent(this, EditTaskActivity.class);
-        if (editTaskLauncher != null){
+        if (editTaskLauncher != null) {
             intent.putExtra(EditTaskActivity.TAREA_EDITAR, task);
             editTaskLauncher.launch(intent);
         }
     }
-
-
 }

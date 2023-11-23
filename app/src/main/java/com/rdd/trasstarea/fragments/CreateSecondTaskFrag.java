@@ -21,7 +21,7 @@ import com.rdd.trasstarea.model.Task;
 public class CreateSecondTaskFrag extends Fragment {
 
     private String date1;
-    private final Task task = new Task();
+    private Task task = new Task();
     private EditText descripcion;
     private LottieAnimationView btnCreateTask;
 
@@ -45,6 +45,7 @@ public class CreateSecondTaskFrag extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable("tarea", task);
     }
 
     @Override
@@ -61,15 +62,23 @@ public class CreateSecondTaskFrag extends Fragment {
         }
     }
 
+    private void recibirTask(){
+        if (comunicateFragments.getTaskLiveData().isInitialized()){
+            comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> this.task = task);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmento2 = inflater.inflate(R.layout.create_task2, container, false);
 
-
-
         initComponents(fragmento2);
-        putDataTask();
-        recuperarDatos();
+        if (savedInstanceState != null) {
+            recibirTask();
+        } else {
+            putDataTask();
+            recuperarDatos();
+        }
         return fragmento2;
     }
 
@@ -113,6 +122,5 @@ public class CreateSecondTaskFrag extends Fragment {
     private void sendData(){
         comunicateFragments.setDescription(descripcion.getText().toString());
     }
-
 
 }

@@ -27,7 +27,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     private final List<Task> tasksDataSet;
     private static IComunicator comunicator;
-    private boolean aceptar = false;
+    private final boolean aceptar = false;
+
+    public List<Task> getTasksDataSet() {
+        return tasksDataSet;
+    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextView titulo, fecha, tiempoRestante;
@@ -121,10 +125,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             if (item.getItemId() == R.id.delete) {
                 // Get the adapter position and pass it to the deleteList method
                 int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
-
                     CustomAdapter.comunicator.deleteList(position);
-
-
                 return true;
             }
             if (item.getItemId() == R.id.edit){

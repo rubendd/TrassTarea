@@ -44,13 +44,14 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
                 editTask = (Task) getIntent().getSerializableExtra(TAREA_EDITAR);
         }
 
-
-
-
         comunicateFragments.setTask(editTask);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createTaskFragment).addToBackStack(null).commit();
-
+        if (getSupportFragmentManager().findFragmentByTag("CreateTaskFragmentTag") == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_task_create, createTaskFragment, "CreateTaskFragmentTag")
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
 

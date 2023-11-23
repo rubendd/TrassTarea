@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TrassTask</string>
+    <string name="empezar">Start</string>
+    <string name="tus_tareas_tu_ritmo_tu_xito">Your tasks, your pace, your success.</string>
+    <string name="icono_de_la_aplicacion">App Icon</string>
+    <string name="todo">TODO</string>
+    <string name="d_as">days</string>
+    <string name="quedan">Remaining:</string>
+    <string name="titulo">Title</string>
+    <string name="fecha">00/00/00</string>
+    <string name="dias">00</string>
+    <string name="notareas">No tasks available, my friend</string>
+    <string name="action_settings">Exit</string>
+    <string name="action_favorite">Favorite\n</string>
+    <string name="action_acercade">About\n</string>
+    <string name="add_tarea">Add Task</string>
+    <string name="aceptar">Accept</string>
+    <string name="salir">Exit</string>
+    <string name="cancelar">Cancel</string>
+    <string name="Descripcion">Description\n</string>
+    <string name="edit">Edit\n</string>
+    <string name="borrar">Delete\n</string>
+    <string name="add_task">Add Task</string>
+    <string name="prioritaria">Priority?</string>
+    <string name="siguiente">Next</string>
+    <string name="fechacreacion">Creation Date</string>
+    <string name="fecha_objetivo">Due Date</string>
+    <string name="hintDescription">Write the description here…</string>
+    <string name="volver">Back</string>
+    <string name="crear_tarea">Create Task</string>
+    <string name="confirmar">Confirm</string>
+</resources>

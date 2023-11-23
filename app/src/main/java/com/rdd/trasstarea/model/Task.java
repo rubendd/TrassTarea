@@ -93,6 +93,22 @@ public class Task implements Serializable {
         return fechaInicio;
     }
 
+    public void setFechaInicio(Calendar fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDaysLeft(long daysLeft) {
+        this.daysLeft = daysLeft;
+    }
+
+    public void setProgresState(int progresState) {
+        this.progresState = progresState;
+    }
+
     public Calendar getDateEnd() {
         return dateEnd;
     }

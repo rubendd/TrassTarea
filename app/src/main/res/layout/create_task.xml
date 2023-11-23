@@ -106,8 +106,8 @@
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="217dp"
-            android:layout_marginStart="110dp"
             android:layout_height="48dp"
+            android:layout_marginStart="110dp"
             android:layout_marginTop="50dp" />
 
         <CheckBox
