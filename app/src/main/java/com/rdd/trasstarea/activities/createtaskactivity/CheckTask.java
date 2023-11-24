@@ -2,9 +2,12 @@ package com.rdd.trasstarea.activities.createtaskactivity;
 
 import android.widget.EditText;
 
+/**
+ * Clase que contiene métodos estático reutilizables
+ */
 public class CheckTask {
 
-
+    //Comprobar campos
     public static boolean checkEditText(EditText editText){
         String texto = editText.getText().toString();
         String titulo = "Título";

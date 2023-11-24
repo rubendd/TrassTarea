@@ -17,61 +17,70 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
-
 public class CreateSecondTaskFrag extends Fragment {
 
-    private String date1;
-    private Task task = new Task();
-    private EditText descripcion;
-    private LottieAnimationView btnCreateTask;
+    // Variables de instancia
+    private String date1;  // Variable para almacenar la fecha 1
+    private Task task = new Task();  // Instancia de la clase Task para almacenar datos de la tarea
+    private EditText descripcion;  // Campo de texto para la descripción de la tarea
+    private LottieAnimationView btnCreateTask;  // Vista de animación para el botón de crear tarea
 
-    private ComunicateFragments comunicateFragments;
+    private ComunicateFragments comunicateFragments;  // ViewModel compartido entre fragmentos
 
-
-    public interface mandarTarea{
+    // Interfaz para la comunicación con la actividad contenedora
+    public interface mandarTarea {
         void mandarTask();
     }
 
-    private mandarTarea comunicador;
+    private mandarTarea comunicador;  // Objeto que implementa la interfaz de comunicación
 
+    // Método llamado cuando el fragmento se adjunta a la actividad
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof mandarTarea){
+
+        // Verifica si la actividad implementa la interfaz de comunicación
+        if (context instanceof mandarTarea) {
             comunicador = (mandarTarea) context;
         }
     }
 
+    // Método llamado para guardar el estado del fragmento antes de ser destruido y recreado
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("tarea", task);
+        outState.putSerializable("tarea", task);  // Guarda la tarea en el Bundle
     }
 
+    // Método llamado al crear el fragmento
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Obtenemos una referencia del ViewModel
-         comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
+        // Obtiene una referencia del ViewModel compartido
+        comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
     }
 
-    private void putDataTask(){
-        if (comunicateFragments.getTaskLiveData().isInitialized()){
+    // Método para obtener datos de la tarea y actualizar la interfaz de usuario
+    private void putDataTask() {
+        if (comunicateFragments.getTaskLiveData().isInitialized()) {
             comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> descripcion.setText(task.getDescription()));
         }
     }
 
-    private void recibirTask(){
-        if (comunicateFragments.getTaskLiveData().isInitialized()){
+    // Método para recibir datos de la tarea
+    private void recibirTask() {
+        if (comunicateFragments.getTaskLiveData().isInitialized()) {
             comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> this.task = task);
         }
     }
 
+    // Método llamado para crear la vista del fragmento
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmento2 = inflater.inflate(R.layout.create_task2, container, false);
 
+        // Inicializa los componentes y maneja los datos
         initComponents(fragmento2);
         if (savedInstanceState != null) {
             recibirTask();
@@ -82,7 +91,8 @@ public class CreateSecondTaskFrag extends Fragment {
         return fragmento2;
     }
 
-    private void initComponents(View fragmento2){
+    // Método para inicializar los componentes de la interfaz de usuario
+    private void initComponents(View fragmento2) {
         descripcion = fragmento2.findViewById(R.id.editTextDescription);
         Button btnSalir = fragmento2.findViewById(R.id.back);
         btnCreateTask = fragmento2.findViewById(R.id.create);
@@ -93,6 +103,7 @@ public class CreateSecondTaskFrag extends Fragment {
         });
     }
 
+    // Método llamado al hacer clic en el botón para volver al fragmento anterior
     private void backFragment(View view) {
         // Intenta encontrar la instancia existente del CreateTaskFragment por su tag
         CreateTaskFragment existingFragment = (CreateTaskFragment) requireActivity().getSupportFragmentManager().findFragmentByTag("CreateTaskFragment");
@@ -102,11 +113,12 @@ public class CreateSecondTaskFrag extends Fragment {
             existingFragment = new CreateTaskFragment();
         }
 
+        // Reemplaza el fragmento actual con el fragmento anterior y lo agrega a la pila de retroceso
         requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, existingFragment, "CreateTaskFragment").commit();
     }
 
-
-    private void recuperarDatos(){
+    // Método para recuperar datos del ViewModel compartido
+    private void recuperarDatos() {
         if (comunicateFragments.getTitulo().isInitialized()) {
             comunicateFragments.getTitulo().observe(getViewLifecycleOwner(), task::setTitulo);
             comunicateFragments.getDate1().observe(getViewLifecycleOwner(), da -> {
@@ -119,8 +131,8 @@ public class CreateSecondTaskFrag extends Fragment {
         }
     }
 
-    private void sendData(){
+    // Método para enviar datos al ViewModel compartido
+    private void sendData() {
         comunicateFragments.setDescription(descripcion.getText().toString());
     }
-
 }

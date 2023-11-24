@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.rdd.trasstarea.model.Task;
 
+/**
+ * ViewModel
+ */
 public class ComunicateFragments extends ViewModel {
 
     private final MutableLiveData<Task> taskLiveData = new MutableLiveData<>();
