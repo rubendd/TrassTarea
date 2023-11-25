@@ -33,6 +33,8 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     private EditText titulo, date1, date2;
     private CheckBox prioritaria;
     private TextView text;
+
+
     String select;  // Variable para almacenar la selección del Spinner
 
     // Constructor por defecto del fragmento
@@ -68,6 +70,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         super.onCreate(savedInstanceState);
         createSecondTaskFrag = new CreateSecondTaskFrag();
         compartirViewModel = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
+
     }
 
     // Método llamado para crear la vista del fragmento
@@ -170,11 +173,23 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
 
     // Método para enviar datos al ViewModel compartido
     private void sendData() {
+
+        //Crear
         compartirViewModel.setTitulo(titulo.getText().toString());
         compartirViewModel.setDate2(date2.getText().toString());
         compartirViewModel.setDate1(date1.getText().toString());
         compartirViewModel.setState(select);
         compartirViewModel.setPrioritario(prioritaria.isChecked());
+
+        //Editar
+        compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task1 -> {
+            task1.setTitulo(titulo.getText().toString());
+            task1.setFechaInicio(ListController.convertirFecha(date1.getText().toString()));
+            task1.setDateEnd(ListController.convertirFecha(date2.getText().toString()));
+            task1.setStatesNumber(Task.States.valueOf(select));
+            task1.setPrioritaria(prioritaria.isChecked());
+        });
+
     }
 
     // Método para verificar si los campos obligatorios están completos antes de pasar a la siguiente página

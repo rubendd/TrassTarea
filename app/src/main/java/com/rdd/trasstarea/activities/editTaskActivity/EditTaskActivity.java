@@ -13,7 +13,6 @@ import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.fragments.ComunicateFragments;
 import com.rdd.trasstarea.fragments.CreateSecondTaskFrag;
 import com.rdd.trasstarea.fragments.CreateTaskFragment;
-import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
 public class EditTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea {
@@ -21,13 +20,7 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
     // Definición de constantes y variables de clase
     public static final String TAREA_NUEVA = "tareaNueva";
     public static final String TAREA_EDITAR = "tareaEditar";
-    public String TITULO;
-    public String DATE2;
-    public String DATE1;
-    public String STATE;
-    public boolean PRIORITAIO;
     public String DESCRIPTION;
-
     // Variables de instancia
     private ComunicateFragments comunicateFragments;
     private Task editTask;
@@ -68,27 +61,26 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
     @Override
     public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
-        editTask = (Task) savedInstanceState.getSerializable("task");
+        if (savedInstanceState != null) {
+            editTask = (Task) savedInstanceState.getSerializable("task");
+        }
     }
 
     // Implementación del método de la interfaz para enviar la tarea creada o editada
     @Override
     public void mandarTask() {
         // Obtiene los valores del formulario a través del ViewModel
-        TITULO = comunicateFragments.getTitulo().getValue();
-        DATE2 = comunicateFragments.getDate2().getValue();
-        STATE = comunicateFragments.getState().getValue();
-        PRIORITAIO = Boolean.TRUE.equals(comunicateFragments.getPrioritario().getValue());
         DESCRIPTION = comunicateFragments.getDescription().getValue();
+        // Crea una nueva tarea
+        editTask = comunicateFragments.getTaskLiveData().getValue();
 
-        // Crea una nueva tarea con los valores proporcionados
-        Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2),
-                Task.States.valueOf(STATE), DESCRIPTION, ListController.convertirFecha(String.valueOf(DATE1)));
-
+        if (editTask != null) {
+            editTask.setDescription(DESCRIPTION);
+        }
 
         // Prepara la intención para devolver la tarea al fragmento anterior
         Intent intent = new Intent();
-        intent.putExtra(TAREA_NUEVA, task);
+        intent.putExtra(TAREA_NUEVA, editTask);
         setResult(RESULT_OK, intent);
 
         // Finaliza la actividad

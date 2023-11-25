@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -31,6 +30,7 @@ import com.rdd.trasstarea.model.Task;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -43,6 +43,7 @@ public class ListActivity extends AppCompatActivity {
     private final ListController listController = new ListController();
 
     // Lista de tareas y otros miembros de la actividad
+
     private List<Task> listTareas = listController.getListTask();
     private View mensaje;
     private MenuItem item;
@@ -62,6 +63,9 @@ public class ListActivity extends AppCompatActivity {
             listTareas.remove(position);
             customAdapter.updateData(listTareas);
             customAdapter.notifyItemRemoved(position);
+            if (favorite) {
+                filtrarFavoritos();
+            }
             lanzarMensajeNoTareas();
         }
 
@@ -71,6 +75,9 @@ public class ListActivity extends AppCompatActivity {
             listTareas.add(createTask);
             customAdapter.updateData(listTareas);
             customAdapter.notifyItemInserted(customAdapter.getItemCount());
+            if (favorite) {
+                filtrarFavoritos();
+            }
             lanzarMensajeNoTareas();
         }
 
@@ -94,7 +101,7 @@ public class ListActivity extends AppCompatActivity {
 
         // Configurar la actividad
         if (savedInstanceState != null){
-            configureSaveStance(savedInstanceState, toolbar);
+            configureSaveStance(savedInstanceState);
         } else {
             configureRecyclerView();
         }
@@ -122,7 +129,7 @@ public class ListActivity extends AppCompatActivity {
     /**
      * Este método se comunica con el viewholder para borrar la tarea mediante una interfaz.
      */
-    private void configureSaveStance(Bundle savedInstanceState, Toolbar toolbar) {
+    private void configureSaveStance(Bundle savedInstanceState) {
         // Restaurar el estado de la variable 'favorite'
         favorite = savedInstanceState.getBoolean("favorite");
         // Restaurar la lista de tareas y configurar el RecyclerView
@@ -215,7 +222,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void filtrarFavoritos() {
         // Filtrar la lista por favoritos y actualizar el adaptador
-        List<Task> filteredList = listController.filtarLista();
+        List<Task> filteredList = listTareas.stream().filter(Task::isPrioritaria).collect(Collectors.toList());
         customAdapter.updateData(filteredList);
         customAdapter.notifyDataSetChanged();
         lanzarMensajeNoTareas();
@@ -224,25 +231,19 @@ public class ListActivity extends AppCompatActivity {
     // Lanzadores de actividades para crear y editar tareas
     ActivityResultLauncher<Intent> createTaskLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    // Manejar el resultado de la creación de la tarea
-                    if (result.getResultCode() == RESULT_OK) {
-                        handleTaskCreationResult(result);
-                    }
+            result -> {
+                // Manejar el resultado de la creación de la tarea
+                if (result.getResultCode() == RESULT_OK) {
+                    handleTaskCreationResult(result);
                 }
             });
 
     ActivityResultLauncher<Intent> editTaskLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    // Manejar el resultado de la edición de la tarea
-                    if (result.getResultCode() == RESULT_OK) {
-                        handleTaskEditResult(result);
-                    }
+            result -> {
+                // Manejar el resultado de la edición de la tarea
+                if (result.getResultCode() == RESULT_OK) {
+                    handleTaskEditResult(result);
                 }
             });
 
@@ -264,7 +265,7 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-    private void handleTaskEditResult(ActivityResult result) {
+    private void handleTaskEditResult(@NonNull ActivityResult result) {
         // Obtener la tarea editada del Intent devuelto
         Intent intentDevuelto = result.getData();
         if (intentDevuelto != null) {
@@ -274,9 +275,10 @@ public class ListActivity extends AppCompatActivity {
                 createTask = task;
                 listTareas.set(positionTask, createTask);
                 customAdapter.updateData(listTareas);
+                if (favorite) {
+                    filtrarFavoritos();
+                }
                 customAdapter.notifyDataSetChanged();
-                favorite = false;
-                configureRecyclerView();
             } else {
                 Toast.makeText(ListActivity.this, TAREA_NUEVA_ES_NULA, Toast.LENGTH_SHORT).show();
             }

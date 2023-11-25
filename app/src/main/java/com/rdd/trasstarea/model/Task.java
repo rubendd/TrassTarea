@@ -16,6 +16,8 @@ public class Task implements Serializable {
     private Calendar dateEnd; // Fecha límite para la tarea
     private Calendar fechaInicio; // Fecha de inicio de la tarea
     private int progresState; // Estado de progreso de la tarea
+    private static int nextId = 0;  // Campo estático para rastrear el próximo ID disponible
+    private int id = 0;
 
     // Método getter para la descripción
     public String getDescription() {
@@ -29,6 +31,8 @@ public class Task implements Serializable {
 
     // Constructor para la clase Task
     public Task(String titulo, boolean prioritaria, Calendar dateEnd, States state, String description, Calendar fechaInicio) {
+        this.id = nextId;
+        nextId++;
         this.titulo = titulo;
         this.prioritaria = prioritaria;
         this.dateEnd = dateEnd;
@@ -40,6 +44,22 @@ public class Task implements Serializable {
 
     // Constructor por defecto para Task
     public Task() {
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setFechaInicio(Calendar fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
     // Método getter para el estado de progreso

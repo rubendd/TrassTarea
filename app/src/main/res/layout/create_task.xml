@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D4D9F4"
     android:id="@+id/create_task_first">
 
     <LinearLayout
@@ -128,6 +128,7 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="96dp"
+                android:fontFamily="serif"
                 android:text="@string/cancelar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -137,6 +138,7 @@
                 android:layout_width="124dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="40dp"
+                android:fontFamily="serif"
                 android:text="@string/siguiente"
                 app:layout_constraintBottom_toBottomOf="@+id/cancelar"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -149,6 +151,7 @@
         android:layout_width="310dp"
         android:layout_height="45dp"
         android:layout_marginTop="30dp"
+        android:fontFamily="@font/akaya_telivigala"
         android:text="@string/add_task"
         android:textAlignment="center"
         android:textSize="30sp"

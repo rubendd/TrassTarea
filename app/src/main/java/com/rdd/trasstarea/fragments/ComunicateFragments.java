@@ -25,11 +25,17 @@ public class ComunicateFragments extends ViewModel {
     private final MutableLiveData<String> date2 = new MutableLiveData<>();
     private final MutableLiveData<String> state = new MutableLiveData<>();
     private final MutableLiveData<Boolean> prioritario = new MutableLiveData<>();
+    private final MutableLiveData<Integer> id = new MutableLiveData<>();
+
 
     private final MutableLiveData<String> description = new MutableLiveData<>();
 
     public MutableLiveData<String> getDescription() {
         return description;
+    }
+
+    public MutableLiveData<Integer> getId() {
+        return id;
     }
 
     public MutableLiveData<String> getTitulo() {
@@ -70,4 +76,8 @@ public class ComunicateFragments extends ViewModel {
     public void setDescription(String nomb) {
         description.setValue(nomb);
     }
+    public void setId(int nomb) {
+        id.setValue(nomb);
+    }
+
 }

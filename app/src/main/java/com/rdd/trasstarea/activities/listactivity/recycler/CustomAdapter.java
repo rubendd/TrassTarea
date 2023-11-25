@@ -71,7 +71,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         }
 
 
-        private void cambiarDecoracion(Task c){
+        private void cambiarDecoracion(Task c) {
             // Aplicar tachado al título si la tarea está completada
             if (c.getProgresState() == 100) {
                 titulo.setPaintFlags(titulo.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -79,9 +79,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 // Quitar el tachado si la tarea no está completada
                 titulo.setPaintFlags(titulo.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
             }
+            // Actualizar el icono de prioridad
             if (c.isPrioritaria()) {
                 prioritaria.setImageResource(R.drawable.baseline_stars_24);
+            } else {
+                // Si la tarea no es prioritaria, establecer otra imagen o dejarla en blanco según tus necesidades
+                prioritaria.setImageResource(R.drawable.baseline_stars_24_black);
             }
+
             if (c.getDaysLeft() < 0) {
                 tiempoRestante.setTextColor(Color.RED);
             } else {
@@ -89,6 +94,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 tiempoRestante.setTextColor(Color.BLACK); // o el color que desees
             }
         }
+
 
     }
 
@@ -103,6 +109,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public void updateData(List<Task> newData) {
         tasksDataSet.clear();
         tasksDataSet.addAll(newData);
+        notifyDataSetChanged();
     }
 
     // Crear nuevas vistas (invocado por el administrador de diseño)
@@ -152,14 +159,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             }
             if (item.getItemId() == R.id.delete) {
                 // Obtener la posición del adaptador y llamar al método deleteList
-                int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
-                CustomAdapter.comunicator.deleteList(position);
+                CustomAdapter.comunicator.deleteList(task.getId());
                 return true;
             }
             if (item.getItemId() == R.id.edit) {
                 // Obtener la posición del adaptador y llamar al método editTask
-                int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
-                CustomAdapter.comunicator.editTask(task, position);
+                CustomAdapter.comunicator.editTask(task, task.getId());
                 return true;
             }
             return false;
