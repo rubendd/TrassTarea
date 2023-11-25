@@ -67,6 +67,10 @@ public class Task implements Serializable {
         return progresState;
     }
 
+    public void setProgresState(int progresState) {
+        this.progresState = progresState;
+    }
+
     // Método para establecer valores numéricos para diferentes estados
     public int setStatesNumber(States states) {
         // Asociar cada estado a un valor numérico

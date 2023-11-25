@@ -33,9 +33,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     private EditText titulo, date1, date2;
     private CheckBox prioritaria;
     private TextView text;
-
-
-    String select;  // Variable para almacenar la selección del Spinner
+    private String select;  // Variable para almacenar la selección del Spinner
 
     // Constructor por defecto del fragmento
     public CreateTaskFragment() {
@@ -186,7 +184,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
             task1.setTitulo(titulo.getText().toString());
             task1.setFechaInicio(ListController.convertirFecha(date1.getText().toString()));
             task1.setDateEnd(ListController.convertirFecha(date2.getText().toString()));
-            task1.setStatesNumber(Task.States.valueOf(select));
+            task1.setProgresState(task1.setStatesNumber(Task.States.valueOf(select)));
             task1.setPrioritaria(prioritaria.isChecked());
         });
 
