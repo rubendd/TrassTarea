@@ -159,12 +159,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             }
             if (item.getItemId() == R.id.delete) {
                 // Obtener la posición del adaptador y llamar al método deleteList
-                CustomAdapter.comunicator.deleteList(task.getId());
+                CustomAdapter.comunicator.deleteList(task);
                 return true;
             }
             if (item.getItemId() == R.id.edit) {
                 // Obtener la posición del adaptador y llamar al método editTask
-                CustomAdapter.comunicator.editTask(task, task.getId());
+                int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
+                CustomAdapter.comunicator.editTask(task, position);
                 return true;
             }
             return false;

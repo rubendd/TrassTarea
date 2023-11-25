@@ -58,11 +58,11 @@ public class ListActivity extends AppCompatActivity {
     // Interfaz de comunicación con el adaptador
     private final IComunicator comunicator = new IComunicator() {
         @Override
-        public void deleteList(int position) {
+        public void deleteList(Task task) {
             // Eliminar tarea y notificar al adaptador
-            listTareas.remove(position);
+            listTareas.remove(task);
             customAdapter.updateData(listTareas);
-            customAdapter.notifyItemRemoved(position);
+            customAdapter.notifyItemRemoved(task.getId());
             if (favorite) {
                 filtrarFavoritos();
             }
@@ -272,8 +272,9 @@ public class ListActivity extends AppCompatActivity {
             Task task = (Task) Objects.requireNonNull(intentDevuelto.getExtras()).get(EditTaskActivity.TAREA_NUEVA);
             if (task != null) {
                 // Actualizar la tarea editada en la lista y notificar al adaptador
+                int posicionTarea = findTaskPositionById(task.getId());
                 createTask = task;
-                listTareas.set(positionTask, createTask);
+                listTareas.set(posicionTarea, createTask);
                 customAdapter.updateData(listTareas);
                 if (favorite) {
                     filtrarFavoritos();
@@ -286,6 +287,17 @@ public class ListActivity extends AppCompatActivity {
             // Manejar el caso donde el Intent devuelto es nulo
             Toast.makeText(ListActivity.this, EL_INTENT_ES_NULO, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // Método para encontrar la posición de la tarea por ID en la lista actual
+    private int findTaskPositionById(int taskId) {
+        for (int i = 0; i < listTareas.size(); i++) {
+            if (listTareas.get(i).getId() == taskId) {
+                return i;
+            }
+        }
+        // Devolver -1 si no se encuentra la tarea en la lista actual
+        return -1;
     }
 
     private void initCreateTask() {

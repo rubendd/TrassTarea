@@ -16,7 +16,18 @@ public class CheckTask {
         return texto.equalsIgnoreCase(titulo)
                 || texto.equalsIgnoreCase(fechaCreacion)
                 || texto.equalsIgnoreCase(fechaObjetivo)
-                || texto.isEmpty();
+                || texto.isEmpty() || estaVacio(texto);
     }
+
+    private static boolean estaVacio(String string) {
+        int espaciosEnBlanco = 0;
+        for (int i = 0; i < string.length(); i++) {
+            if (string.charAt(i) == ' ') {
+                espaciosEnBlanco++;
+            }
+        }
+        return espaciosEnBlanco == string.length();
+    }
+
 
 }
