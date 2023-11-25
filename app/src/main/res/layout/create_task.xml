@@ -124,8 +124,8 @@
 
             <Button
                 android:id="@+id/cancelar"
-                android:layout_width="113dp"
-                android:layout_height="48dp"
+                android:layout_width="140dp"
+                android:layout_height="46dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="96dp"
                 android:fontFamily="serif"
@@ -135,8 +135,8 @@
 
             <Button
                 android:id="@+id/siguiente"
-                android:layout_width="124dp"
-                android:layout_height="48dp"
+                android:layout_width="136dp"
+                android:layout_height="47dp"
                 android:layout_marginEnd="40dp"
                 android:fontFamily="serif"
                 android:text="@string/siguiente"
