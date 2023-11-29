@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:icon="@drawable/baseline_color_lens_24">
+
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/baseline_color_lens_24"
+        android:title="Tema">
+
+        <SwitchPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_color_lens_24"
+            android:title="Claro" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Contraste">
+
+        <CheckBoxPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="false"
+            android:icon="@drawable/baseline_contrast_24"
+            android:title="Alto Contraste" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Fuente">
+
+        <ListPreference
+            android:entries="@array/dificultades"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entryValues="@array/valores"
+            android:defaultValue="2"
+            android:icon="@drawable/baseline_sort_by_alpha_24"
+            android:title="Tamaño Letra" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Tipo base de datos">
+
+        <SwitchPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="false"
+            android:title="Switch preference" />
+    </PreferenceCategory>
+</PreferenceScreen>
