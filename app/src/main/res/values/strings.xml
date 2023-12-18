@@ -29,4 +29,11 @@
     <string name="volver">Volver</string>
     <string name="crear_tarea">Crear tarea</string>
     <string name="confirmar">Confirmar</string>
+    <string name="IP">10.0.2.2</string>
+    <string name="bd">bd</string>
+    <string name="usuario">usuario</string>
+    <string name="password" />
+    <string name="restablecer">Restablecer</string>
+    <string name="settings">Preferencias</string>
+    <string name="port">1001</string>
 </resources>

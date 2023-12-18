@@ -3,4 +3,9 @@
     <string name="Descripcion">Descripcion\n</string>
     <string name="borrar">Borrar\n</string>
     <string name="hintDescription">Escribe la descripción aquí...</string>
+    <string name="IP">10.0.2.2</string>
+    <string name="bd">bd</string>
+    <string name="usuario">usuario</string>
+    <string name="password" />
+    <string name="settings">Preferencias</string>
 </resources>

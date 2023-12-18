@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:icon="@drawable/baseline_color_lens_24">
 
     <PreferenceCategory
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/baseline_color_lens_24"
         android:title="Tema">
 
         <SwitchPreference
@@ -13,7 +13,8 @@
             android:layout_height="wrap_content"
             android:defaultValue="true"
             android:icon="@drawable/baseline_color_lens_24"
-            android:title="Claro" />
+            android:title="Claro"
+            app:key="claro" />
     </PreferenceCategory>
     <PreferenceCategory
         android:layout_width="wrap_content"
@@ -25,7 +26,8 @@
             android:layout_height="wrap_content"
             android:defaultValue="false"
             android:icon="@drawable/baseline_contrast_24"
-            android:title="Alto Contraste" />
+            android:title="Alto Contraste"
+            app:key="contraste" />
     </PreferenceCategory>
     <PreferenceCategory
         android:layout_width="wrap_content"
@@ -33,20 +35,113 @@
         android:title="Fuente">
 
         <ListPreference
-            android:entries="@array/dificultades"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entryValues="@array/valores"
             android:defaultValue="2"
+            android:entries="@array/dificultades"
+            android:entryValues="@array/valores"
             android:icon="@drawable/baseline_sort_by_alpha_24"
-            android:title="Tamaño Letra" />
+            android:title="Tamaño Letra"
+            app:key="fuente" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Tipo base de datos">
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Ordenación">
+
+        <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="2"
+            android:entries="@array/criterio"
+            android:entryValues="@array/valores"
+            android:icon="@drawable/baseline_casino_24"
+            android:title="Criterio"
+            app:key="criterio" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Orden">
 
         <SwitchPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:defaultValue="false"
-            android:title="Switch preference" />
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_color_lens_24"
+            android:title="Asc"
+            app:key="asc" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Nombre de la base de datos">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="@string/bd"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/bd"
+            app:key="nombrebd" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="IP">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="@string/IP"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/IP"
+            app:key="ip" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Puerto">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="@string/port"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="1001"
+            app:key="puerto" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Usuario">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:selectAllOnFocus="true"
+            app:key="usuario"
+            android:singleLine="true"
+            android:title="@string/usuario" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Contraseña">
+
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Password"
+            app:key="password"
+
+            app:summary="@string/password" />
+    </PreferenceCategory>
+
+    <Preference
+        android:key="button_preference"
+        android:widgetLayout="@layout/botonrestablecer"
+        />
 </PreferenceScreen>
+

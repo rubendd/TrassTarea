@@ -23,6 +23,8 @@ import com.rdd.trasstarea.activities.editTaskActivity.EditTaskActivity;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
+import com.rdd.trasstarea.activities.settings.SettingsActivity;
+import com.rdd.trasstarea.activities.settings.SettingsFragments;
 import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
@@ -193,7 +195,10 @@ public class ListActivity extends AppCompatActivity {
             new AboutDialog(this, "Rubén Díaz Dugo" + "\n" + "IES TRASSIERRA 2023");
             return true; // Indica que el evento ha sido manejado
         }
-        if (item.getItemId() == R.id.action_settings) {
+        if (item.getItemId() == R.id.action_settings){
+            initSettingConfigure();
+        }
+        if (item.getItemId() == R.id.action_exit) {
             // Mostrar el cuadro de diálogo de salida
             new ExitDialog(this);
             return true; // Indica que el evento ha sido manejado
@@ -316,5 +321,11 @@ public class ListActivity extends AppCompatActivity {
             editTaskLauncher.launch(intent);
         }
     }
+
+    private void initSettingConfigure(){
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
 }
 

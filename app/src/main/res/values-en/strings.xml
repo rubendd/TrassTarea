@@ -30,4 +30,8 @@
     <string name="volver">Back</string>
     <string name="crear_tarea">Create Task</string>
     <string name="confirmar">Confirm</string>
+    <string name="IP">10.0.2.2</string>
+    <string name="bd">bd</string>
+    <string name="usuario">usuario</string>
+    <string name="password" />
 </resources>
