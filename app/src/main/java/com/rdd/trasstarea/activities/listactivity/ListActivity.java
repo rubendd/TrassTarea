@@ -1,6 +1,7 @@
 package com.rdd.trasstarea.activities.listactivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +26,6 @@ import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
 import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.activities.settings.SettingsActivity;
-import com.rdd.trasstarea.activities.settings.SettingsFragments;
 import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
@@ -36,10 +37,19 @@ import java.util.stream.Collectors;
 
 public class ListActivity extends AppCompatActivity {
 
+    /**
+     * -------------------------------Variables--------------------------------------
+     */
+
     // Constantes para las claves de Bundle
     public static final String TASK_LIST = "taskList";
     public static final String TAREA_NUEVA_ES_NULA = "Tarea nueva es nula";
     public static final String EL_INTENT_ES_NULO = "El intent es nulo";
+
+    // Variables configuración.
+    private static final String PREFS_NAME = "MyPrefsFile";
+    private static final String KEY_THEME = "theme";
+    private SharedPreferences preferences;
 
     // Controlador de la lista de tareas
     private final ListController listController = new ListController();
@@ -56,6 +66,10 @@ public class ListActivity extends AppCompatActivity {
     // Tarea a crear/editar y bandera de favoritos
     private Task createTask;
     private boolean favorite = false;
+
+    /**
+     * -------------------------------Interfaz--------------------------------------
+     */
 
     // Interfaz de comunicación con el adaptador
     private final IComunicator comunicator = new IComunicator() {
@@ -92,6 +106,9 @@ public class ListActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * ------------------------------------------------------------------------------
+     */
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -322,9 +339,51 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
+
+     //------------------------------Configuracion -------------------------------------------
+
     private void initSettingConfigure(){
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    private void saveDarkTheme(){
+        preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(KEY_THEME, "dark");
+        editor.apply();
+    }
+    private String returnTheme(){
+        return preferences.getString(KEY_THEME, "light");
+    }
+
+
+    private void configurePreferences(){
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //Editar preferencias desde código
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("bd_externa", true);
+        editor.putString("nombre", "Por determinar");
+        editor.putString("ip", "0.0.0.0");
+        editor.apply();
+
+        //de forma anónima
+        preferences.edit().putString("dificultad", "Nula").apply();
+
+        etDificultad = findViewById(R.id.etDificultad);
+        etBD = findViewById(R.id.etBD);
+    }
+
+    private void changeTheme(){
+        // Cambiar el tema de la aplicación
+        if (returnTheme().equals("dark")) {
+           // setTheme(R.style.DarkTheme); // Define tu estilo de tema oscuro en res/values/styles.xml
+        } else {
+           // setTheme(R.style.LightTheme); // Define tu estilo de tema claro en res/values/styles.xml
+        }
+
+        setContentView(R.layout.activity_main);
     }
 
 }

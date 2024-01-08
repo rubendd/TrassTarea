@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:icon="@drawable/baseline_color_lens_24">
+    android:icon="@drawable/baseline_color_lens_24"
+    android:title="Preferencias">
 
     <PreferenceCategory
         android:layout_width="wrap_content"
