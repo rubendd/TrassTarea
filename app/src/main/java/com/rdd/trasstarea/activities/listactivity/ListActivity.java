@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -107,7 +108,7 @@ public class ListActivity extends AppCompatActivity {
     };
 
     /**
-     * ------------------------------------------------------------------------------
+     * -----------------------------ESTADOS-------------------------------------------------
      */
 
     @Override
@@ -125,6 +126,25 @@ public class ListActivity extends AppCompatActivity {
             configureRecyclerView();
         }
         lanzarMensajeNoTareas();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Seteamos los EditText en onResume para cuando esta actividad pasa de estar en segundo plano
+        //a primer plano. Así cuando se editan las preferencias siempre aparecerán los valores actualizados.
+       // boolean temaClaro = preferences.getBoolean("claro", true);
+        AppCompatDelegate.setDefaultNightMode(temaClaro ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+    /*
+        String bd = "Interna SQLite";
+        if (preferences.getBoolean("bd_externa", true)) {
+            bd = "Externa: " + sharedPreferences.getString("nombre", "Desconocida") + "@" +
+                    sharedPreferences.getString("ip", "x.x.x.x");
+        }
+        etBD.setText(bd);
+       */
     }
 
     @Override
@@ -160,6 +180,9 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * ------------------------------------------------------------------------------
+     */
     private void configureRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
         // Configurar el layout manager, el adaptador y otros aspectos.
@@ -347,44 +370,7 @@ public class ListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void saveDarkTheme(){
-        preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(KEY_THEME, "dark");
-        editor.apply();
-    }
-    private String returnTheme(){
-        return preferences.getString(KEY_THEME, "light");
-    }
 
-
-    private void configurePreferences(){
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        //Editar preferencias desde código
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("bd_externa", true);
-        editor.putString("nombre", "Por determinar");
-        editor.putString("ip", "0.0.0.0");
-        editor.apply();
-
-        //de forma anónima
-        preferences.edit().putString("dificultad", "Nula").apply();
-
-        etDificultad = findViewById(R.id.etDificultad);
-        etBD = findViewById(R.id.etBD);
-    }
-
-    private void changeTheme(){
-        // Cambiar el tema de la aplicación
-        if (returnTheme().equals("dark")) {
-           // setTheme(R.style.DarkTheme); // Define tu estilo de tema oscuro en res/values/styles.xml
-        } else {
-           // setTheme(R.style.LightTheme); // Define tu estilo de tema claro en res/values/styles.xml
-        }
-
-        setContentView(R.layout.activity_main);
-    }
 
 }
 

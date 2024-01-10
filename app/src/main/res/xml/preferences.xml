@@ -15,6 +15,7 @@
             android:defaultValue="true"
             android:icon="@drawable/baseline_color_lens_24"
             android:title="Claro"
+            android:summary="Cambia el tema a oscuro y claro"
             app:key="claro" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -28,6 +29,7 @@
             android:defaultValue="false"
             android:icon="@drawable/baseline_contrast_24"
             android:title="Alto Contraste"
+            android:summary="Ajusta los colores con contraste"
             app:key="contraste" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -43,6 +45,7 @@
             android:entryValues="@array/valores"
             android:icon="@drawable/baseline_sort_by_alpha_24"
             android:title="Tamaño Letra"
+            android:summary="Ajusta el tamaño de la letra"
             app:key="fuente" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -58,6 +61,7 @@
             android:entryValues="@array/valores"
             android:icon="@drawable/baseline_casino_24"
             android:title="Criterio"
+            android:summary="Ajusta el criterio de ordenacion"
             app:key="criterio" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -71,6 +75,7 @@
             android:defaultValue="true"
             android:icon="@drawable/baseline_color_lens_24"
             android:title="Asc"
+            android:summary="Ajusta el orden en el que apareceran las listas"
             app:key="asc" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -84,6 +89,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/bd"
+            android:summary="Nombre de la base de datos"
             app:key="nombrebd" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -97,6 +103,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/IP"
+            android:summary="Ip a la que se conectará la base de datos"
             app:key="ip" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -110,6 +117,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="1001"
+            android:summary="Puerto"
             app:key="puerto" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -122,6 +130,7 @@
             android:selectAllOnFocus="true"
             app:key="usuario"
             android:singleLine="true"
+            android:summary="Nombre de usuario de la base de datos"
             android:title="@string/usuario" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -136,8 +145,7 @@
             android:singleLine="true"
             android:title="Password"
             app:key="password"
-
-            app:summary="@string/password" />
+            android:summary="Contraseña de la base de datos"/>
     </PreferenceCategory>
 
     <Preference
