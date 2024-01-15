@@ -403,7 +403,7 @@ public class ListActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> System.out.println("bien"),
-                        throwable -> System.out.println("mal"));
+                        throwable -> System.out.println("ml"));
     }
 
 
