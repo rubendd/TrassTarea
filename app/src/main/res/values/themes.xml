@@ -9,6 +9,7 @@
     </style>
 
 
+    
     <style name="MyToolbarStyle" parent="Widget.AppCompat.Toolbar">
     </style>
     <style name="Theme.TrassTarea" parent="Base.Theme.TrassTarea" />

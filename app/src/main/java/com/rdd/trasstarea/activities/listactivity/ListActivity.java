@@ -2,6 +2,7 @@ package com.rdd.trasstarea.activities.listactivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +69,9 @@ public class ListActivity extends AppCompatActivity {
     private Task createTask;
     private boolean favorite = false;
 
+    //Bandera para recreado
+    private boolean isRecreado = false;
+
     /**
      * -------------------------------Interfaz--------------------------------------
      */
@@ -114,10 +118,16 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.listado_tareas);
         mensaje = findViewById(R.id.mensaje);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Cargar las settings
+        setSettings();
+
+
 
         // Configurar la actividad
         if (savedInstanceState != null){
@@ -132,19 +142,36 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setSettings();
 
-        //Seteamos los EditText en onResume para cuando esta actividad pasa de estar en segundo plano
-        //a primer plano. Así cuando se editan las preferencias siempre aparecerán los valores actualizados.
-       // boolean temaClaro = preferences.getBoolean("claro", true);
+
+    }
+
+
+    private void setSettings(){
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //Tema oscuro.
+        boolean temaClaro = preferences.getBoolean("claro", true);
         AppCompatDelegate.setDefaultNightMode(temaClaro ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
-    /*
-        String bd = "Interna SQLite";
-        if (preferences.getBoolean("bd_externa", true)) {
-            bd = "Externa: " + sharedPreferences.getString("nombre", "Desconocida") + "@" +
-                    sharedPreferences.getString("ip", "x.x.x.x");
+
+
+        Configuration configuration = getResources().getConfiguration();
+
+        //Tamaño fuente
+        String fuente = preferences.getString("fuente","b");
+        if (fuente.equals("a")) configuration.fontScale = 0.8f;
+        if (fuente.equals("b")) configuration.fontScale = 1.0f;
+        if (fuente.equals("c")) configuration.fontScale = 1.3f;
+
+        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+        if (isRecreado){
+            recreate();
+            isRecreado = !isRecreado;
         }
-        etBD.setText(bd);
-       */
+
+
     }
 
     @Override
@@ -367,6 +394,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void initSettingConfigure(){
         Intent intent = new Intent(this, SettingsActivity.class);
+        isRecreado = true;
         startActivity(intent);
     }
 

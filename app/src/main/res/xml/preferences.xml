@@ -21,20 +21,6 @@
     <PreferenceCategory
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="Contraste">
-
-        <CheckBoxPreference
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:defaultValue="false"
-            android:icon="@drawable/baseline_contrast_24"
-            android:title="Alto Contraste"
-            android:summary="Ajusta los colores con contraste"
-            app:key="contraste" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:title="Fuente">
 
         <ListPreference
