@@ -1,6 +1,10 @@
 package com.rdd.trasstarea.model;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -8,16 +12,77 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
+@Entity
 public class Task implements Serializable {
     // Definición de la clase Task
-    private String titulo, description; // Título y descripción de la tarea
-    private boolean prioritaria; // Estado de prioridad de la tarea
-    private long daysLeft; // Número de días restantes para completar la tarea
-    private Calendar dateEnd; // Fecha límite para la tarea
-    private Calendar fechaInicio; // Fecha de inicio de la tarea
-    private int progresState; // Estado de progreso de la tarea
-    private static int nextId = 0;  // Campo estático para rastrear el próximo ID disponible
+    @PrimaryKey(autoGenerate = true)// Campo estático para rastrear el próximo ID disponible
+    @NonNull
     private int id = 0;
+    @ColumnInfo(name = "titulo")
+    private String titulo;
+    @ColumnInfo(name = "description")
+    private String description; // Título y descripción de la tarea
+    @ColumnInfo(name = "prioritaria")
+    private boolean prioritaria; // Estado de prioridad de la tarea
+    @ColumnInfo(name = "daysLeft")
+    private long daysLeft; // Número de días restantes para completar la tarea
+
+    @Ignore
+    private Calendar dateEnd; // Fecha límite para la tarea
+    @Ignore
+    private Calendar fechaInicio; // Fecha de inicio de la tarea
+
+    @ColumnInfo(name = "progresState")
+    private int progresState; // Estado de progreso de la tarea
+    @ColumnInfo(name = "URL_doc")
+    private String URL_doc;
+
+    @ColumnInfo(name = "URL_img")
+    private String URL_img;
+
+    @ColumnInfo(name = "URL_aud")
+    private String URL_aud;
+
+    @ColumnInfo(name = "URL_vid")
+    private String URL_vid;
+    @Ignore
+    private static int nextId = 0;
+
+    public String getURL_doc() {
+        return URL_doc;
+    }
+
+    public String getURL_img() {
+        return URL_img;
+    }
+
+    public String getURL_aud() {
+        return URL_aud;
+    }
+
+    public String getURL_vid() {
+        return URL_vid;
+    }
+
+    public void setDaysLeft(long daysLeft) {
+        this.daysLeft = daysLeft;
+    }
+
+    public void setURL_doc(String URL_doc) {
+        this.URL_doc = URL_doc;
+    }
+
+    public void setURL_img(String URL_img) {
+        this.URL_img = URL_img;
+    }
+
+    public void setURL_aud(String URL_aud) {
+        this.URL_aud = URL_aud;
+    }
+
+    public void setURL_vid(String URL_vid) {
+        this.URL_vid = URL_vid;
+    }
 
     // Método getter para la descripción
     public String getDescription() {
@@ -40,6 +105,27 @@ public class Task implements Serializable {
         this.daysLeft = getDaysLeft(); // Calcular el número de días restantes para la tarea
         this.description = description;
         this.fechaInicio = fechaInicio;
+    }
+
+    public Task(int id, String titulo, String description,
+                boolean prioritaria, long daysLeft,
+                Calendar dateEnd, Calendar fechaInicio,
+                int progresState, String URL_doc,
+                String URL_img, String URL_aud, String URL_vid) {
+
+        this.id = nextId;
+        nextId++;
+        this.titulo = titulo;
+        this.description = description;
+        this.prioritaria = prioritaria;
+        this.daysLeft = daysLeft;
+        this.dateEnd = dateEnd;
+        this.fechaInicio = fechaInicio;
+        this.progresState = progresState;
+        this.URL_doc = URL_doc;
+        this.URL_img = URL_img;
+        this.URL_aud = URL_aud;
+        this.URL_vid = URL_vid;
     }
 
     // Constructor por defecto para Task
@@ -153,6 +239,7 @@ public class Task implements Serializable {
         }
     }
 
+
     // Método setter para la fecha límite
     public void setDateEnd(Calendar dateEnd) {
         this.dateEnd = dateEnd;
@@ -219,5 +306,7 @@ public class Task implements Serializable {
                 ", progresState=" + progresState +
                 '}';
     }
+
+
 
 }

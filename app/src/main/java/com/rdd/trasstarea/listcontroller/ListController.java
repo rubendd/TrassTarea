@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -22,10 +24,7 @@ public class ListController {
         setListTareas();
     }
 
-    // Método para filtrar la lista y devolver solo las tareas prioritarias
-    public List<Task> filtarLista() {
-        return listTask.stream().filter(Task::isPrioritaria).collect(Collectors.toList());
-    }
+
 
     // Método getter para obtener la lista completa de tareas
     public List<Task> getListTask() {
@@ -61,5 +60,31 @@ public class ListController {
             e.printStackTrace();
         }
         return Calendar.getInstance();
+    }
+
+    public static List<Task> orderByAlfabetico(List<Task> listTask){
+        Collections.sort(listTask, (o1, o2) -> o1.getTitulo().compareToIgnoreCase(o2.getTitulo()));
+        return listTask;
+    }
+
+    public static List<Task> orderByDate(List<Task> listTask){
+        Collections.sort(listTask, Comparator.comparing(Task::getFechaInicio));
+        return listTask;
+    }
+
+    public static List<Task> orderByDaysLeft(List<Task> listTask){
+        Collections.sort(listTask, Comparator.comparingLong(Task::getDaysLeft));
+        return listTask;
+    }
+    public static List<Task> orderByProgress(List<Task> listTask){
+        Collections.sort(listTask, Comparator.comparingLong(Task::getDaysLeft));
+        return listTask;
+    }
+
+    public static List<Task> orderByAsc(List<Task> listTask, boolean asc) {
+        if (!asc) {
+            Collections.sort(listTask, Comparator.comparingLong(Task::getProgresState));
+        }
+        return listTask;
     }
 }

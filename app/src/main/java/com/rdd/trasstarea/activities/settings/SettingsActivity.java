@@ -3,6 +3,7 @@ package com.rdd.trasstarea.activities.settings;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -12,9 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
 import com.rdd.trasstarea.R;
+
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -24,10 +25,12 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //Esta actividad no utiliza setContentView()!!
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle("Preferencias de usuario");
-        setSettings();
+
+       // setSettings();
 
 
         //Cargamos el fragmento de preferencias
@@ -38,29 +41,15 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-
+    /*
     private void setSettings(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         //Tema oscuro.
         boolean temaClaro = preferences.getBoolean("claro", true);
         AppCompatDelegate.setDefaultNightMode(temaClaro ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
-
-        //Tamaño fuente
-        Configuration configuration = getResources().getConfiguration();
-
-        //Tamaño fuente
-        String fuente = preferences.getString("fuente","2");
-        if (fuente.equals("1")) configuration.fontScale = 0.8f;
-        if (fuente.equals("2")) configuration.fontScale = 1.0f;
-        if (fuente.equals("3")) configuration.fontScale = 1.5f;
-
-        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-
-
-
     }
-
+    */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //El recurso 'android.R.id.home' es el botón 'home' (flecha atrás) en la barra de acción
@@ -79,7 +68,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             Preference claro = findPreference("claro");
             Preference tamanioFuente = findPreference("fuente");
-            Preference altoContraste = findPreference("contraste");
+            Preference criterio = findPreference("criterio");
+            Preference asc = findPreference("asc");
 
 
             assert claro != null;
@@ -95,27 +85,60 @@ public class SettingsActivity extends AppCompatActivity {
 
             assert tamanioFuente != null;
             tamanioFuente.setOnPreferenceChangeListener((preference, newValue) -> {
-                System.out.println("Hola");
                 String fuente = (String) newValue;
                 Configuration configuration = getResources().getConfiguration();
 
-                //Tamaño fuente
-                if (fuente.equals("1")) configuration.fontScale = 0.8f;
-                if (fuente.equals("2")) configuration.fontScale = 1.0f;
-                if (fuente.equals("3")) configuration.fontScale = 1.3f;
+                // Tamaño fuente
+                if (fuente.equals("a")) configuration.fontScale = 0.8f;
+                if (fuente.equals("b")) configuration.fontScale = 1.0f;
+                if (fuente.equals("c")) configuration.fontScale = 1.3f;
 
                 getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+                // Guardar la preferencia en SharedPreferences
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("fuente", fuente);
                 editor.apply();
+
+                // Forzar el reinicio de la actividad
                 getActivity().recreate();
+
                 return true;
             });
 
+            assert criterio != null;
+            criterio.setOnPreferenceChangeListener((preference, newValue) -> {
+                String criterios = (String) newValue;
+                Configuration configuration = getResources().getConfiguration();
+
+                getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+                // Guardar la preferencia en SharedPreferences
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("criterio", criterios);
+                editor.apply();
+
+                return true;
+            });
+
+            assert asc != null;
+            asc.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean asc_s = (boolean) newValue;
+                Configuration configuration = getResources().getConfiguration();
+
+                getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+                // Guardar la preferencia en SharedPreferences
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("asc", asc_s);
+                editor.apply();
+
+                return true;
+            });
         }
-
-
     }
 }
 

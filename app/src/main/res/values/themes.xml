@@ -8,7 +8,18 @@
 
     </style>
 
+    <!-- Otros estilos -->
+    <style name="small">
+        <item name="android:textSize">14sp</item>
+    </style>
 
+    <style name="medium">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="large">
+        <item name="android:textSize">18sp</item>
+    </style>
     
     <style name="MyToolbarStyle" parent="Widget.AppCompat.Toolbar">
     </style>

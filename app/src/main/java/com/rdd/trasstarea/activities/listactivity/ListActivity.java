@@ -1,9 +1,12 @@
 package com.rdd.trasstarea.activities.listactivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,9 +20,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
@@ -29,19 +32,32 @@ import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.activities.settings.SettingsActivity;
 import com.rdd.trasstarea.comunicator.IComunicator;
+import com.rdd.trasstarea.database.AppDataBase;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import io.reactivex.Completable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+
+
 
 public class ListActivity extends AppCompatActivity {
 
     /**
      * -------------------------------Variables--------------------------------------
      */
+
+    AppDataBase appDataBase;
 
     // Constantes para las claves de Bundle
     public static final String TASK_LIST = "taskList";
@@ -58,7 +74,7 @@ public class ListActivity extends AppCompatActivity {
 
     // Lista de tareas y otros miembros de la actividad
 
-    private List<Task> listTareas = listController.getListTask();
+    private List<Task> listTareas = new ArrayList<>();
     private View mensaje;
     private MenuItem item;
     private CustomAdapter customAdapter;
@@ -94,6 +110,7 @@ public class ListActivity extends AppCompatActivity {
         public void createTask() {
             // Añadir nueva tarea y notificar al adaptador
             listTareas.add(createTask);
+            insertarUsuario(createTask);
             customAdapter.updateData(listTareas);
             customAdapter.notifyItemInserted(customAdapter.getItemCount());
             if (favorite) {
@@ -118,7 +135,8 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        appDataBase = AppDataBase.getInstance(getApplicationContext());
+        listTareas = obtenerLista();
         setContentView(R.layout.listado_tareas);
         mensaje = findViewById(R.id.mensaje);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -140,38 +158,19 @@ public class ListActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        setSettings();
-
-
+    protected void onDestroy() {
+        super.onDestroy();
+        if (appDataBase != null){
+            appDataBase.close();
+        }
     }
 
 
-    private void setSettings(){
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //Tema oscuro.
-        boolean temaClaro = preferences.getBoolean("claro", true);
-        AppCompatDelegate.setDefaultNightMode(temaClaro ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
-
-
-        Configuration configuration = getResources().getConfiguration();
-
-        //Tamaño fuente
-        String fuente = preferences.getString("fuente","b");
-        if (fuente.equals("a")) configuration.fontScale = 0.8f;
-        if (fuente.equals("b")) configuration.fontScale = 1.0f;
-        if (fuente.equals("c")) configuration.fontScale = 1.3f;
-
-        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-
-        if (isRecreado){
-            recreate();
-            isRecreado = !isRecreado;
-        }
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setSettings();
     }
 
     @Override
@@ -389,8 +388,41 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
+    //------------------------------DataBase -------------------------------------------
 
-     //------------------------------Configuracion -------------------------------------------
+    /**
+     * En este ejemplo, Schedulers.io()
+     * y AndroidSchedulers.mainThread() se utilizan para
+     * realizar la operación de inserción en un hilo de fondo
+     * y para manejar el resultado en el hilo principal, respectivamente.
+     * @param task
+     */
+    @SuppressLint("CheckResult")
+    private void insertarUsuario(Task task) {
+        appDataBase.daoTask().insertTask(task)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> System.out.println("bien"),
+                        throwable -> System.out.println("mal"));
+    }
+
+
+    @SuppressLint("CheckResult")
+    private List<Task> obtenerLista(){
+        appDataBase.daoTask().getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((tasks) -> {
+                    listTareas.clear();  // Limpiamos la lista existente
+                    listTareas.addAll(tasks);  // Añadimos las nuevas tareas
+                    // Otros procedimientos después de obtener la lista...
+                }, throwable -> {
+                    Log.e("Error", "Error al obtener la lista");
+                });
+        return listTareas;
+    }
+
+     //------------------------------Configuracion-------------------------------------------
 
     private void initSettingConfigure(){
         Intent intent = new Intent(this, SettingsActivity.class);
@@ -398,7 +430,58 @@ public class ListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void setSettings(){
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        //Tema oscuro.
+        boolean temaClaro = preferences.getBoolean("claro", true);
+        AppCompatDelegate.setDefaultNightMode(temaClaro ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+
+
+        Configuration configuration = getResources().getConfiguration();
+
+        //Tamaño fuente
+        String fuente = preferences.getString("fuente","b");
+        if (fuente.equals("a")) configuration.fontScale = 0.8f;
+        if (fuente.equals("b")) configuration.fontScale = 1.0f;
+        if (fuente.equals("c")) configuration.fontScale = 1.3f;
+
+        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+
+        //TODO mejorar la parte del asc, ya que no se guarda bien.
+
+        if (!listTareas.isEmpty()){
+            String criterio = preferences.getString("criterio","b");
+            if (criterio.equals("a")) {
+                ListController.orderByAlfabetico(listTareas);
+            }
+            if (criterio.equals("b")) {
+                ListController.orderByDate(listTareas);
+            }
+            if (criterio.equals("c")) {
+                ListController.orderByDaysLeft(listTareas);
+            }
+            if (criterio.equals("d")) {
+                ListController.orderByProgress(listTareas);
+            }
+
+
+            //Ordenar lista by asc.
+            boolean asc = preferences.getBoolean("asc",true);
+            listTareas = ListController.orderByAsc(listTareas, asc);
+
+        }
+        //Ordenar lista
+
+
+        if (isRecreado){
+            recreate();
+            isRecreado = !isRecreado;
+        }
+
+
+    }
 
 }
 
