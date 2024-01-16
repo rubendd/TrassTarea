@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
@@ -42,10 +41,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -132,28 +129,33 @@ public class ListActivity extends AppCompatActivity {
      * -----------------------------ESTADOS-------------------------------------------------
      */
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appDataBase = AppDataBase.getInstance(getApplicationContext());
-        listTareas = obtenerLista();
         setContentView(R.layout.listado_tareas);
         mensaje = findViewById(R.id.mensaje);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Cargar las settings
+        // Cargar las settings
         setSettings();
 
-
-
         // Configurar la actividad
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             configureSaveStance(savedInstanceState);
         } else {
-            configureRecyclerView();
+            // Llamada a obtenerLista() con subscribe
+            obtenerLista().subscribe((tasks) -> {
+                // Configurar el RecyclerView y otras acciones dependientes de la lista
+                listTareas.addAll(tasks);
+                configureRecyclerView();
+                lanzarMensajeNoTareas();
+            }, throwable -> {
+                Log.e("error", "No se ha podido recuperar");
+            });
         }
-        lanzarMensajeNoTareas();
     }
 
 
@@ -407,22 +409,24 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
-    @SuppressLint("CheckResult")
-    private List<Task> obtenerLista(){
-        appDataBase.daoTask().getAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((tasks) -> {
-                    listTareas.clear();  // Limpiamos la lista existente
-                    listTareas.addAll(tasks);  // Añadimos las nuevas tareas
-                    // Otros procedimientos después de obtener la lista...
-                }, throwable -> {
-                    Log.e("Error", "Error al obtener la lista");
+    private Single<List<Task>> obtenerLista() {
+        return obtenerSingle()
+                .doOnSuccess(tasks -> {
+                    // Actualizar la listaTareas en caso de éxito
+                    listTareas.clear();
+                    listTareas.addAll(tasks);
                 });
-        return listTareas;
     }
 
-     //------------------------------Configuracion-------------------------------------------
+    private Single<List<Task>> obtenerSingle() {
+        return appDataBase.daoTask().getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+
+    //------------------------------Configuracion-------------------------------------------
 
     private void initSettingConfigure(){
         Intent intent = new Intent(this, SettingsActivity.class);
