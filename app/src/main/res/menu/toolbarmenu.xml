@@ -25,6 +25,10 @@
         android:title="@string/settings"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/estadisticas"
+        android:title="@string/estadisticas"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/action_exit"
         android:title="@string/action_settings"
         app:showAsAction="never"/>

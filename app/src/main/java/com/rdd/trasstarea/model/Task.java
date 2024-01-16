@@ -9,17 +9,13 @@ import androidx.room.PrimaryKey;
 import com.rdd.trasstarea.listcontroller.ListController;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class Task implements Serializable {
     // Definición de la clase Task
     @PrimaryKey(autoGenerate = true)// Campo estático para rastrear el próximo ID disponible
-    @NonNull
     private int id = 0;
     @ColumnInfo(name = "titulo")
     private String titulo;
@@ -100,8 +96,7 @@ public class Task implements Serializable {
 
     // Constructor para la clase Task
     public Task(String titulo, boolean prioritaria, String dateEnd, States state, String description, String fechaInicio) {
-        this.id = nextId;
-        nextId++;
+        this.id = getId();
         this.titulo = titulo;
         this.prioritaria = prioritaria;
         this.dateEnd = dateEnd;
@@ -111,14 +106,11 @@ public class Task implements Serializable {
         this.fechaInicio = fechaInicio;
     }
 
-    public Task(int id, String titulo, String description,
+    public Task(String titulo, String description,
                 boolean prioritaria, long daysLeft,
                 String dateEnd, String fechaInicio,
                 int progresState, String URL_doc,
                 String URL_img, String URL_aud, String URL_vid) {
-
-        this.id = nextId;
-        nextId++;
         this.titulo = titulo;
         this.description = description;
         this.prioritaria = prioritaria;
