@@ -6,10 +6,13 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.rdd.trasstarea.listcontroller.ListController;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -27,10 +30,10 @@ public class Task implements Serializable {
     @ColumnInfo(name = "daysLeft")
     private long daysLeft; // Número de días restantes para completar la tarea
 
-    @Ignore
-    private Calendar dateEnd; // Fecha límite para la tarea
-    @Ignore
-    private Calendar fechaInicio; // Fecha de inicio de la tarea
+
+    private String dateEnd; // Fecha límite para la tarea
+
+    private String fechaInicio; // Fecha de inicio de la tarea
 
     @ColumnInfo(name = "progresState")
     private int progresState; // Estado de progreso de la tarea
@@ -95,7 +98,7 @@ public class Task implements Serializable {
     }
 
     // Constructor para la clase Task
-    public Task(String titulo, boolean prioritaria, Calendar dateEnd, States state, String description, Calendar fechaInicio) {
+    public Task(String titulo, boolean prioritaria, String dateEnd, States state, String description, String fechaInicio) {
         this.id = nextId;
         nextId++;
         this.titulo = titulo;
@@ -109,7 +112,7 @@ public class Task implements Serializable {
 
     public Task(int id, String titulo, String description,
                 boolean prioritaria, long daysLeft,
-                Calendar dateEnd, Calendar fechaInicio,
+                String dateEnd, String fechaInicio,
                 int progresState, String URL_doc,
                 String URL_img, String URL_aud, String URL_vid) {
 
@@ -144,7 +147,7 @@ public class Task implements Serializable {
         this.description = description;
     }
 
-    public void setFechaInicio(Calendar fechaInicio) {
+    public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
@@ -221,27 +224,19 @@ public class Task implements Serializable {
     }
 
     // Métodos getter para la fecha de inicio y la fecha límite
-    public Calendar getFechaInicio() {
+    public String getFechaInicio() {
         return fechaInicio;
     }
 
-    public Calendar getDateEnd() {
+    public String getDateEnd() {
         return dateEnd;
     }
 
     // Método para convertir el calendario a formato de texto
-    public String calendar() {
-        try {
-            return calendarToText();
-        } catch (ParseException e) {
-            // Lanzar una excepción de tiempo de ejecución si hay una excepción de análisis
-            throw new RuntimeException(e);
-        }
-    }
 
 
     // Método setter para la fecha límite
-    public void setDateEnd(Calendar dateEnd) {
+    public void setDateEnd(String dateEnd) {
         this.dateEnd = dateEnd;
     }
 
@@ -272,7 +267,7 @@ public class Task implements Serializable {
         fechaActual.set(Calendar.MILLISECOND, 0);
 
         // Obtener la fecha de vencimiento
-        Calendar fechaFutura = getDateEnd();
+        Calendar fechaFutura = ListController.convertirFecha(getDateEnd());
 
         // Establecer los campos de tiempo a 0 para comparar solo las fechas
         fechaFutura.set(Calendar.HOUR_OF_DAY, 0);
@@ -286,12 +281,7 @@ public class Task implements Serializable {
     }
 
     // Método privado para convertir el calendario a formato de texto
-    private String calendarToText() throws ParseException {
-        Calendar cal = getFechaInicio();
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 
-        return format1.format(cal.getTime());
-    }
 
     // Método toString para representar la tarea como una cadena
     @NonNull

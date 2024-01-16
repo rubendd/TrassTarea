@@ -53,7 +53,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
                 if (task != null) {
                     titulo.setText(task.getTitulo());
                     date1.setText(ListController.calendarToText(Calendar.getInstance()));
-                    date2.setText(ListController.calendarToText(task.getDateEnd()));
+                    date2.setText(task.getDateEnd());
                     prioritaria.setChecked(task.isPrioritaria());
                     obtenerState(task);
                     outState.putSerializable("task", task);  // Guarda la tarea en el Bundle
@@ -96,8 +96,8 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         // Actualiza la interfaz de usuario con los datos de la tarea
         if (task != null) {
             titulo.setText(task.getTitulo());
-            date1.setText(ListController.calendarToText(task.getFechaInicio()));
-            date2.setText(ListController.calendarToText(task.getDateEnd()));
+            date1.setText(task.getFechaInicio());
+            date2.setText(task.getDateEnd());
             prioritaria.setChecked(task.isPrioritaria());
             obtenerState(task);
         }
@@ -111,7 +111,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
                 if (task != null) {
                     titulo.setText(task.getTitulo());
                     date1.setText(ListController.calendarToText(Calendar.getInstance()));
-                    date2.setText(ListController.calendarToText(task.getDateEnd()));
+                    date2.setText(task.getDateEnd());
                     prioritaria.setChecked(task.isPrioritaria());
                     obtenerState(task);
                 }
@@ -182,8 +182,8 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         //Editar
         compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task1 -> {
             task1.setTitulo(titulo.getText().toString());
-            task1.setFechaInicio(ListController.convertirFecha(date1.getText().toString()));
-            task1.setDateEnd(ListController.convertirFecha(date2.getText().toString()));
+            task1.setFechaInicio(date1.getText().toString());
+            task1.setDateEnd(date2.getText().toString());
             task1.setProgresState(task1.setStatesNumber(Task.States.valueOf(select)));
             task1.setPrioritaria(prioritaria.isChecked());
         });

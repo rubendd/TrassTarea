@@ -56,7 +56,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         // Método para enlazar una tarea a la vista
         public void bindTask(Task c) {
             titulo.setText(c.getTitulo());
-            fecha.setText(c.calendar());
+            fecha.setText(c.getFechaInicio());
             tiempoRestante.setText(String.valueOf(c.getDaysLeft()));
             duracion.setProgress(c.getProgresState());
 

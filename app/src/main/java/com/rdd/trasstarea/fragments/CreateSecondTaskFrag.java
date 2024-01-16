@@ -125,7 +125,7 @@ public class CreateSecondTaskFrag extends Fragment {
                 date1 = da;
                 System.out.println(date1);
             });
-            comunicateFragments.getDate2().observe(getViewLifecycleOwner(), da -> task.setDateEnd(ListController.convertirFecha(da)));
+            comunicateFragments.getDate2().observe(getViewLifecycleOwner(), da -> task.setDateEnd(da));
             comunicateFragments.getPrioritario().observe(getViewLifecycleOwner(), task::setPrioritaria);
             comunicateFragments.getState().observe(getViewLifecycleOwner(), da -> task.setStatesNumber(Task.States.valueOf(String.valueOf(da))));
         }
