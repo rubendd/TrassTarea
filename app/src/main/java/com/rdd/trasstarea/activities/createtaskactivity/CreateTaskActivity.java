@@ -62,8 +62,8 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         DESCRIPTION = comunicateFragments.getDescription().getValue();
 
         // Crea una nueva tarea con los valores proporcionados
-        Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2),
-                Task.States.valueOf(STATE), DESCRIPTION, ListController.convertirFecha(String.valueOf(DATE1)));
+        Task task = new Task(TITULO, PRIORITAIO, DATE2,
+                Task.States.valueOf(STATE), DESCRIPTION, DATE1);
 
         // Prepara la intención para devolver la tarea al fragmento anterior
         Intent intent = new Intent();

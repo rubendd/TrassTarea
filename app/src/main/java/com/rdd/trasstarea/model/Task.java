@@ -30,9 +30,10 @@ public class Task implements Serializable {
     @ColumnInfo(name = "daysLeft")
     private long daysLeft; // Número de días restantes para completar la tarea
 
-
+    @ColumnInfo(name = "dateEnd")
     private String dateEnd; // Fecha límite para la tarea
 
+    @ColumnInfo(name = "fechaInicio")
     private String fechaInicio; // Fecha de inicio de la tarea
 
     @ColumnInfo(name = "progresState")

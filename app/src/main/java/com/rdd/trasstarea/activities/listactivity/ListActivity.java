@@ -95,6 +95,7 @@ public class ListActivity extends AppCompatActivity {
         public void deleteList(Task task) {
             // Eliminar tarea y notificar al adaptador
             listTareas.remove(task);
+            deleteTask(task); //Borrar de la base de datos
             customAdapter.updateData(listTareas);
             customAdapter.notifyItemRemoved(task.getId());
             if (favorite) {
@@ -106,14 +107,20 @@ public class ListActivity extends AppCompatActivity {
         @Override
         public void createTask() {
             // Añadir nueva tarea y notificar al adaptador
-            listTareas.add(createTask);
-            insertarUsuario(createTask);
-            customAdapter.updateData(listTareas);
-            customAdapter.notifyItemInserted(customAdapter.getItemCount());
-            if (favorite) {
-                filtrarFavoritos();
+            if (!listTareas.contains(createTask)) {
+                // Añadir nueva tarea y notificar al adaptador
+                listTareas.add(createTask);
+                insertarUsuario(createTask);
+                customAdapter.updateData(listTareas);
+                customAdapter.notifyItemInserted(customAdapter.getItemCount());
+                if (favorite) {
+                    filtrarFavoritos();
+                }
+                lanzarMensajeNoTareas();
+            } else {
+                // La tarea ya existe, manejarlo según tus necesidades
+                Toast.makeText(ListActivity.this, "pepe", Toast.LENGTH_SHORT).show();
             }
-            lanzarMensajeNoTareas();
         }
 
         @Override
@@ -146,16 +153,23 @@ public class ListActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             configureSaveStance(savedInstanceState);
         } else {
-            // Llamada a obtenerLista() con subscribe
-            obtenerLista().subscribe((tasks) -> {
-                // Configurar el RecyclerView y otras acciones dependientes de la lista
-                listTareas.addAll(tasks);
-                configureRecyclerView();
-                lanzarMensajeNoTareas();
-            }, throwable -> {
-                Log.e("error", "No se ha podido recuperar");
-            });
+            obtenerSingle()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            tasks -> {
+                                // Agregar las nuevas tareas sin borrar las existentes
+                                listTareas.addAll(tasks);
+                                configureRecyclerView();
+                                lanzarMensajeNoTareas();
+                            },
+                            throwable -> {
+                                Log.e("Error", "Error al obtener la lista de tareas", throwable);
+                                Toast.makeText(this, "Error al obtener la lista de tareas", Toast.LENGTH_SHORT).show();
+                            }
+                    );
         }
+
     }
 
 
@@ -348,6 +362,7 @@ public class ListActivity extends AppCompatActivity {
                 int posicionTarea = findTaskPositionById(task.getId());
                 createTask = task;
                 listTareas.set(posicionTarea, createTask);
+                actualizarTarea(createTask); //Actualizar en base de datos.
                 customAdapter.updateData(listTareas);
                 if (favorite) {
                     filtrarFavoritos();
@@ -409,21 +424,28 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
-    private Single<List<Task>> obtenerLista() {
-        return obtenerSingle()
-                .doOnSuccess(tasks -> {
-                    // Actualizar la listaTareas en caso de éxito
-                    listTareas.clear();
-                    listTareas.addAll(tasks);
-                });
-    }
 
     private Single<List<Task>> obtenerSingle() {
-        return appDataBase.daoTask().getAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return appDataBase.daoTask().getAll();
     }
 
+    @SuppressLint("CheckResult")
+    private void actualizarTarea(Task task){
+        appDataBase.daoTask().updateTask(task)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> System.out.println("bien"),
+                        throwable -> System.out.println("ml"));
+    }
+
+    @SuppressLint("CheckResult")
+    private void deleteTask(Task task){
+        appDataBase.daoTask().delete(task)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> System.out.println("bien"),
+                        throwable -> System.out.println("ml"));
+    }
 
 
     //------------------------------Configuracion-------------------------------------------
@@ -454,7 +476,6 @@ public class ListActivity extends AppCompatActivity {
 
 
         //TODO mejorar la parte del asc, ya que no se guarda bien.
-
         if (!listTareas.isEmpty()){
             String criterio = preferences.getString("criterio","b");
             if (criterio.equals("a")) {

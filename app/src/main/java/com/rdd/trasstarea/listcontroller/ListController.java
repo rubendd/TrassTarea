@@ -40,10 +40,10 @@ public class ListController {
     // Método privado para inicializar la lista de tareas con algunas tareas de ejemplo
     private void setListTareas() {
         // Agregar tareas a la lista
-        listTask.add(new Task("Cumpleaños de Adrian", true, convertirFecha("03/12/23"), Task.States.STARTED, "Hola Adrian", convertirFecha("03/12/23")));
-        listTask.add(new Task("Hacer tareas", false, convertirFecha("28/7/23"), Task.States.FINALIZED, "Hola Pepe", convertirFecha("03/12/23")));
-        listTask.add(new Task("Ir al gimnasio", false, convertirFecha("07/10/23"), Task.States.ADVANCED, "Hola Pepe", convertirFecha("03/12/23")));
-        listTask.add(new Task("NAVIDAD", true, convertirFecha("31/12/23"), Task.States.NOTSTARTED, "Hola Pepe", convertirFecha("03/12/23")));
+        listTask.add(new Task("Cumpleaños de Adrian", true, "03/12/23", Task.States.STARTED, "Hola Adrian", "03/12/23"));
+        listTask.add(new Task("Hacer tareas", false, "28/7/23", Task.States.FINALIZED, "Hola Pepe", "03/12/23"));
+        listTask.add(new Task("Ir al gimnasio", false,"07/10/23", Task.States.ADVANCED, "Hola Pepe", "03/12/23"));
+        listTask.add(new Task("NAVIDAD", true, "31/12/23", Task.States.NOTSTARTED, "Hola Pepe", "03/12/23"));
     }
 
     // Método estático para convertir una cadena de fecha a un objeto Calendar
