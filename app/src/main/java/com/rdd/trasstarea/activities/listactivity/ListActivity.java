@@ -1,12 +1,10 @@
 package com.rdd.trasstarea.activities.listactivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,21 +30,18 @@ import com.rdd.trasstarea.activities.listactivity.dialogs.ExitDialog;
 import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.activities.settings.SettingsActivity;
 import com.rdd.trasstarea.comunicator.IComunicator;
-import com.rdd.trasstarea.database.AppDataBase;
 import com.rdd.trasstarea.database.TaskRepository;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-
-
 
 
 public class ListActivity extends AppCompatActivity {
@@ -71,7 +66,7 @@ public class ListActivity extends AppCompatActivity {
 
     // Lista de tareas y otros miembros de la actividad
 
-    private List<Task> listTareas;
+    private List<Task> listTareas = new ArrayList<>();
     private View mensaje;
     private MenuItem item;
     private CustomAdapter customAdapter;
@@ -139,13 +134,17 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listTareas = new ArrayList<>();
-        taskRepository = new TaskRepository(AppDataBase.getInstance(getApplicationContext()));
+
+
+        taskRepository = new TaskRepository(getApplicationContext());
+        loadTasks();
         setContentView(R.layout.listado_tareas);
         mensaje = findViewById(R.id.mensaje);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        setSettings();
+        configureRecyclerView();
+        lanzarMensajeNoTareas();
 
         // Configurar la actividad
         if (savedInstanceState != null) {
@@ -161,7 +160,6 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadTasks();
     }
 
     @Override
@@ -460,25 +458,17 @@ public class ListActivity extends AppCompatActivity {
     /**
      * La funcion subscribe ejecutará el hilo.
      */
-    @SuppressLint("CheckResult")
     private void loadTasks() {
-        taskRepository.obtenerSingle()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        tasks -> {
-                            // Agregar las nuevas tareas sin borrar las existentes
-                            listTareas = tasks;
-                            System.out.println("Bien");
-                            setSettings();
-                            configureRecyclerView();
-                            lanzarMensajeNoTareas();
-                        },
-                        throwable -> {
-                            Log.e("Error", "Error al obtener la lista de tareas", throwable);
-                            Toast.makeText(this, "Error al obtener la lista de tareas", Toast.LENGTH_SHORT).show();
-                        }
-                );
+        CompletableFuture<List<Task>> future = CompletableFuture.supplyAsync(() -> {
+            try {
+                List<Task> result = taskRepository.obtenerTodasLasTareas().get();
+                return result != null ? result : Collections.emptyList();
+            } catch (ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        future.thenAccept(listTareas::addAll).join();
     }
 
 }

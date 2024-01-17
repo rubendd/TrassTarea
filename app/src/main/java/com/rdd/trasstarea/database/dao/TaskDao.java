@@ -20,18 +20,18 @@ import io.reactivex.Single;
 public interface TaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Completable insertTask(Task task);
+    void insertTask(Task task);
 
     @Delete
-    Completable delete(Task task);
+    void delete(Task task);
 
     @Query("SELECT * FROM task")
-    Single<List<Task>> getAll();
+    List<Task> getAll();
 
     @Update
-    Completable updateTask(Task... task);
+    void updateTask(Task... task);
 
     @Query("SELECT * FROM task where prioritaria = 1")
-    Single<List<Task>> getPriotiraias();
+    List<Task> getPriotiraias();
 
 }
