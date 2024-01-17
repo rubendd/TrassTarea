@@ -1,7 +1,9 @@
 package com.rdd.trasstarea.activities.listactivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,6 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,6 +54,9 @@ public class ListActivity extends AppCompatActivity {
      * -------------------------------Variables--------------------------------------
      */
     TaskRepository taskRepository;
+
+    private static final int CODIGO_DE_SOLICITUD = 1; // Puedes usar cualquier número entero
+    private boolean guardarEnSd = false;
 
     // Constantes para las claves de Bundle
     public static final String TASK_LIST = "taskList";
@@ -441,7 +448,9 @@ public class ListActivity extends AppCompatActivity {
         listTareas = ListController.orderByAsc(new ArrayList<>(listTareas), asc);
 
         boolean sd = preferences.getBoolean("sd",false);
+        System.out.println(sd);
         if (sd) {
+               pedirPermisos();
           //  guardarListaEnSd(); //TODO hacer guardado
         }
 
@@ -471,5 +480,29 @@ public class ListActivity extends AppCompatActivity {
         future.thenAccept(listTareas::addAll).join();
     }
 
+    // Register the permissions callback, which handles the user's response to the
+// system permissions dialog. Save the return value, an instance of
+// ActivityResultLauncher, as an instance variable.
+    private void pedirPermisos(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+            // Tienes los permisos, realiza las acciones necesarias
+            // Puedes poner tu lógica aquí
+        } else {
+            // Solicitar permisos si no los tienes
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, CODIGO_DE_SOLICITUD);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    }
 }
 

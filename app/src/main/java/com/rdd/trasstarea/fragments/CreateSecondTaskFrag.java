@@ -2,13 +2,19 @@ package com.rdd.trasstarea.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.FileUtils;
+import android.os.storage.StorageManager;
+import android.os.storage.StorageVolume;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,6 +24,11 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
+import com.rdd.trasstarea.tarjetasd.SdManager;
+
+import java.util.List;
+import java.util.Objects;
+
 public class CreateSecondTaskFrag extends Fragment {
 
     // Variables de instancia
@@ -149,27 +160,62 @@ public class CreateSecondTaskFrag extends Fragment {
     // Método para enviar datos al ViewModel compartido
     private void sendData() {
         comunicateFragments.setDescription(descripcion.getText().toString());
+        comunicateFragments.setUrl_doc(documento);
     }
 
+    // Lanzadores de resultados de actividad
+    // Lanzadores de resultados de actividad
+    private final ActivityResultLauncher<String> pickDocumentLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onDocumentSelected);
 
+    private final ActivityResultLauncher<String> pickImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImageSelected);
+
+    private final ActivityResultLauncher<String> pickAudioLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onAudioSelected);
+
+    private final ActivityResultLauncher<String> pickVideoLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onVideoSelected);
+
+
+    // Métodos para manejar la selección de documentos, imágenes, audio y video
     public void onSelectDocumentClick(View view) {
-        openFileChooser("application/*");
+        pickDocumentLauncher.launch("application/*");
     }
 
     public void onSelectImageClick(View view) {
-        openFileChooser("image/*");
+        pickImageLauncher.launch("image/*");
     }
 
     public void onSelectAudioClick(View view) {
-        openFileChooser("audio/*");
+        pickAudioLauncher.launch("audio/*");
     }
 
     public void onSelectVideoClick(View view) {
-        openFileChooser("video/*");
+        pickVideoLauncher.launch("video/*");
     }
 
-    private void openFileChooser(String mimeType) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType(mimeType);
+    // Métodos para manejar la selección de documentos, imágenes, audio y video
+
+    private String documento = "";
+    private void onDocumentSelected(Uri documentUri) {
+        // Manejar el documento seleccionado
+        documento = SdManager.getPathFromUri(getContext(), documentUri);
     }
+    private String imagen = "";
+    private void onImageSelected(Uri imageUri) {
+        imagen = SdManager.getPathFromUri(getContext(), imageUri);
+    }
+
+    private String audio = "";
+    private void onAudioSelected(Uri audioUri) {
+        audio = SdManager.getPathFromUri(getContext(), audioUri);
+    }
+
+    private String video = "";
+    private void onVideoSelected(Uri videoUri) {
+        video = SdManager.getPathFromUri(getContext(), videoUri);
+    }
+
+
 }

@@ -14,8 +14,7 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
-// la solucion para no implentar los hilos manualmente:
-// https://developer.android.com/training/data-storage/room/async-queries?hl=es-419#guava-livedata
+
 @Dao
 public interface TaskDao {
 

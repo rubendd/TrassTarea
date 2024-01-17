@@ -29,6 +29,26 @@ public class ComunicateFragments extends ViewModel {
 
 
     private final MutableLiveData<String> description = new MutableLiveData<>();
+    private final MutableLiveData<String> url_doc = new MutableLiveData<>();
+    private final MutableLiveData<String> url_img = new MutableLiveData<>();
+    private final MutableLiveData<String> url_video = new MutableLiveData<>();
+    private final MutableLiveData<String> url_audio = new MutableLiveData<>();
+
+    public MutableLiveData<String> getUrl_doc() {
+        return url_doc;
+    }
+
+    public MutableLiveData<String> getUrl_img() {
+        return url_img;
+    }
+
+    public MutableLiveData<String> getUrl_video() {
+        return url_video;
+    }
+
+    public MutableLiveData<String> getUrl_audio() {
+        return url_audio;
+    }
 
     public MutableLiveData<String> getDescription() {
         return description;
@@ -79,5 +99,18 @@ public class ComunicateFragments extends ViewModel {
     public void setId(int nomb) {
         id.setValue(nomb);
     }
+    public void setUrl_doc(String nomb) {
+        url_doc.setValue(nomb);
+    }
+    public void setUrl_audio(String nomb) {
+        url_audio.setValue(nomb);
+    }
+    public void setUrl_img(String nomb) {
+        url_img.setValue(nomb);
+    }
+    public void setUrl_video(String nomb) {
+        url_video.setValue(nomb);
+    }
+
 
 }

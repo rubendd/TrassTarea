@@ -21,7 +21,7 @@ public class ListController {
 
     // Constructor de la clase ListController, inicializa la lista de tareas
     public ListController() {
-        setListTareas();
+
     }
 
 
@@ -38,13 +38,15 @@ public class ListController {
     }
 
     // Método privado para inicializar la lista de tareas con algunas tareas de ejemplo
+
+    /*
     private void setListTareas() {
         // Agregar tareas a la lista
         listTask.add(new Task("Cumpleaños de Adrian", true, "03/12/23", Task.States.STARTED, "Hola Adrian", "03/12/23"));
         listTask.add(new Task("Hacer tareas", false, "28/7/23", Task.States.FINALIZED, "Hola Pepe", "03/12/23"));
         listTask.add(new Task("Ir al gimnasio", false,"07/10/23", Task.States.ADVANCED, "Hola Pepe", "03/12/23"));
         listTask.add(new Task("NAVIDAD", true, "31/12/23", Task.States.NOTSTARTED, "Hola Pepe", "03/12/23"));
-    }
+    }*/
 
     // Método estático para convertir una cadena de fecha a un objeto Calendar
     public static Calendar convertirFecha(String date) {

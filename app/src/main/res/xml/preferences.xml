@@ -67,7 +67,7 @@
     <PreferenceCategory
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="Almacenar en tarjeta sd">
+        android:title="Almacenamiento">
         <SwitchPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,6 +76,15 @@
             android:title="Tarjeta SD"
             android:summary="Decide si quieres almacenar las tareas en la tarjeta sd"
             app:key="sd" />
+        <SeekBarPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="0"
+            android:icon="@drawable/baseline_send_and_archive_24"
+            android:title="Limpieza de archivos"
+            android:summary="Ajusta el tiempo que duraran los archivos guardados"
+            android:max="365"
+            app:key="guardado" />
     </PreferenceCategory>
     <PreferenceCategory
         android:layout_width="wrap_content"

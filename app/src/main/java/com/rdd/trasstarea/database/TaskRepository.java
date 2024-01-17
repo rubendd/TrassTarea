@@ -10,7 +10,6 @@ import java.util.concurrent.Future;
 
 public class TaskRepository {
 
-    //TODO Hacerlo con future.
     private final DataBaseExecutor databaseExecutor;
 
     public TaskRepository(Context context) {

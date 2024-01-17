@@ -11,7 +11,7 @@ import com.rdd.trasstarea.model.Task;
 
 @Database(
         entities = {Task.class},
-        version = 2
+        version = 3
 )
 public abstract class AppDataBase extends RoomDatabase {
 

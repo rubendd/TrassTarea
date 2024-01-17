@@ -55,7 +55,9 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
                     date1.setText(ListController.calendarToText(Calendar.getInstance()));
                     date2.setText(task.getDateEnd());
                     prioritaria.setChecked(task.isPrioritaria());
+
                     obtenerState(task);
+
                     outState.putSerializable("task", task);  // Guarda la tarea en el Bundle
                 }
             });
@@ -101,6 +103,13 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
             prioritaria.setChecked(task.isPrioritaria());
             obtenerState(task);
         }
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        compartirViewModel.getTaskLiveData().removeObservers(getViewLifecycleOwner());
     }
 
     // Método para obtener datos de la tarea y actualizar la interfaz de usuario

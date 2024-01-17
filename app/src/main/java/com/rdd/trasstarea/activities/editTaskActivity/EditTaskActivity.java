@@ -21,6 +21,10 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
     public static final String TAREA_NUEVA = "tareaNueva";
     public static final String TAREA_EDITAR = "tareaEditar";
     public String DESCRIPTION;
+    public String URL_DOC = "";
+    public String URL_IMG = "";
+    public String URL_AUDIO = "";
+    public String URL_VIDEO = "";
     // Variables de instancia
     private ComunicateFragments comunicateFragments;
     private Task editTask;
@@ -71,11 +75,21 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
     public void mandarTask() {
         // Obtiene los valores del formulario a través del ViewModel
         DESCRIPTION = comunicateFragments.getDescription().getValue();
+
         // Crea una nueva tarea
         editTask = comunicateFragments.getTaskLiveData().getValue();
 
+        URL_AUDIO = comunicateFragments.getUrl_audio().getValue();
+        URL_DOC = comunicateFragments.getUrl_doc().getValue();
+        URL_IMG = comunicateFragments.getUrl_img().getValue();
+        URL_VIDEO = comunicateFragments.getUrl_video().getValue();
+
         if (editTask != null) {
             editTask.setDescription(DESCRIPTION);
+            editTask.setURL_aud(URL_AUDIO);
+            editTask.setURL_doc(URL_DOC);
+            editTask.setURL_img(URL_IMG);
+            editTask.setURL_vid(URL_VIDEO);
         }
 
         // Prepara la intención para devolver la tarea al fragmento anterior

@@ -23,6 +23,10 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
     public String STATE = "estado";
     public boolean PRIORITAIO = true;
     public String DESCRIPTION = "";
+    public String URL_DOC = "";
+    public String URL_IMG = "";
+    public String URL_AUDIO = "";
+    public String URL_VIDEO = "";
 
     // ViewModel para la comunicación entre fragmentos
     private ComunicateFragments comunicateFragments;
@@ -60,10 +64,15 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         STATE = comunicateFragments.getState().getValue();
         PRIORITAIO = Boolean.TRUE.equals(comunicateFragments.getPrioritario().getValue());
         DESCRIPTION = comunicateFragments.getDescription().getValue();
+        URL_DOC = comunicateFragments.getUrl_doc().getValue();
+        URL_AUDIO = comunicateFragments.getUrl_audio().getValue();
+        URL_IMG = comunicateFragments.getUrl_img().getValue();
+        URL_VIDEO = comunicateFragments.getUrl_video().getValue();
+
 
         // Crea una nueva tarea con los valores proporcionados
         Task task = new Task(TITULO, PRIORITAIO, DATE2,
-                Task.States.valueOf(STATE), DESCRIPTION, DATE1);
+                Task.States.valueOf(STATE), DESCRIPTION, DATE1, URL_DOC, URL_AUDIO, URL_IMG, URL_VIDEO);
 
         // Prepara la intención para devolver la tarea al fragmento anterior
         Intent intent = new Intent();

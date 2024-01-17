@@ -1,20 +1,28 @@
 package com.rdd.trasstarea.activities.settings;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SeekBarPreference;
 
 import com.rdd.trasstarea.R;
+
+import java.util.Objects;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -71,6 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference criterio = findPreference("criterio");
             Preference asc = findPreference("asc");
             Preference tarjetasd = findPreference("sd");
+            SeekBarPreference seekBarPreference = findPreference("guardado");
 
 
             assert claro != null;
@@ -140,20 +149,61 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             });
 
-            assert tarjetasd != null;
-            asc.setOnPreferenceChangeListener((preference, newValue) -> {
-                boolean sd_bool = (boolean) newValue;
-                Configuration configuration = getResources().getConfiguration();
+            // Asegúrate de que tarjetasd no sea nulo antes de usarlo
+            if (tarjetasd != null) {
+                tarjetasd.setOnPreferenceChangeListener((preference, newValue) -> {
+                    boolean sd_bool = (boolean) newValue;
 
-                getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
 
-                // Guardar la preferencia en SharedPreferences
+                    Configuration configuration = getResources().getConfiguration();
+                    getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+                    // Guardar la preferencia en SharedPreferences
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("sd", sd_bool);
+                    editor.apply();
+
+
+                    return true;
+                });
+            }
+
+
+
+            if (seekBarPreference != null) {
+                // Obtén el valor actual de las SharedPreferences y establece el resumen
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean("sd", sd_bool);
-                editor.apply();
-                return true;
-            });
+                int valorActual = preferences.getInt("guardado", 0);
+
+                if (valorActual == 0) {
+                    seekBarPreference.setSummary("Duración de archivos guardados: (indefinido)");
+                } else {
+                    seekBarPreference.setSummary("Duración de archivos guardados: " + valorActual + "dias");
+                }
+
+                // Establece un oyente para detectar cambios en la SeekBarPreference
+                seekBarPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    int nuevoValor = (int) newValue;
+
+                    if (nuevoValor == 0) {
+                        preference.setSummary("Duración de archivos guardados: (indefinido)");
+                    } else {
+                        preference.setSummary("Duración de archivos guardados: " + nuevoValor + " días");
+                    }
+                    // Actualiza el resumen con el nuevo valor
+
+
+                    // Guarda el nuevo valor en SharedPreferences
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt("guardado", nuevoValor);
+                    editor.apply();
+
+                    return true;
+                });
+
+            }
+
         }
     }
 }

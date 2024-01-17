@@ -48,6 +48,8 @@ public class Task implements Serializable {
     @Ignore
     private static int nextId = 0;
 
+
+
     public String getURL_doc() {
         return URL_doc;
     }
@@ -95,7 +97,8 @@ public class Task implements Serializable {
     }
 
     // Constructor para la clase Task
-    public Task(String titulo, boolean prioritaria, String dateEnd, States state, String description, String fechaInicio) {
+    public Task(String titulo, boolean prioritaria, String dateEnd, States state, String description, String fechaInicio,
+                String url_doc, String url_audio, String url_img, String url_video) {
         this.id = getId();
         this.titulo = titulo;
         this.prioritaria = prioritaria;
@@ -104,25 +107,15 @@ public class Task implements Serializable {
         this.daysLeft = getDaysLeft(); // Calcular el número de días restantes para la tarea
         this.description = description;
         this.fechaInicio = fechaInicio;
+        this.URL_doc = url_doc;
+        this.URL_aud = url_audio;
+        this.URL_img = url_img;
+        this.URL_vid = url_video;
     }
 
-    public Task(String titulo, String description,
-                boolean prioritaria, long daysLeft,
-                String dateEnd, String fechaInicio,
-                int progresState, String URL_doc,
-                String URL_img, String URL_aud, String URL_vid) {
-        this.titulo = titulo;
-        this.description = description;
-        this.prioritaria = prioritaria;
-        this.daysLeft = daysLeft;
-        this.dateEnd = dateEnd;
-        this.fechaInicio = fechaInicio;
-        this.progresState = progresState;
-        this.URL_doc = URL_doc;
-        this.URL_img = URL_img;
-        this.URL_aud = URL_aud;
-        this.URL_vid = URL_vid;
-    }
+
+
+
 
     // Constructor por defecto para Task
     public Task() {
