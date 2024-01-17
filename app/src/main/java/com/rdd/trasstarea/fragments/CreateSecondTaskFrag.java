@@ -1,6 +1,7 @@
 package com.rdd.trasstarea.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,7 @@ public class CreateSecondTaskFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmento2 = inflater.inflate(R.layout.create_task2, container, false);
 
+
         // Inicializa los componentes y maneja los datos
         initComponents(fragmento2);
         if (savedInstanceState != null) {
@@ -94,9 +96,22 @@ public class CreateSecondTaskFrag extends Fragment {
     // Método para inicializar los componentes de la interfaz de usuario
     private void initComponents(View fragmento2) {
         descripcion = fragmento2.findViewById(R.id.editTextDescription);
+
+        //Botones
         Button btnSalir = fragmento2.findViewById(R.id.back);
+        Button documento = fragmento2.findViewById(R.id.documento);
+        Button video = fragmento2.findViewById(R.id.video);
+        Button audio = fragmento2.findViewById(R.id.audio);
+        Button imagen = fragmento2.findViewById(R.id.imagen);
         btnCreateTask = fragmento2.findViewById(R.id.create);
+
+        //Listener
         btnSalir.setOnClickListener(this::backFragment);
+        documento.setOnClickListener(this::onSelectDocumentClick);
+        audio.setOnClickListener(this::onSelectAudioClick);
+        imagen.setOnClickListener(this::onSelectImageClick);
+        video.setOnClickListener(this::onSelectVideoClick);
+
         btnCreateTask.setOnClickListener(v -> {
             sendData();
             comunicador.mandarTask();
@@ -134,5 +149,27 @@ public class CreateSecondTaskFrag extends Fragment {
     // Método para enviar datos al ViewModel compartido
     private void sendData() {
         comunicateFragments.setDescription(descripcion.getText().toString());
+    }
+
+
+    public void onSelectDocumentClick(View view) {
+        openFileChooser("application/*");
+    }
+
+    public void onSelectImageClick(View view) {
+        openFileChooser("image/*");
+    }
+
+    public void onSelectAudioClick(View view) {
+        openFileChooser("audio/*");
+    }
+
+    public void onSelectVideoClick(View view) {
+        openFileChooser("video/*");
+    }
+
+    private void openFileChooser(String mimeType) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(mimeType);
     }
 }

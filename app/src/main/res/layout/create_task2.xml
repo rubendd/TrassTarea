@@ -14,21 +14,74 @@
             android:textAlignment="center"
             android:textSize="30sp" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="443dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="167dp">
 
-            <EditText
-                android:id="@+id/editTextDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:gravity="start|top"
-                android:hint="@string/hintDescription"
-                android:inputType="textMultiLine"
-                android:minHeight="48dp"
-                android:textColorHint="#8D6E63" />
-        </ScrollView>
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:gravity="start|top"
+            android:hint="@string/hintDescription"
+            android:inputType="textMultiLine"
+            android:minHeight="48dp"
+            android:textColorHint="#8D6E63" />
+    </ScrollView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/imagen"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="99dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:text="imagen"
+            android:textColor="#00796B" />
+
+        <Button
+            android:id="@+id/audio"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/audio"
+            android:textColor="#00796B" />
+
+        <Button
+            android:id="@+id/video"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="2dp"
+            android:text="video" />
+
+        <Button
+            android:id="@+id/documento"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="112dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="2dp"
+            android:text="@string/documento"
+            android:onClick="onSelectDocumentClick"/>
+
+
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,21 +92,21 @@
             <Button
                 android:id="@+id/back"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="150dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginStart="30dp"
-                android:layout_marginEnd="50dp"
-                android:text="@string/volver" />
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="130dp"
+                android:text="@string/volver"
+                android:textColor="#00796B" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/create"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginEnd="10dp"
-                app:lottie_rawRes="@raw/button"
+                android:layout_width="91dp"
+                android:layout_height="74dp"
                 app:lottie_autoPlay="true"
-                app:lottie_loop="true"/>
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/button" />
 
 
         </LinearLayout>

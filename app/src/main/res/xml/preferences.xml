@@ -67,6 +67,19 @@
     <PreferenceCategory
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:title="Almacenar en tarjeta sd">
+        <SwitchPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="false"
+            android:icon="@drawable/baseline_save_as_24"
+            android:title="Tarjeta SD"
+            android:summary="Decide si quieres almacenar las tareas en la tarjeta sd"
+            app:key="sd" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:title="Nombre de la base de datos">
         <EditTextPreference
             android:layout_width="wrap_content"

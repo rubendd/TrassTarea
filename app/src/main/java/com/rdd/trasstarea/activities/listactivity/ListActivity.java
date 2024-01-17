@@ -54,10 +54,7 @@ public class ListActivity extends AppCompatActivity {
     /**
      * -------------------------------Variables--------------------------------------
      */
-
-
     TaskRepository taskRepository;
-
 
     // Constantes para las claves de Bundle
     public static final String TASK_LIST = "taskList";
@@ -150,14 +147,10 @@ public class ListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-
         // Configurar la actividad
         if (savedInstanceState != null) {
             configureSaveStance(savedInstanceState);
         }
-
-
-
     }
 
     @Override
@@ -448,6 +441,11 @@ public class ListActivity extends AppCompatActivity {
         // Ordenar lista by asc.
         boolean asc = preferences.getBoolean("asc", true);
         listTareas = ListController.orderByAsc(new ArrayList<>(listTareas), asc);
+
+        boolean sd = preferences.getBoolean("sd",false);
+        if (sd) {
+          //  guardarListaEnSd(); //TODO hacer guardado
+        }
 
         // Imprimir el tamaño de la lista después de ordenar
         System.out.println(listTareas.size() + " FDFSDFFFFFFFFFFFFFFFFF");

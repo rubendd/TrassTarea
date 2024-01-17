@@ -12,6 +12,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TaskRepository {
 
+    //TODO Hacerlo con future.
     private final AppDataBase appDataBase;
 
     public TaskRepository(AppDataBase appDataBase) {

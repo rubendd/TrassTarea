@@ -22,7 +22,6 @@ public interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertTask(Task task);
 
-
     @Delete
     Completable delete(Task task);
 

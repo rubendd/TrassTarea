@@ -37,4 +37,6 @@
     <string name="settings">Preferencias</string>
     <string name="port">1001</string>
     <string name="estadisticas">Estadisticas</string>
+    <string name="audio">audio</string>
+    <string name="documento">documento</string>
 </resources>

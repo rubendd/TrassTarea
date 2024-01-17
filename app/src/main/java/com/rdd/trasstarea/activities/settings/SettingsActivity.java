@@ -70,6 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference tamanioFuente = findPreference("fuente");
             Preference criterio = findPreference("criterio");
             Preference asc = findPreference("asc");
+            Preference tarjetasd = findPreference("sd");
 
 
             assert claro != null;
@@ -136,6 +137,21 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.putBoolean("asc", asc_s);
                 editor.apply();
 
+                return true;
+            });
+
+            assert tarjetasd != null;
+            asc.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean sd_bool = (boolean) newValue;
+                Configuration configuration = getResources().getConfiguration();
+
+                getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+                // Guardar la preferencia en SharedPreferences
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("sd", sd_bool);
+                editor.apply();
                 return true;
             });
         }
