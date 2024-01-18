@@ -35,6 +35,7 @@ import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.activities.settings.SettingsActivity;
 import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.database.TaskRepository;
+import com.rdd.trasstarea.database.tarjetasd.SdManager;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
@@ -119,6 +120,7 @@ public class ListActivity extends AppCompatActivity {
                     filtrarFavoritos();
                 }
                 lanzarMensajeNoTareas();
+                SdManager.escribirSD(listTareas, getApplicationContext());
 
                 // La tarea ya existe, manejarlo según tus necesidades
                 Toast.makeText(ListActivity.this, "pepe", Toast.LENGTH_SHORT).show();
@@ -144,7 +146,11 @@ public class ListActivity extends AppCompatActivity {
 
 
         taskRepository = new TaskRepository(getApplicationContext());
-        loadTasks();
+        if (guardarEnSd){
+            loadTasksFromSd();
+        } else {
+            loadTasks();
+        }
         setContentView(R.layout.listado_tareas);
         mensaje = findViewById(R.id.mensaje);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -427,6 +433,13 @@ public class ListActivity extends AppCompatActivity {
 
 
         //TODO mejorar la parte del asc, ya que no se guarda bien.
+        boolean sd = preferences.getBoolean("sd",false);
+        System.out.println(sd);
+        if (sd) {
+            pedirPermisos();
+            //  guardarListaEnSd(); //TODO hacer guardado
+        }
+
 
         String criterio = preferences.getString("criterio", "b");
         switch (criterio) {
@@ -448,12 +461,6 @@ public class ListActivity extends AppCompatActivity {
         boolean asc = preferences.getBoolean("asc", true);
         listTareas = ListController.orderByAsc(new ArrayList<>(listTareas), asc);
 
-        boolean sd = preferences.getBoolean("sd",false);
-        System.out.println(sd);
-        if (sd) {
-               pedirPermisos();
-          //  guardarListaEnSd(); //TODO hacer guardado
-        }
 
         // Imprimir el tamaño de la lista después de ordenar
         System.out.println(listTareas.size() + " FDFSDFFFFFFFFFFFFFFFFF");
@@ -480,6 +487,9 @@ public class ListActivity extends AppCompatActivity {
 
         future.thenAccept(listTareas::addAll).join();
     }
+    private void loadTasksFromSd() {
+        listTareas = SdManager.leerSD(getApplicationContext());
+    }
 
     // Register the permissions callback, which handles the user's response to the
 // system permissions dialog. Save the return value, an instance of
@@ -489,8 +499,7 @@ public class ListActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED) {
-            // Tienes los permisos, realiza las acciones necesarias
-            // Puedes poner tu lógica aquí
+
         } else {
             // Solicitar permisos si no los tienes
             ActivityCompat.requestPermissions(this, new String[]{

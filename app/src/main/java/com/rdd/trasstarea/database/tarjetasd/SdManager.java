@@ -13,24 +13,64 @@ import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.model.Task;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
 public class SdManager {
 
+    public static void guardarArchivoEnDirectorio(Uri uri, Context context) {
+
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+
+            // Define la ruta de destino en tu directorio específico
+            File directorioApp = new File(context.getExternalFilesDir(null), "tus_archivos");
+            if (!directorioApp.exists()) {
+                if (directorioApp.mkdirs()) {
+                    Log.d("Almacenamiento", "Directorio de la aplicación creado: " + directorioApp.getAbsolutePath());
+                } else {
+                    Log.e("Almacenamiento", "Error al crear el directorio de la aplicación");
+                    return;
+                }
+            }
+
+            String nombreArchivo = "archivo_" + System.currentTimeMillis(); // Puedes definir tu propia lógica para el nombre del archivo
+            File archivoDestino = new File(directorioApp, nombreArchivo);
+
+            OutputStream outputStream = new FileOutputStream(archivoDestino);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            inputStream.close();
+            outputStream.close();
+
+            Log.d("Almacenamiento", "Archivo guardado en: " + archivoDestino.getAbsolutePath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Almacenamiento", "Error al guardar el archivo: " + e.getMessage());
+        }
+    }
 
 
     public static void escribirSD(List<Task> listaTareas, Context context){
-
         File file = new File(context.getExternalFilesDir(null), "tareas.dat");
         try {
             FileOutputStream fo = new FileOutputStream (file);
@@ -44,10 +84,9 @@ public class SdManager {
         catch(IOException ex){
             ex.printStackTrace();
         }
-
     }
 
-    public List<Task> leerSD(Context context) {
+    public static List<Task> leerSD(Context context) {
         try {
             File file = new File(context.getExternalFilesDir(null), "tareas.dat");
             if (!file.exists()) {
@@ -61,7 +100,6 @@ public class SdManager {
             ObjectInput input = new ObjectInputStream(buffer);
 
             return (List<Task>) input.readObject();
-
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
             Toast.makeText(context, "Error al leer de la sd: Clase no encontrada", Toast.LENGTH_SHORT).show();

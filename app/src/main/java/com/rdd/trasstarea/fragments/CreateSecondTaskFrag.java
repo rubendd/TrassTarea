@@ -1,8 +1,12 @@
 package com.rdd.trasstarea.fragments;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +23,18 @@ import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.LottieAnimationView;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.model.Task;
-import com.rdd.trasstarea.database.tarjetasd.SdManager;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class CreateSecondTaskFrag extends Fragment {
 
     // Variables de instancia
+    private static final int SELECCIONAR_DOCUMENTO_REQUEST = 2;
+
     private String date1;  // Variable para almacenar la fecha 1
     private String video;
     private String audio;
@@ -118,10 +129,10 @@ public class CreateSecondTaskFrag extends Fragment {
 
         //Listener
         btnSalir.setOnClickListener(this::backFragment);
-        documento.setOnClickListener(this::onSelectDocumentClick);
-        audio.setOnClickListener(this::onSelectAudioClick);
-        imagen.setOnClickListener(this::onSelectImageClick);
-        video.setOnClickListener(this::onSelectVideoClick);
+        documento.setOnClickListener(v -> onSelectDocumentClick());
+        audio.setOnClickListener(v -> onSelectAudioClick());
+        imagen.setOnClickListener(v -> onSelectImgClick());
+        video.setOnClickListener(v -> onSelectVideoClick());
 
         btnCreateTask.setOnClickListener(v -> {
             sendData();
@@ -181,68 +192,144 @@ public class CreateSecondTaskFrag extends Fragment {
     }
 
 
-    // Lanzadores de resultados de actividad
-    private final ActivityResultLauncher<String> pickDocumentLauncher =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onDocumentSelected);
+    private void onSelectDocumentClick() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");  // Todos los tipos de archivos
 
-    private final ActivityResultLauncher<String> pickImageLauncher =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImageSelected);
+        seleccionarArchivo.launch(intent);
+    }
+    private void onSelectImgClick() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");  // Todos los tipos de archivos
 
-    private final ActivityResultLauncher<String> pickAudioLauncher =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onAudioSelected);
+        seleccionarArchivo.launch(intent);
+    }
+    private void onSelectVideoClick() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");  // Todos los tipos de archivos
 
-    private final ActivityResultLauncher<String> pickVideoLauncher =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onVideoSelected);
+        seleccionarArchivo.launch(intent);
+    }
+    private void onSelectAudioClick() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");  // Todos los tipos de archivos
 
-
-    // Métodos para manejar la selección de documentos, imágenes, audio y video
-    public void onSelectDocumentClick(View view) {
-        pickDocumentLauncher.launch("application/*");
+        seleccionarArchivo.launch(intent);
     }
 
+    ActivityResultLauncher<Intent> seleccionarArchivo = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                // Manejar el resultado de la selección de archivos
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    handleFileSelectionResult(result.getData());
+                }
+            });
 
-    public void onSelectImageClick(View view) {
-        pickImageLauncher.launch("image/*");
-    }
-
-    public void onSelectAudioClick(View view) {
-        pickAudioLauncher.launch("audio/*");
-    }
-
-    public void onSelectVideoClick(View view) {
-        pickVideoLauncher.launch("video/*");
-    }
-
-
-    // Métodos para manejar la selección de documentos, imágenes, audio y video
-
-
-    private void onDocumentSelected(Uri documentUri) {
-        if (documentUri != null) {
-            this.documento = SdManager.getPathFromUri(getContext(), documentUri);
+    private void handleFileSelectionResult(Intent data) {
+        if (data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                guardarArchivoEnDirectorio(uri);
+            }
         }
     }
 
 
-    private void onImageSelected(Uri imageUri) {
-        if (imageUri != null) {
-            this.imagen = SdManager.getPathFromUri(getContext(), imageUri);
+    private void guardarArchivoEnDirectorio(Uri uri) {
+        try {
+            InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
+            // Define la ruta de destino en tu directorio específico
+            File directorioApp = new File(requireActivity().getExternalFilesDir(null), "archivos_adjuntos");
+            if (!directorioApp.exists()) {
+                if (directorioApp.mkdirs()) {
+                    Log.d("Almacenamiento", "Directorio de archivos adjuntos creado: " + directorioApp.getAbsolutePath());
+                } else {
+                    Log.e("Almacenamiento", "Error al crear el directorio de archivos adjuntos");
+                    return;
+                }
+            }
+
+            String nombreArchivo = "archivo_" + System.currentTimeMillis()+"."; // Puedes definir tu propia lógica para el nombre del archivo
+            File archivoDestino = new File(directorioApp, nombreArchivo);
+
+            OutputStream outputStream = new FileOutputStream(archivoDestino);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            inputStream.close();
+            outputStream.close();
+
+            Log.d("Almacenamiento", "Archivo guardado en: " + archivoDestino.getAbsolutePath());
+
+            // Ahora, dependiendo del tipo de archivo (documento, audio, imagen, video),
+            // actualiza las variables correspondientes (documento, audio, imagen, video)
+            // para luego usarlas en tu lógica de envío de datos
+            // Ejemplo:
+            if (esTipoDocumento(uri)) {
+                documento = archivoDestino.getAbsolutePath();
+            } else if (esTipoAudio(uri)) {
+                audio = archivoDestino.getAbsolutePath();
+            } else if (esTipoImagen(uri)) {
+                imagen = archivoDestino.getAbsolutePath();
+            } else if (esTipoVideo(uri)) {
+                video = archivoDestino.getAbsolutePath();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Almacenamiento", "Error al guardar el archivo: " + e.getMessage());
         }
     }
 
+    private boolean esTipoDocumento(Uri uri) {
+        ContentResolver resolver = requireActivity().getContentResolver();
+        String tipoContenido = resolver.getType(uri);
 
-    private void onAudioSelected(Uri audioUri) {
-        if (audioUri != null) {
-            this.audio = SdManager.getPathFromUri(getContext(), audioUri);
+        if (tipoContenido != null) {
+            // Puedes ajustar esta lógica según los tipos MIME de documentos que deseas reconocer
+            return tipoContenido.startsWith("application/") || tipoContenido.startsWith("text/");
         }
+        return false;
     }
 
+    private boolean esTipoAudio(Uri uri) {
+        ContentResolver resolver = requireActivity().getContentResolver();
+        String tipoContenido = resolver.getType(uri);
 
-    private void onVideoSelected(Uri videoUri) {
-        if (videoUri != null) {
-            this.video = SdManager.getPathFromUri(getContext(), videoUri);
+        if (tipoContenido != null) {
+            return tipoContenido.startsWith("audio/");
         }
+        return false;  // Cambia esto según tus necesidades
     }
 
+    private boolean esTipoImagen(Uri uri) {
+        ContentResolver resolver = requireActivity().getContentResolver();
+        String tipoContenido = resolver.getType(uri);
 
+        if (tipoContenido != null) {
+            return tipoContenido.startsWith("image/");
+        }
+
+        return false;  // Cambia esto según tus necesidades
+    }
+
+    private boolean esTipoVideo(Uri uri) {
+        ContentResolver resolver = requireActivity().getContentResolver();
+        String tipoContenido = resolver.getType(uri);
+
+        if (tipoContenido != null) {
+            return tipoContenido.startsWith("video/");
+        }
+        return false;  // Cambia esto según tus necesidades
+    }
 }
