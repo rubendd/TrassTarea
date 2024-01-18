@@ -390,6 +390,7 @@ public class ListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, EditTaskActivity.class);
         if (editTaskLauncher != null) {
             intent.putExtra(EditTaskActivity.TAREA_EDITAR, task);
+            System.out.println(task.toString());
             editTaskLauncher.launch(intent);
         }
     }

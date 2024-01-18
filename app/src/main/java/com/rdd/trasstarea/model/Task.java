@@ -266,23 +266,23 @@ public class Task implements Serializable {
         return diferenciaEnMillis / (24 * 60 * 60 * 1000);
     }
 
-    // Método privado para convertir el calendario a formato de texto
 
 
-    // Método toString para representar la tarea como una cadena
-    @NonNull
     @Override
     public String toString() {
         return "Task{" +
-                "titulo='" + titulo + '\'' +
+                "id=" + id +
+                ", titulo='" + titulo + '\'' +
                 ", description='" + description + '\'' +
                 ", prioritaria=" + prioritaria +
                 ", daysLeft=" + daysLeft +
-                ", dateEnd=" + dateEnd +
+                ", dateEnd='" + dateEnd + '\'' +
+                ", fechaInicio='" + fechaInicio + '\'' +
                 ", progresState=" + progresState +
+                ", URL_doc='" + URL_doc + '\'' +
+                ", URL_img='" + URL_img + '\'' +
+                ", URL_aud='" + URL_aud + '\'' +
+                ", URL_vid='" + URL_vid + '\'' +
                 '}';
     }
-
-
-
 }

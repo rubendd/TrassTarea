@@ -1,4 +1,4 @@
-package com.rdd.trasstarea.tarjetasd;
+package com.rdd.trasstarea.database.tarjetasd;
 
 import android.content.Context;
 import android.database.Cursor;

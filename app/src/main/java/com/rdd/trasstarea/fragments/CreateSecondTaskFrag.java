@@ -1,12 +1,8 @@
 package com.rdd.trasstarea.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.FileUtils;
-import android.os.storage.StorageManager;
-import android.os.storage.StorageVolume;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +18,20 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.rdd.trasstarea.R;
-import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
-import com.rdd.trasstarea.tarjetasd.SdManager;
-
-import java.util.List;
-import java.util.Objects;
+import com.rdd.trasstarea.database.tarjetasd.SdManager;
 
 public class CreateSecondTaskFrag extends Fragment {
 
     // Variables de instancia
     private String date1;  // Variable para almacenar la fecha 1
+    private String video = "";
+    private String audio = "";
+    private String imagen = "";
+    private String documento = "";
+
+
+
     private Task task = new Task();  // Instancia de la clase Task para almacenar datos de la tarea
     private EditText descripcion;  // Campo de texto para la descripción de la tarea
     private LottieAnimationView btnCreateTask;  // Vista de animación para el botón de crear tarea
@@ -154,6 +153,23 @@ public class CreateSecondTaskFrag extends Fragment {
             comunicateFragments.getDate2().observe(getViewLifecycleOwner(), da -> task.setDateEnd(da));
             comunicateFragments.getPrioritario().observe(getViewLifecycleOwner(), task::setPrioritaria);
             comunicateFragments.getState().observe(getViewLifecycleOwner(), da -> task.setStatesNumber(Task.States.valueOf(String.valueOf(da))));
+            comunicateFragments.getUrl_audio().observe(getViewLifecycleOwner(), s -> {
+                audio = s;
+                System.out.println(audio);
+            });
+            comunicateFragments.getUrl_doc().observe(getViewLifecycleOwner(), s -> {
+                documento = s;
+                System.out.println(documento);
+            });
+            comunicateFragments.getUrl_video().observe(getViewLifecycleOwner(), s -> {
+                video = s;
+                System.out.println(video);
+            });
+            comunicateFragments.getUrl_img().observe(getViewLifecycleOwner(), s -> {
+                imagen = s;
+                System.out.println(imagen);
+            });
+
         }
     }
 
@@ -161,9 +177,25 @@ public class CreateSecondTaskFrag extends Fragment {
     private void sendData() {
         comunicateFragments.setDescription(descripcion.getText().toString());
         comunicateFragments.setUrl_doc(documento);
+        comunicateFragments.getUrl_doc().observe(getViewLifecycleOwner(),s -> {
+            //TODO hacer esto
+        });
+        comunicateFragments.getUrl_img().observe(getViewLifecycleOwner(),s -> {
+            imagen = s;
+        });
+        comunicateFragments.getUrl_audio().observe(getViewLifecycleOwner(),s -> {
+            audio = s;
+        });
+        comunicateFragments.setUrl_audio(audio);
+        comunicateFragments.setUrl_video(video);
+        comunicateFragments.setUrl_img(imagen);
+        System.out.println(documento);
+        System.out.println(audio);
+        System.out.println(video);
+        System.out.println(imagen);
     }
 
-    // Lanzadores de resultados de actividad
+
     // Lanzadores de resultados de actividad
     private final ActivityResultLauncher<String> pickDocumentLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::onDocumentSelected);
@@ -183,6 +215,7 @@ public class CreateSecondTaskFrag extends Fragment {
         pickDocumentLauncher.launch("application/*");
     }
 
+
     public void onSelectImageClick(View view) {
         pickImageLauncher.launch("image/*");
     }
@@ -195,26 +228,35 @@ public class CreateSecondTaskFrag extends Fragment {
         pickVideoLauncher.launch("video/*");
     }
 
+
     // Métodos para manejar la selección de documentos, imágenes, audio y video
 
-    private String documento = "";
+
     private void onDocumentSelected(Uri documentUri) {
-        // Manejar el documento seleccionado
-        documento = SdManager.getPathFromUri(getContext(), documentUri);
+        if (documentUri != null) {
+            documento = SdManager.getPathFromUri(getContext(), documentUri);
+        }
     }
-    private String imagen = "";
+
+
     private void onImageSelected(Uri imageUri) {
-        imagen = SdManager.getPathFromUri(getContext(), imageUri);
+        if (imageUri != null) {
+            imagen = SdManager.getPathFromUri(getContext(), imageUri);
+        }
     }
 
-    private String audio = "";
+
     private void onAudioSelected(Uri audioUri) {
-        audio = SdManager.getPathFromUri(getContext(), audioUri);
+        if (audioUri != null) {
+            audio = SdManager.getPathFromUri(getContext(), audioUri);
+        }
     }
 
-    private String video = "";
+
     private void onVideoSelected(Uri videoUri) {
-        video = SdManager.getPathFromUri(getContext(), videoUri);
+        if (videoUri != null) {
+            video = SdManager.getPathFromUri(getContext(), videoUri);
+        }
     }
 
 

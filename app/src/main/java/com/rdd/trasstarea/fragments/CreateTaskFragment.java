@@ -44,25 +44,29 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Verifica si el LiveData de la tarea está inicializado
-        if (compartirViewModel.getTaskLiveData().isInitialized()) {
-            text.setText("Editar tarea");
+        // Verifica si la vista del fragmento es nula
+        if (getView() != null) {
+            // Verifica si el LiveData de la tarea está inicializado
+            if (compartirViewModel.getTaskLiveData().isInitialized()) {
+                text.setText("Editar tarea");
 
-            // Observa cambios en la tarea y actualiza la interfaz de usuario en consecuencia
-            compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
-                if (task != null) {
-                    titulo.setText(task.getTitulo());
-                    date1.setText(ListController.calendarToText(Calendar.getInstance()));
-                    date2.setText(task.getDateEnd());
-                    prioritaria.setChecked(task.isPrioritaria());
+                // Observa cambios en la tarea y actualiza la interfaz de usuario en consecuencia
+                compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
+                    if (task != null) {
+                        titulo.setText(task.getTitulo());
+                        date1.setText(ListController.calendarToText(Calendar.getInstance()));
+                        date2.setText(task.getDateEnd());
+                        prioritaria.setChecked(task.isPrioritaria());
 
-                    obtenerState(task);
+                        obtenerState(task);
 
-                    outState.putSerializable("task", task);  // Guarda la tarea en el Bundle
-                }
-            });
+                        outState.putSerializable("task", task);  // Guarda la tarea en el Bundle
+                    }
+                });
+            }
         }
     }
+
 
     // Método llamado al crear el fragmento
     @Override
@@ -143,6 +147,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
             compartirViewModel.getDate1().observe(getViewLifecycleOwner(), da -> date1.setText(da));
             compartirViewModel.getDate2().observe(getViewLifecycleOwner(), da -> date2.setText(da));
             compartirViewModel.getPrioritario().observe(getViewLifecycleOwner(), da -> prioritaria.setChecked(da));
+
         }
     }
 

@@ -75,14 +75,19 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
     public void mandarTask() {
         // Obtiene los valores del formulario a través del ViewModel
         DESCRIPTION = comunicateFragments.getDescription().getValue();
-
-        // Crea una nueva tarea
-        editTask = comunicateFragments.getTaskLiveData().getValue();
-
         URL_AUDIO = comunicateFragments.getUrl_audio().getValue();
         URL_DOC = comunicateFragments.getUrl_doc().getValue();
         URL_IMG = comunicateFragments.getUrl_img().getValue();
         URL_VIDEO = comunicateFragments.getUrl_video().getValue();
+
+        // Crea una nueva tarea
+        editTask = comunicateFragments.getTaskLiveData().getValue();
+
+
+
+        System.out.println(URL_VIDEO.isEmpty() ? "Esta vacio" : URL_VIDEO);
+        System.out.println(URL_DOC.isEmpty() ? "Esta vacio" : URL_DOC);
+        System.out.println(URL_IMG.isEmpty() ? "Esta vacio" : URL_IMG);
 
         if (editTask != null) {
             editTask.setDescription(DESCRIPTION);
@@ -92,6 +97,7 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
             editTask.setURL_vid(URL_VIDEO);
         }
 
+        System.out.println(editTask.toString());
         // Prepara la intención para devolver la tarea al fragmento anterior
         Intent intent = new Intent();
         intent.putExtra(TAREA_NUEVA, editTask);
