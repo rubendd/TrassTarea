@@ -25,10 +25,10 @@ public class CreateSecondTaskFrag extends Fragment {
 
     // Variables de instancia
     private String date1;  // Variable para almacenar la fecha 1
-    private String video = "";
-    private String audio = "";
-    private String imagen = "";
-    private String documento = "";
+    private String video;
+    private String audio;
+    private String imagen;
+    private String documento;
 
 
 
@@ -83,6 +83,7 @@ public class CreateSecondTaskFrag extends Fragment {
     private void recibirTask() {
         if (comunicateFragments.getTaskLiveData().isInitialized()) {
             comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> this.task = task);
+            System.out.println(task.toString());
         }
     }
 
@@ -148,26 +149,23 @@ public class CreateSecondTaskFrag extends Fragment {
             comunicateFragments.getTitulo().observe(getViewLifecycleOwner(), task::setTitulo);
             comunicateFragments.getDate1().observe(getViewLifecycleOwner(), da -> {
                 date1 = da;
-                System.out.println(date1);
             });
             comunicateFragments.getDate2().observe(getViewLifecycleOwner(), da -> task.setDateEnd(da));
             comunicateFragments.getPrioritario().observe(getViewLifecycleOwner(), task::setPrioritaria);
             comunicateFragments.getState().observe(getViewLifecycleOwner(), da -> task.setStatesNumber(Task.States.valueOf(String.valueOf(da))));
+
             comunicateFragments.getUrl_audio().observe(getViewLifecycleOwner(), s -> {
                 audio = s;
                 System.out.println(audio);
             });
             comunicateFragments.getUrl_doc().observe(getViewLifecycleOwner(), s -> {
                 documento = s;
-                System.out.println(documento);
             });
             comunicateFragments.getUrl_video().observe(getViewLifecycleOwner(), s -> {
                 video = s;
-                System.out.println(video);
             });
             comunicateFragments.getUrl_img().observe(getViewLifecycleOwner(), s -> {
                 imagen = s;
-                System.out.println(imagen);
             });
 
         }
@@ -176,23 +174,10 @@ public class CreateSecondTaskFrag extends Fragment {
     // Método para enviar datos al ViewModel compartido
     private void sendData() {
         comunicateFragments.setDescription(descripcion.getText().toString());
-        comunicateFragments.setUrl_doc(documento);
-        comunicateFragments.getUrl_doc().observe(getViewLifecycleOwner(),s -> {
-            //TODO hacer esto
-        });
-        comunicateFragments.getUrl_img().observe(getViewLifecycleOwner(),s -> {
-            imagen = s;
-        });
-        comunicateFragments.getUrl_audio().observe(getViewLifecycleOwner(),s -> {
-            audio = s;
-        });
-        comunicateFragments.setUrl_audio(audio);
-        comunicateFragments.setUrl_video(video);
-        comunicateFragments.setUrl_img(imagen);
-        System.out.println(documento);
-        System.out.println(audio);
-        System.out.println(video);
-        System.out.println(imagen);
+        comunicateFragments.setUrl_doc((documento == null) ? "" : documento);
+        comunicateFragments.setUrl_audio((audio == null) ? "" : audio);
+        comunicateFragments.setUrl_video((video == null) ? "" : video);
+        comunicateFragments.setUrl_img((imagen == null) ? "" : imagen);
     }
 
 
@@ -234,28 +219,28 @@ public class CreateSecondTaskFrag extends Fragment {
 
     private void onDocumentSelected(Uri documentUri) {
         if (documentUri != null) {
-            documento = SdManager.getPathFromUri(getContext(), documentUri);
+            this.documento = SdManager.getPathFromUri(getContext(), documentUri);
         }
     }
 
 
     private void onImageSelected(Uri imageUri) {
         if (imageUri != null) {
-            imagen = SdManager.getPathFromUri(getContext(), imageUri);
+            this.imagen = SdManager.getPathFromUri(getContext(), imageUri);
         }
     }
 
 
     private void onAudioSelected(Uri audioUri) {
         if (audioUri != null) {
-            audio = SdManager.getPathFromUri(getContext(), audioUri);
+            this.audio = SdManager.getPathFromUri(getContext(), audioUri);
         }
     }
 
 
     private void onVideoSelected(Uri videoUri) {
         if (videoUri != null) {
-            video = SdManager.getPathFromUri(getContext(), videoUri);
+            this.video = SdManager.getPathFromUri(getContext(), videoUri);
         }
     }
 

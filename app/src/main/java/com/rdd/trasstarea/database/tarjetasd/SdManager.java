@@ -7,36 +7,72 @@ import android.os.Build;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.rdd.trasstarea.R;
+import com.rdd.trasstarea.model.Task;
+
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.List;
 
 public class SdManager {
 
-/*
-    public void guardarEnSd(){
-        File file = new File(this.getExternalFilesDir(null), fichero);
 
-//        //Para directorio público compartido
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) //Posterior a Android 11
-//            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), fichero);
-//        else
-//            file = new File(Environment.getExternalStorageDirectory(), fichero);
 
-        OutputStreamWriter osw = null;
+    public static void escribirSD(List<Task> listaTareas, Context context){
+
+        File file = new File(context.getExternalFilesDir(null), "tareas.dat");
         try {
-            osw = new OutputStreamWriter(new FileOutputStream(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            FileOutputStream fo = new FileOutputStream (file);
+            ObjectOutputStream oo = new ObjectOutputStream(fo);
+
+            oo.writeObject(listaTareas);
+
+            oo.close();
+            fo.close();
         }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+    public List<Task> leerSD(Context context) {
         try {
-            osw.write(texto);
-            osw.flush();
-            osw.close();
-        } catch (IOException | NullPointerException e) {
-            Toast.makeText(this, R.string.msg_readwrite_error, Toast.LENGTH_SHORT).show();
+            File file = new File(context.getExternalFilesDir(null), "tareas.dat");
+            if (!file.exists()) {
+                // Manejar el caso en el que el archivo no existe
+                Toast.makeText(context, "El archivo no existe", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
+            InputStream fileInputStream = new FileInputStream(file);
+            InputStream buffer = new BufferedInputStream(fileInputStream);
+            ObjectInput input = new ObjectInputStream(buffer);
+
+            return (List<Task>) input.readObject();
+
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            Toast.makeText(context, "Error al leer de la sd: Clase no encontrada", Toast.LENGTH_SHORT).show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Toast.makeText(context, "Error al leer de la sd: IOException", Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(this, R.string.msg_save_ok, Toast.LENGTH_SHORT).show();
-    }*/
+        return null;
+    }
+
+
 
 
     public static String getPathFromUri(Context context, Uri uri) {

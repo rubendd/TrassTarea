@@ -63,6 +63,9 @@ public class Task implements Serializable {
     }
 
     public String getURL_vid() {
+        if (URL_vid == null){
+
+        }
         return URL_vid;
     }
 
