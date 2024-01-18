@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -36,6 +37,10 @@ public class CreateSecondTaskFrag extends Fragment {
     private static final int SELECCIONAR_DOCUMENTO_REQUEST = 2;
 
     private String date1;  // Variable para almacenar la fecha 1
+    private TextView ruta_imagen;
+    private TextView ruta_video;
+    private TextView ruta_audio;
+    private TextView ruta_documento;
     private String video;
     private String audio;
     private String imagen;
@@ -87,6 +92,10 @@ public class CreateSecondTaskFrag extends Fragment {
     private void putDataTask() {
         if (comunicateFragments.getTaskLiveData().isInitialized()) {
             comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> descripcion.setText(task.getDescription()));
+            comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> ruta_video.setText(task.getURL_vid()));
+            comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> ruta_audio.setText(task.getURL_aud()));
+            comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> ruta_documento.setText(task.getURL_doc()));
+            comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> ruta_imagen.setText(task.getURL_img()));
         }
     }
 
@@ -126,6 +135,10 @@ public class CreateSecondTaskFrag extends Fragment {
         Button audio = fragmento2.findViewById(R.id.audio);
         Button imagen = fragmento2.findViewById(R.id.imagen);
         btnCreateTask = fragmento2.findViewById(R.id.create);
+        ruta_audio = fragmento2.findViewById(R.id.labelAudio);
+        ruta_documento = fragmento2.findViewById(R.id.labelDocumento);
+        ruta_imagen = fragmento2.findViewById(R.id.labelImagen);
+        ruta_video = fragmento2.findViewById(R.id.labelVideo);
 
         //Listener
         btnSalir.setOnClickListener(this::backFragment);
@@ -185,10 +198,10 @@ public class CreateSecondTaskFrag extends Fragment {
     // Método para enviar datos al ViewModel compartido
     private void sendData() {
         comunicateFragments.setDescription(descripcion.getText().toString());
-        comunicateFragments.setUrl_doc((documento == null) ? "" : documento);
-        comunicateFragments.setUrl_audio((audio == null) ? "" : audio);
-        comunicateFragments.setUrl_video((video == null) ? "" : video);
-        comunicateFragments.setUrl_img((imagen == null) ? "" : imagen);
+        comunicateFragments.setUrl_doc(ruta_documento.getText().toString());
+        comunicateFragments.setUrl_audio(ruta_audio.getText().toString());
+        comunicateFragments.setUrl_video(ruta_video.getText().toString());
+        comunicateFragments.setUrl_img(ruta_imagen.getText().toString());
     }
 
 
@@ -239,7 +252,10 @@ public class CreateSecondTaskFrag extends Fragment {
         }
     }
 
-
+    /**
+     * Guardar en la sd card el archivo.
+     * @param uri
+     */
     private void guardarArchivoEnDirectorio(Uri uri) {
         try {
             InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
@@ -271,18 +287,18 @@ public class CreateSecondTaskFrag extends Fragment {
 
             Log.d("Almacenamiento", "Archivo guardado en: " + archivoDestino.getAbsolutePath());
 
-            // Ahora, dependiendo del tipo de archivo (documento, audio, imagen, video),
-            // actualiza las variables correspondientes (documento, audio, imagen, video)
-            // para luego usarlas en tu lógica de envío de datos
-            // Ejemplo:
             if (esTipoDocumento(uri)) {
                 documento = archivoDestino.getAbsolutePath();
+                ruta_documento.setText(documento);
             } else if (esTipoAudio(uri)) {
                 audio = archivoDestino.getAbsolutePath();
+                ruta_audio.setText(audio);
             } else if (esTipoImagen(uri)) {
                 imagen = archivoDestino.getAbsolutePath();
+                ruta_imagen.setText(imagen);
             } else if (esTipoVideo(uri)) {
                 video = archivoDestino.getAbsolutePath();
+                ruta_video.setText(video);
             }
 
         } catch (IOException e) {

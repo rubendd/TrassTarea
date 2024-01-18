@@ -39,4 +39,9 @@
     <string name="estadisticas">Estadisticas</string>
     <string name="audio">audio</string>
     <string name="documento">documento</string>
+    <string name="ruta_imagen">ruta/imagen</string>
+    <string name="ruta_del_documento">Ruta del Documento</string>
+    <string name="ruta_del_video">Ruta del Video</string>
+    <string name="ruta_del_audio">Ruta del Audio</string>
+    <string name="ruta_de_la_imagen">Ruta de la Imagen</string>
 </resources>

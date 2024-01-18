@@ -113,7 +113,6 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        compartirViewModel.getTaskLiveData().removeObservers(getViewLifecycleOwner());
     }
 
     // Método para obtener datos de la tarea y actualizar la interfaz de usuario
@@ -173,7 +172,6 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
     private void nextActivity(View view) {
         if (nextPageCheck()) {
             sendData();
-
             // Reemplaza el fragmento actual con el segundo fragmento y lo agrega a la pila de retroceso
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_task_create, createSecondTaskFrag, "CreateSecond")

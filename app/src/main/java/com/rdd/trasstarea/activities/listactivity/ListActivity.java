@@ -111,19 +111,19 @@ public class ListActivity extends AppCompatActivity {
         public void createTask() {
             // Añadir nueva tarea y notificar al adaptador
 
-                // Añadir nueva tarea y notificar al adaptador
-                listTareas.add(createTask);
-                taskRepository.insertarTask(createTask);
-                customAdapter.updateData(listTareas);
-                customAdapter.notifyItemInserted(customAdapter.getItemCount());
-                if (favorite) {
-                    filtrarFavoritos();
-                }
-                lanzarMensajeNoTareas();
-                SdManager.escribirSD(listTareas, getApplicationContext());
+            // Añadir nueva tarea y notificar al adaptador
+            listTareas.add(createTask);
+            taskRepository.insertarTask(createTask);
+            customAdapter.updateData(listTareas);
+            customAdapter.notifyItemInserted(customAdapter.getItemCount());
+            if (favorite) {
+                filtrarFavoritos();
+            }
+            lanzarMensajeNoTareas();
+            SdManager.escribirSD(listTareas, getApplicationContext());
 
-                // La tarea ya existe, manejarlo según tus necesidades
-                Toast.makeText(ListActivity.this, "pepe", Toast.LENGTH_SHORT).show();
+            // La tarea ya existe, manejarlo según tus necesidades
+            Toast.makeText(ListActivity.this, "pepe", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -146,11 +146,8 @@ public class ListActivity extends AppCompatActivity {
 
 
         taskRepository = new TaskRepository(getApplicationContext());
-        if (guardarEnSd){
-            loadTasksFromSd();
-        } else {
-            loadTasks();
-        }
+        loadTasks();
+
         setContentView(R.layout.listado_tareas);
         mensaje = findViewById(R.id.mensaje);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -264,10 +261,10 @@ public class ListActivity extends AppCompatActivity {
             new AboutDialog(this, "Rubén Díaz Dugo" + "\n" + "IES TRASSIERRA 2023");
             return true; // Indica que el evento ha sido manejado
         }
-        if (item.getItemId() == R.id.estadisticas){
+        if (item.getItemId() == R.id.estadisticas) {
             new AboutDialog(this, Estadisticas.mostrarEstadisticas(listTareas));
         }
-        if (item.getItemId() == R.id.action_settings){
+        if (item.getItemId() == R.id.action_settings) {
             initSettingConfigure();
         }
         if (item.getItemId() == R.id.action_exit) {
@@ -284,10 +281,6 @@ public class ListActivity extends AppCompatActivity {
         int iconResource = favorite ? R.drawable.baseline_stars_24 : R.drawable.baseline_stars_24_black;
         item.setIcon(iconResource);
     }
-
-
-
-
 
 
     private void checkFiltrado() {
@@ -402,18 +395,15 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
-
-
-
     //------------------------------Configuracion-------------------------------------------
 
-    private void initSettingConfigure(){
+    private void initSettingConfigure() {
         Intent intent = new Intent(this, SettingsActivity.class);
         isRecreado = true;
         startActivity(intent);
     }
 
-    private void setSettings(){
+    private void setSettings() {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         //Tema oscuro.
@@ -424,7 +414,7 @@ public class ListActivity extends AppCompatActivity {
         Configuration configuration = getResources().getConfiguration();
 
         //Tamaño fuente
-        String fuente = preferences.getString("fuente","b");
+        String fuente = preferences.getString("fuente", "b");
         if (fuente.equals("a")) configuration.fontScale = 0.8f;
         if (fuente.equals("b")) configuration.fontScale = 1.0f;
         if (fuente.equals("c")) configuration.fontScale = 1.3f;
@@ -433,7 +423,7 @@ public class ListActivity extends AppCompatActivity {
 
 
         //TODO mejorar la parte del asc, ya que no se guarda bien.
-        boolean sd = preferences.getBoolean("sd",false);
+        boolean sd = preferences.getBoolean("sd", false);
         System.out.println(sd);
         if (sd) {
             pedirPermisos();
@@ -466,7 +456,7 @@ public class ListActivity extends AppCompatActivity {
         System.out.println(listTareas.size() + " FDFSDFFFFFFFFFFFFFFFFF");
 
 
-        if (isRecreado){
+        if (isRecreado) {
             recreate();
             isRecreado = !isRecreado;
         }
@@ -487,6 +477,7 @@ public class ListActivity extends AppCompatActivity {
 
         future.thenAccept(listTareas::addAll).join();
     }
+
     private void loadTasksFromSd() {
         listTareas = SdManager.leerSD(getApplicationContext());
     }
@@ -494,7 +485,7 @@ public class ListActivity extends AppCompatActivity {
     // Register the permissions callback, which handles the user's response to the
 // system permissions dialog. Save the return value, an instance of
 // ActivityResultLauncher, as an instance variable.
-    private void pedirPermisos(){
+    private void pedirPermisos() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
