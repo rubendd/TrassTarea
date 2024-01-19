@@ -121,10 +121,6 @@ public class ListActivity extends AppCompatActivity {
             }
             lanzarMensajeNoTareas();
             SdManager.escribirSD(listTareas, getApplicationContext());
-
-            // La tarea ya existe, manejarlo según tus necesidades
-            Toast.makeText(ListActivity.this, "pepe", Toast.LENGTH_SHORT).show();
-
         }
 
         @Override
@@ -170,6 +166,11 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!isRecreado){
+            setSettings();
+        }
+        isRecreado = !isRecreado;
+
     }
 
     @Override
@@ -454,7 +455,6 @@ public class ListActivity extends AppCompatActivity {
 
         // Imprimir el tamaño de la lista después de ordenar
         System.out.println(listTareas.size() + " FDFSDFFFFFFFFFFFFFFFFF");
-
 
         if (isRecreado) {
             recreate();
