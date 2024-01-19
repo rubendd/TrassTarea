@@ -79,7 +79,7 @@ public class ListController {
         return listTask;
     }
     public static List<Task> orderByProgress(List<Task> listTask){
-        Collections.sort(listTask, Comparator.comparingLong(Task::getDaysLeft));
+        Collections.sort(listTask, Comparator.comparingLong(Task::getProgresState));
         return listTask;
     }
 

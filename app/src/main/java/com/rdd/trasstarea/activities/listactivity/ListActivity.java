@@ -57,7 +57,6 @@ public class ListActivity extends AppCompatActivity {
     TaskRepository taskRepository;
 
     private static final int CODIGO_DE_SOLICITUD = 1; // Puedes usar cualquier número entero
-    private boolean guardarEnSd = false;
 
     // Constantes para las claves de Bundle
     public static final String TASK_LIST = "taskList";
@@ -87,6 +86,7 @@ public class ListActivity extends AppCompatActivity {
 
     //Bandera para recreado
     private boolean isRecreado = false;
+    private static int prueba = 0;
 
     /**
      * -------------------------------Interfaz--------------------------------------
@@ -139,11 +139,10 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        prueba++;
+        System.out.println(prueba);
         taskRepository = new TaskRepository(getApplicationContext());
         loadTasks();
-
         setContentView(R.layout.listado_tareas);
         mensaje = findViewById(R.id.mensaje);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -166,11 +165,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isRecreado){
-            setSettings();
-        }
-        isRecreado = !isRecreado;
-
+        setSettings();
     }
 
     @Override
@@ -400,8 +395,8 @@ public class ListActivity extends AppCompatActivity {
 
     private void initSettingConfigure() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        isRecreado = true;
         startActivity(intent);
+        isRecreado = !isRecreado;
     }
 
     private void setSettings() {
@@ -427,7 +422,7 @@ public class ListActivity extends AppCompatActivity {
         boolean sd = preferences.getBoolean("sd", false);
         System.out.println(sd);
         if (sd) {
-            pedirPermisos();
+          //  pedirPermisos();
             //  guardarListaEnSd(); //TODO hacer guardado
         }
 
@@ -452,10 +447,6 @@ public class ListActivity extends AppCompatActivity {
         boolean asc = preferences.getBoolean("asc", true);
         listTareas = ListController.orderByAsc(new ArrayList<>(listTareas), asc);
 
-
-        // Imprimir el tamaño de la lista después de ordenar
-        System.out.println(listTareas.size() + " FDFSDFFFFFFFFFFFFFFFFF");
-
         if (isRecreado) {
             recreate();
             isRecreado = !isRecreado;
@@ -478,9 +469,7 @@ public class ListActivity extends AppCompatActivity {
         future.thenAccept(listTareas::addAll).join();
     }
 
-    private void loadTasksFromSd() {
-        listTareas = SdManager.leerSD(getApplicationContext());
-    }
+
 
     // Register the permissions callback, which handles the user's response to the
 // system permissions dialog. Save the return value, an instance of

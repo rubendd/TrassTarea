@@ -31,8 +31,10 @@
         <!-- Customize other theme attributes as needed -->
         <item name="colorPrimaryDark">#0077CC</item>
         <item name="colorAccent">#33A4FF</item>
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:actionMenuTextColor">#090707</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:actionMenuTextColor">#FFFFFF</item>
+        <item name="android:background">#BF212837</item>
+        <item name="android:textColorSecondary">#BFFFFFFF</item>
     </style>
 
     <style name="ActionBarItemTextAppearance" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">

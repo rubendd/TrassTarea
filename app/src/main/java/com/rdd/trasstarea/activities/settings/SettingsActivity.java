@@ -49,15 +49,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    /*
-    private void setSettings(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        //Tema oscuro.
-        boolean temaClaro = preferences.getBoolean("claro", true);
-        AppCompatDelegate.setDefaultNightMode(temaClaro ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
-    }
-    */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //El recurso 'android.R.id.home' es el botón 'home' (flecha atrás) en la barra de acción
@@ -205,6 +196,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
         }
+
+
     }
 }
 
