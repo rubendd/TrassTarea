@@ -83,12 +83,6 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
         // Crea una nueva tarea
         editTask = comunicateFragments.getTaskLiveData().getValue();
 
-
-
-        System.out.println(URL_VIDEO.isEmpty() ? "Esta vacio" : URL_VIDEO);
-        System.out.println(URL_DOC.isEmpty() ? "Esta vacio" : URL_DOC);
-        System.out.println(URL_IMG.isEmpty() ? "Esta vacio" : URL_IMG);
-
         if (editTask != null) {
             editTask.setDescription(DESCRIPTION);
             editTask.setURL_aud(URL_AUDIO);
@@ -97,7 +91,6 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
             editTask.setURL_vid(URL_VIDEO);
         }
 
-        System.out.println(editTask.toString());
         // Prepara la intención para devolver la tarea al fragmento anterior
         Intent intent = new Intent();
         intent.putExtra(TAREA_NUEVA, editTask);

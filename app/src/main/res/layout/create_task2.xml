@@ -48,7 +48,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                android:text="Imagen"
+                android:text="@string/imagens"
                 android:textColor="#00796B" />
 
             <TextView
@@ -76,7 +76,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="5dp"
-                android:text="Audio"
+                android:text="@string/audios"
                 android:textColor="#00796B" />
 
             <TextView
@@ -104,7 +104,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="2dp"
-                android:text="Video"
+                android:text="@string/videos"
                 android:textColor="#00796B" />
 
             <TextView
@@ -133,7 +133,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="2dp"
                 android:onClick="onSelectDocumentClick"
-                android:text="Documento" />
+                android:text="@string/documentos" />
 
             <TextView
                 android:id="@+id/labelDocumento"

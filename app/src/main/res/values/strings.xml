@@ -44,4 +44,8 @@
     <string name="ruta_del_video">Ruta del Video</string>
     <string name="ruta_del_audio">Ruta del Audio</string>
     <string name="ruta_de_la_imagen">Ruta de la Imagen</string>
+    <string name="documentos">Documento</string>
+    <string name="audios">Audio</string>
+    <string name="imagens">Imagen</string>
+    <string name="videos">Video</string>
 </resources>
