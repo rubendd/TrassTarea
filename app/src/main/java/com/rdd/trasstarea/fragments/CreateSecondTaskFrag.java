@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -259,6 +261,10 @@ public class CreateSecondTaskFrag extends Fragment {
     private void guardarArchivoEnDirectorio(Uri uri) {
         try {
             InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
+
+            // Obtener el nombre del archivo original desde la URI
+            String nombreArchivoOriginal = obtenerNombreArchivoDesdeUri(uri);
+
             // Define la ruta de destino en tu directorio específico
             File directorioApp = new File(requireActivity().getExternalFilesDir(null), "archivos_adjuntos");
             if (!directorioApp.exists()) {
@@ -270,8 +276,8 @@ public class CreateSecondTaskFrag extends Fragment {
                 }
             }
 
-            String nombreArchivo = "archivo_" + System.currentTimeMillis()+"."; // Puedes definir tu propia lógica para el nombre del archivo
-            File archivoDestino = new File(directorioApp, nombreArchivo);
+            // Usar el mismo nombre del archivo original
+            File archivoDestino = new File(directorioApp, nombreArchivoOriginal);
 
             OutputStream outputStream = new FileOutputStream(archivoDestino);
 
@@ -306,6 +312,26 @@ public class CreateSecondTaskFrag extends Fragment {
             Log.e("Almacenamiento", "Error al guardar el archivo: " + e.getMessage());
         }
     }
+
+    // Método para obtener el nombre del archivo desde la URI
+    private String obtenerNombreArchivoDesdeUri(Uri uri) {
+        Cursor cursor = requireActivity().getContentResolver().query(uri, null, null, null, null);
+        String nombreArchivo = "";
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                int nombreIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                nombreArchivo = cursor.getString(nombreIndex);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return nombreArchivo;
+    }
+
 
     private boolean esTipoDocumento(Uri uri) {
         ContentResolver resolver = requireActivity().getContentResolver();

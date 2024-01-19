@@ -85,7 +85,7 @@ public class ListController {
 
     public static List<Task> orderByAsc(List<Task> listTask, boolean asc) {
         if (!asc) {
-            Collections.sort(listTask, Comparator.comparingLong(Task::getProgresState));
+            Collections.reverse(listTask);
         }
         return listTask;
     }
