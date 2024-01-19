@@ -86,7 +86,7 @@ public class ListActivity extends AppCompatActivity {
 
     //Bandera para recreado
     private boolean isRecreado = false;
-    private static int prueba = 0;
+
 
     /**
      * -------------------------------Interfaz--------------------------------------
@@ -110,8 +110,6 @@ public class ListActivity extends AppCompatActivity {
         @Override
         public void createTask() {
             // Añadir nueva tarea y notificar al adaptador
-
-            // Añadir nueva tarea y notificar al adaptador
             listTareas.add(createTask);
             taskRepository.insertarTask(createTask);
             customAdapter.updateData(listTareas);
@@ -120,7 +118,7 @@ public class ListActivity extends AppCompatActivity {
                 filtrarFavoritos();
             }
             lanzarMensajeNoTareas();
-            SdManager.escribirSD(listTareas, getApplicationContext());
+          //  SdManager.escribirSD(listTareas, getApplicationContext());
         }
 
         @Override
@@ -139,8 +137,6 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prueba++;
-        System.out.println(prueba);
         taskRepository = new TaskRepository(getApplicationContext());
         loadTasks();
         setContentView(R.layout.listado_tareas);

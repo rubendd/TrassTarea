@@ -258,7 +258,7 @@ public class CreateSecondTaskFrag extends Fragment {
      * Guardar en la sd card el archivo.
      * @param uri
      */
-    private void guardarArchivoEnDirectorio(Uri uri) {
+    public void guardarArchivoEnDirectorio(Uri uri) {
         try {
             InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
 

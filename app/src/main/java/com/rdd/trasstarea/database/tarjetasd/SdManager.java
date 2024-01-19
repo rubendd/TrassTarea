@@ -69,47 +69,51 @@ public class SdManager {
         }
     }
 
+    /**
+     * Este metodo no sirve, de nada es para guardar las tareas en fichero
+     * public static void escribirSD(List<Task> listaTareas, Context context){
+     *         File file = new File(context.getExternalFilesDir(null), "tareas.dat");
+     *         try {
+     *             FileOutputStream fo = new FileOutputStream (file);
+     *             ObjectOutputStream oo = new ObjectOutputStream(fo);
+     *
+     *             oo.writeObject(listaTareas);
+     *
+     *             oo.close();
+     *             fo.close();
+     *         }
+     *         catch(IOException ex){
+     *             ex.printStackTrace();
+     *         }
+     *     }
+     */
 
-    public static void escribirSD(List<Task> listaTareas, Context context){
-        File file = new File(context.getExternalFilesDir(null), "tareas.dat");
-        try {
-            FileOutputStream fo = new FileOutputStream (file);
-            ObjectOutputStream oo = new ObjectOutputStream(fo);
-
-            oo.writeObject(listaTareas);
-
-            oo.close();
-            fo.close();
-        }
-        catch(IOException ex){
-            ex.printStackTrace();
-        }
-    }
-
-    public static List<Task> leerSD(Context context) {
-        try {
-            File file = new File(context.getExternalFilesDir(null), "tareas.dat");
-            if (!file.exists()) {
-                // Manejar el caso en el que el archivo no existe
-                Toast.makeText(context, "El archivo no existe", Toast.LENGTH_SHORT).show();
-                return null;
-            }
-
-            InputStream fileInputStream = new FileInputStream(file);
-            InputStream buffer = new BufferedInputStream(fileInputStream);
-            ObjectInput input = new ObjectInputStream(buffer);
-
-            return (List<Task>) input.readObject();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            Toast.makeText(context, "Error al leer de la sd: Clase no encontrada", Toast.LENGTH_SHORT).show();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            Toast.makeText(context, "Error al leer de la sd: IOException", Toast.LENGTH_SHORT).show();
-        }
-        return null;
-    }
-
+    /**
+     *
+     * public static List<Task> leerSD(Context context) {
+     *         try {
+     *             File file = new File(context.getExternalFilesDir(null), "tareas.dat");
+     *             if (!file.exists()) {
+     *                 // Manejar el caso en el que el archivo no existe
+     *                 Toast.makeText(context, "El archivo no existe", Toast.LENGTH_SHORT).show();
+     *                 return null;
+     *             }
+     *
+     *             InputStream fileInputStream = new FileInputStream(file);
+     *             InputStream buffer = new BufferedInputStream(fileInputStream);
+     *             ObjectInput input = new ObjectInputStream(buffer);
+     *
+     *             return (List<Task>) input.readObject();
+     *         } catch (ClassNotFoundException ex) {
+     *             ex.printStackTrace();
+     *             Toast.makeText(context, "Error al leer de la sd: Clase no encontrada", Toast.LENGTH_SHORT).show();
+     *         } catch (IOException ex) {
+     *             ex.printStackTrace();
+     *             Toast.makeText(context, "Error al leer de la sd: IOException", Toast.LENGTH_SHORT).show();
+     *         }
+     *         return null;
+     *     }
+     */
 
 
 
