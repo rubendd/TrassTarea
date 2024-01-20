@@ -2,10 +2,12 @@ package com.rdd.trasstarea.database.tarjetasd;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -32,6 +34,14 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 public class SdManager {
+
+
+
+
+    public static boolean isSdChecked(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean("sd",false);
+    }
 
 
     /**

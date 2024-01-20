@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -260,11 +261,15 @@ public class CreateSecondTaskFrag extends Fragment {
                 }
             });
 
+    /**
+     * Método que coge el intent y guarda la uri del intent tambien comprueba la preferencia de la SdCard.
+     * @param data
+     */
     private void handleFileSelectionResult(Intent data) {
         if (data != null) {
             Uri uri = data.getData();
             if (uri != null) {
-                guardarArchivoEnDirectorio(uri,true);
+                guardarArchivoEnDirectorio(uri,SdManager.isSdChecked(requireContext()));
             }
         }
     }
