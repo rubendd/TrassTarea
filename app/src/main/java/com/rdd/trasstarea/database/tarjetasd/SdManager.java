@@ -36,8 +36,11 @@ import java.util.List;
 public class SdManager {
 
 
-
-
+    /**
+     * Método que comprueba si la preferencia de la sdCard está activada
+     * @param context
+     * @return
+     */
     public static boolean isSdChecked(Context context){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean("sd",false);

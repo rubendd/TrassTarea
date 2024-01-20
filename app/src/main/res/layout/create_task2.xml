@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/textView"
@@ -16,7 +18,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="121dp">
+        android:layout_height="100dp">
 
         <EditText
             android:id="@+id/editTextDescription"
@@ -38,7 +40,7 @@
         <!-- Botón con Etiqueta para Imagen -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="100dp">
 
             <Button
                 android:id="@+id/imagen"
@@ -54,19 +56,32 @@
             <TextView
                 android:id="@+id/labelImagen"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="@string/ruta_de_la_imagen"
                 android:textColor="#000"
                 android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/borrarimagen"
+                android:layout_width="63dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/aceptar"
+                android:onClick="onSelectDocumentClick"
+                android:padding="16dp"
+                android:src="@drawable/baseline_restore_from_trash_24"
+                tools:ignore="TouchTargetSizeCheck" />
+
         </LinearLayout>
 
         <!-- Botón con Etiqueta para Audio -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="100dp">
 
             <Button
                 android:id="@+id/audio"
@@ -89,12 +104,24 @@
                 android:text="@string/ruta_del_audio"
                 android:textColor="#000"
                 android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/borraraudio"
+                android:layout_width="63dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/aceptar"
+                android:onClick="onSelectDocumentClick"
+                android:padding="16dp"
+                android:src="@drawable/baseline_restore_from_trash_24"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
 
         <!-- Botón con Etiqueta para Video -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="100dp">
 
             <Button
                 android:id="@+id/video"
@@ -117,12 +144,24 @@
                 android:text="@string/ruta_del_video"
                 android:textColor="#000"
                 android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/borrarvideo"
+                android:layout_width="63dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/aceptar"
+                android:onClick="onSelectDocumentClick"
+                android:padding="16dp"
+                android:src="@drawable/baseline_restore_from_trash_24"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
 
         <!-- Botón con Etiqueta para Documento -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="100dp">
 
             <Button
                 android:id="@+id/documento"
@@ -145,14 +184,25 @@
                 android:text="@string/ruta_del_documento"
                 android:textColor="#000"
                 android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/borrardocumento"
+                android:layout_width="63dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/aceptar"
+                android:onClick="onSelectDocumentClick"
+                android:padding="16dp"
+                android:src="@drawable/baseline_restore_from_trash_24"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="90dp">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/back"
