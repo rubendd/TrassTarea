@@ -5,21 +5,10 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorPrimary">#054273</item>
         <item name="colorPrimaryDark">#0D5087</item>
-
+        <item name="android:textColorSecondary">#BFFFFFFF</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
     </style>
 
-    <!-- Otros estilos -->
-    <style name="small">
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="medium">
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="large">
-        <item name="android:textSize">18sp</item>
-    </style>
 
     <style name="MyToolbarStyle" parent="Widget.AppCompat.Toolbar">
     </style>

@@ -1,11 +1,14 @@
 package com.rdd.trasstarea.database.tarjetasd;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,6 +33,63 @@ import java.util.List;
 
 public class SdManager {
 
+
+    /**
+     * Método para verificar si la tarjeta SD está montada
+     * @return  si la tarjeta montada
+     */
+    public static boolean isTarjetaSDMontada() {
+        String estado = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(estado);
+    }
+
+    public static String obtenerNombreArchivoDesdeUri(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        String nombreArchivo = "";
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                int nombreIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                nombreArchivo = cursor.getString(nombreIndex);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return nombreArchivo;
+    }
+
+    public static boolean esTipoDocumento(Context context, Uri uri) {
+        ContentResolver resolver = context.getContentResolver();
+        String tipoContenido = resolver.getType(uri);
+
+        return tipoContenido != null && (tipoContenido.startsWith("application/") || tipoContenido.startsWith("text/"));
+    }
+
+    public static boolean esTipoAudio(Context context, Uri uri) {
+        ContentResolver resolver = context.getContentResolver();
+        String tipoContenido = resolver.getType(uri);
+
+        return tipoContenido != null && tipoContenido.startsWith("audio/");
+    }
+
+    public static boolean esTipoImagen(Context context, Uri uri) {
+        ContentResolver resolver = context.getContentResolver();
+        String tipoContenido = resolver.getType(uri);
+
+        return tipoContenido != null && tipoContenido.startsWith("image/");
+    }
+
+    public static boolean esTipoVideo(Context context, Uri uri) {
+        ContentResolver resolver = context.getContentResolver();
+        String tipoContenido = resolver.getType(uri);
+
+        return tipoContenido != null && tipoContenido.startsWith("video/");
+    }
+
+    /**
     public static void guardarArchivoEnDirectorio(Uri uri, Context context) {
 
         try {

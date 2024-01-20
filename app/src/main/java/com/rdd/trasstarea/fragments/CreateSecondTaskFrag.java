@@ -1,13 +1,13 @@
 package com.rdd.trasstarea.fragments;
 
+import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.OpenableColumns;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +20,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.rdd.trasstarea.R;
+import com.rdd.trasstarea.database.tarjetasd.SdManager;
 import com.rdd.trasstarea.model.Task;
 
 import java.io.File;
@@ -105,7 +108,6 @@ public class CreateSecondTaskFrag extends Fragment {
     private void recibirTask() {
         if (comunicateFragments.getTaskLiveData().isInitialized()) {
             comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> this.task = task);
-            System.out.println(task.toString());
         }
     }
 
@@ -206,8 +208,18 @@ public class CreateSecondTaskFrag extends Fragment {
         comunicateFragments.setUrl_img(ruta_imagen.getText().toString());
     }
 
+    private void pedirPermisos(){
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // No tienes el permiso, solicítalo
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    1);
+        }
+    }
 
     private void onSelectDocumentClick() {
+        pedirPermisos();
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");  // Todos los tipos de archivos
@@ -215,6 +227,7 @@ public class CreateSecondTaskFrag extends Fragment {
         seleccionarArchivo.launch(intent);
     }
     private void onSelectImgClick() {
+        pedirPermisos();
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");  // Todos los tipos de archivos
@@ -222,6 +235,7 @@ public class CreateSecondTaskFrag extends Fragment {
         seleccionarArchivo.launch(intent);
     }
     private void onSelectVideoClick() {
+        pedirPermisos();
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");  // Todos los tipos de archivos
@@ -229,6 +243,7 @@ public class CreateSecondTaskFrag extends Fragment {
         seleccionarArchivo.launch(intent);
     }
     private void onSelectAudioClick() {
+        pedirPermisos();
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");  // Todos los tipos de archivos
@@ -249,7 +264,7 @@ public class CreateSecondTaskFrag extends Fragment {
         if (data != null) {
             Uri uri = data.getData();
             if (uri != null) {
-                guardarArchivoEnDirectorio(uri);
+                guardarArchivoEnDirectorio(uri,true);
             }
         }
     }
@@ -258,15 +273,24 @@ public class CreateSecondTaskFrag extends Fragment {
      * Guardar en la sd card el archivo.
      * @param uri
      */
-    public void guardarArchivoEnDirectorio(Uri uri) {
+    public void guardarArchivoEnDirectorio(Uri uri, boolean guardarEnTarjetaSD) {
         try {
+            // Verificar y solicitar permisos si es necesario
+
             InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
 
             // Obtener el nombre del archivo original desde la URI
-            String nombreArchivoOriginal = obtenerNombreArchivoDesdeUri(uri);
+            String nombreArchivoOriginal = SdManager.obtenerNombreArchivoDesdeUri(requireContext(), uri);
 
             // Define la ruta de destino en tu directorio específico
-            File directorioApp = new File(requireActivity().getExternalFilesDir(null), "archivos_adjuntos");
+            File directorioApp;
+
+            if (guardarEnTarjetaSD && SdManager.isTarjetaSDMontada()) {
+                directorioApp = new File(Environment.getExternalStorageDirectory(), "archivos_adjuntos");
+            } else {
+                directorioApp = new File(requireActivity().getExternalFilesDir(null), "archivos_adjuntos");
+            }
+
             if (!directorioApp.exists()) {
                 if (directorioApp.mkdirs()) {
                     Log.d("Almacenamiento", "Directorio de archivos adjuntos creado: " + directorioApp.getAbsolutePath());
@@ -293,16 +317,16 @@ public class CreateSecondTaskFrag extends Fragment {
 
             Log.d("Almacenamiento", "Archivo guardado en: " + archivoDestino.getAbsolutePath());
 
-            if (esTipoDocumento(uri)) {
+            if (SdManager.esTipoDocumento(requireContext(), uri)) {
                 documento = archivoDestino.getAbsolutePath();
                 ruta_documento.setText(documento);
-            } else if (esTipoAudio(uri)) {
+            } else if (SdManager.esTipoAudio(requireContext(), uri)) {
                 audio = archivoDestino.getAbsolutePath();
                 ruta_audio.setText(audio);
-            } else if (esTipoImagen(uri)) {
+            } else if (SdManager.esTipoImagen(requireContext(), uri)) {
                 imagen = archivoDestino.getAbsolutePath();
                 ruta_imagen.setText(imagen);
-            } else if (esTipoVideo(uri)) {
+            } else if (SdManager.esTipoVideo(requireContext(), uri)) {
                 video = archivoDestino.getAbsolutePath();
                 ruta_video.setText(video);
             }
@@ -313,65 +337,7 @@ public class CreateSecondTaskFrag extends Fragment {
         }
     }
 
+
     // Método para obtener el nombre del archivo desde la URI
-    private String obtenerNombreArchivoDesdeUri(Uri uri) {
-        Cursor cursor = requireActivity().getContentResolver().query(uri, null, null, null, null);
-        String nombreArchivo = "";
 
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                int nombreIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                nombreArchivo = cursor.getString(nombreIndex);
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        return nombreArchivo;
-    }
-
-
-    private boolean esTipoDocumento(Uri uri) {
-        ContentResolver resolver = requireActivity().getContentResolver();
-        String tipoContenido = resolver.getType(uri);
-
-        if (tipoContenido != null) {
-            // Puedes ajustar esta lógica según los tipos MIME de documentos que deseas reconocer
-            return tipoContenido.startsWith("application/") || tipoContenido.startsWith("text/");
-        }
-        return false;
-    }
-
-    private boolean esTipoAudio(Uri uri) {
-        ContentResolver resolver = requireActivity().getContentResolver();
-        String tipoContenido = resolver.getType(uri);
-
-        if (tipoContenido != null) {
-            return tipoContenido.startsWith("audio/");
-        }
-        return false;  // Cambia esto según tus necesidades
-    }
-
-    private boolean esTipoImagen(Uri uri) {
-        ContentResolver resolver = requireActivity().getContentResolver();
-        String tipoContenido = resolver.getType(uri);
-
-        if (tipoContenido != null) {
-            return tipoContenido.startsWith("image/");
-        }
-
-        return false;  // Cambia esto según tus necesidades
-    }
-
-    private boolean esTipoVideo(Uri uri) {
-        ContentResolver resolver = requireActivity().getContentResolver();
-        String tipoContenido = resolver.getType(uri);
-
-        if (tipoContenido != null) {
-            return tipoContenido.startsWith("video/");
-        }
-        return false;  // Cambia esto según tus necesidades
-    }
 }
