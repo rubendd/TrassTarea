@@ -102,6 +102,29 @@ public class SdManager {
         return tipoContenido != null && tipoContenido.startsWith("video/");
     }
 
+
+    public static boolean borrarArchivo(String rutaArchivo) {
+        File archivo = new File(rutaArchivo);
+
+        if (archivo.exists()) {
+            try {
+                if (archivo.delete()) {
+                    Log.d("borrarArchivo", "Archivo borrado: " + rutaArchivo);
+                    return true;
+                } else {
+                    Log.e("borrarArchivo", "No se pudo borrar el archivo: " + rutaArchivo);
+                    return false;
+                }
+            } catch (SecurityException e) {
+                Log.e("borrarArchivo", "Error de seguridad al borrar el archivo: " + e.getMessage());
+                return false;
+            }
+        } else {
+            Log.e("borrarArchivo", "El archivo no existe en la ruta proporcionada: " + rutaArchivo);
+            return false;
+        }
+    }
+
     /**
     public static void guardarArchivoEnDirectorio(Uri uri, Context context) {
 
@@ -191,8 +214,13 @@ public class SdManager {
 
 
     public static String getPathFromUri(Context context, Uri uri) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
-            return getPathFromDocumentUri(context, uri);
+        if (uri == null) {
+            return null;
+        }
+
+        if ("file".equalsIgnoreCase(uri.getScheme())) {
+            // La URI ya es un archivo local, simplemente devuelve el path
+            return uri.getPath();
         } else if ("content".equalsIgnoreCase(uri.getScheme())) {
             return getPathFromContentUri(context, uri);
         } else {

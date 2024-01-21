@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -139,7 +141,13 @@ public class CreateSecondTaskFrag extends Fragment {
         Button video = fragmento2.findViewById(R.id.video);
         Button audio = fragmento2.findViewById(R.id.audio);
         Button imagen = fragmento2.findViewById(R.id.imagen);
+        ImageButton borrarDocumento = fragmento2.findViewById(R.id.borrardocumento);
+        ImageButton borrarVideo = fragmento2.findViewById(R.id.borrarvideo);
+        ImageButton borrarAudio = fragmento2.findViewById(R.id.borraraudio);
+        ImageButton borrarImagen = fragmento2.findViewById(R.id.borrarimagen);
         btnCreateTask = fragmento2.findViewById(R.id.create);
+
+        //Labels
         ruta_audio = fragmento2.findViewById(R.id.labelAudio);
         ruta_documento = fragmento2.findViewById(R.id.labelDocumento);
         ruta_imagen = fragmento2.findViewById(R.id.labelImagen);
@@ -151,6 +159,10 @@ public class CreateSecondTaskFrag extends Fragment {
         audio.setOnClickListener(v -> onSelectAudioClick());
         imagen.setOnClickListener(v -> onSelectImgClick());
         video.setOnClickListener(v -> onSelectVideoClick());
+        borrarDocumento.setOnClickListener(v -> borrarDocumento(ruta_documento.getText().toString(),ruta_documento));
+        borrarImagen.setOnClickListener(v -> borrarDocumento(ruta_imagen.getText().toString(),ruta_imagen));
+        borrarAudio.setOnClickListener(v -> borrarDocumento(ruta_audio.getText().toString(),ruta_audio));
+        borrarVideo.setOnClickListener(v -> borrarDocumento(ruta_video.getText().toString(),ruta_video));
 
         btnCreateTask.setOnClickListener(v -> {
             sendData();
@@ -210,12 +222,34 @@ public class CreateSecondTaskFrag extends Fragment {
     }
 
     private void pedirPermisos(){
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // No tienes el permiso, solicítalo
-            ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Verificar si no tienes el permiso de escritura
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Solicitar permiso de escritura
+                ActivityCompat.requestPermissions(requireActivity(),
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        1);
+            }
+
+            // Verificar si no tienes el permiso de lectura
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Solicitar permiso de lectura
+                ActivityCompat.requestPermissions(requireActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        2);
+            }
+        }
+    }
+
+
+    private void borrarDocumento(String ruta, TextView textView){
+        pedirPermisos();
+        if(SdManager.borrarArchivo(ruta)){
+            textView.setText("");
+        } else {
+            Log.e("error","No se pudo borrar el documento");
         }
     }
 
@@ -341,8 +375,4 @@ public class CreateSecondTaskFrag extends Fragment {
             Log.e("Almacenamiento", "Error al guardar el archivo: " + e.getMessage());
         }
     }
-
-
-    // Método para obtener el nombre del archivo desde la URI
-
 }
