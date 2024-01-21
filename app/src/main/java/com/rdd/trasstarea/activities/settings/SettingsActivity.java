@@ -142,7 +142,6 @@ public class SettingsActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean("asc", asc_s);
                 editor.apply();
-
                 return true;
             });
 
@@ -198,7 +197,6 @@ public class SettingsActivity extends AppCompatActivity {
 
                     return true;
                 });
-
             }
 
             if (restablecer != null) {
