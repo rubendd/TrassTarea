@@ -84,7 +84,7 @@
             android:title="Limpieza de archivos"
             android:summary="Ajusta el tiempo que duraran los archivos guardados"
             android:max="365"
-            app:key="guardado" />
+            app:key="borrado" />
     </PreferenceCategory>
     <PreferenceCategory
         android:layout_width="wrap_content"

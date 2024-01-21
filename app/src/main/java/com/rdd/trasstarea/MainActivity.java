@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.rdd.trasstarea.activities.listactivity.ListActivity;
+import com.rdd.trasstarea.database.tarjetasd.SdManager;
 
 public class MainActivity extends AppCompatActivity {
 

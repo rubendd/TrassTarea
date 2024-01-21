@@ -188,9 +188,7 @@ public class CreateSecondTaskFrag extends Fragment {
     private void recuperarDatos() {
         if (comunicateFragments.getTitulo().isInitialized()) {
             comunicateFragments.getTitulo().observe(getViewLifecycleOwner(), task::setTitulo);
-            comunicateFragments.getDate1().observe(getViewLifecycleOwner(), da -> {
-                date1 = da;
-            });
+            comunicateFragments.getDate1().observe(getViewLifecycleOwner(), da -> date1 = da);
             comunicateFragments.getDate2().observe(getViewLifecycleOwner(), da -> task.setDateEnd(da));
             comunicateFragments.getPrioritario().observe(getViewLifecycleOwner(), task::setPrioritaria);
             comunicateFragments.getState().observe(getViewLifecycleOwner(), da -> task.setStatesNumber(Task.States.valueOf(String.valueOf(da))));

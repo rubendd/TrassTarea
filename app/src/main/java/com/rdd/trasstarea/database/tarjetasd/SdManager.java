@@ -11,8 +11,68 @@ import android.provider.OpenableColumns;
 import android.util.Log;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 public class SdManager {
+
+
+    /**
+     * **************** SISTEMA DE BORRADO DE ARCHIVOS POR TIEMPO ***********************
+     */
+
+    public static void borrarArchivosPorTiempo(Context context) {
+        // Lógica para obtener la preferencia y borrar archivos según la fecha de creación
+        SharedPreferences preferences = context.getSharedPreferences("borrado", Context.MODE_PRIVATE);
+        int numeroDias = preferences.getInt("borrado", 0);
+
+        // Obtener el directorio donde se guardan los archivos
+        File directorioApp = obtenerDirectorioApp(context);
+
+        // Iterar sobre los archivos en el directorio y aplicar la lógica de borrado
+        File[] archivos = directorioApp.listFiles();
+
+        if (archivos != null) {
+            for (File archivo : archivos) {
+                // Aplicar la lógica de borrado para cada archivo
+                if (debeBorrarArchivo(archivo, numeroDias) && numeroDias != 0) {
+                    if (archivo.delete()) {
+                        Log.d("borrarArchivo", "Archivo borrado: " + archivo.getAbsolutePath());
+                    } else {
+                        Log.e("borrarArchivo", "No se pudo borrar el archivo: " + archivo.getAbsolutePath());
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean debeBorrarArchivo(File archivo, int numeroDias) {
+        long fechaCreacion = archivo.lastModified();
+        long diferenciaEnMillis = System.currentTimeMillis() - fechaCreacion;
+        long diferenciaEnDias = TimeUnit.MILLISECONDS.toDays(diferenciaEnMillis);
+        return diferenciaEnDias >= numeroDias;
+    }
+
+    private static File obtenerDirectorioApp(Context context) {
+        boolean guardarEnTarjetaSD = true;  // Indica si se debe guardar en la tarjeta SD
+        File directorioApp;
+
+        if (guardarEnTarjetaSD && isTarjetaSDMontada()) {
+            directorioApp = new File(Environment.getExternalStorageDirectory(), "archivos_adjuntos");
+        } else {
+            directorioApp = new File(context.getExternalFilesDir(null), "archivos_adjuntos");
+        }
+
+        if (!directorioApp.exists()) {
+            if (directorioApp.mkdirs()) {
+                Log.d("Almacenamiento", "Directorio de archivos adjuntos creado: " + directorioApp.getAbsolutePath());
+            } else {
+                Log.e("Almacenamiento", "Error al crear el directorio de archivos adjuntos");
+            }
+        }
+
+        return directorioApp;
+    }
+
 
 
     /**
@@ -24,7 +84,6 @@ public class SdManager {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean("sd",false);
     }
-
 
     /**
      * Método para verificar si la tarjeta SD está montada
@@ -39,7 +98,7 @@ public class SdManager {
      * Método que obtiene el nombre del archivo.
      * @param context
      * @param uri
-     * @return
+     * @return el nombre del archivo
      */
     public static String obtenerNombreArchivoDesdeUri(Context context, Uri uri) {
         Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
