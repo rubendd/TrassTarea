@@ -157,8 +157,9 @@
     </PreferenceCategory>
 
     <Preference
-        android:key="button_preference"
-        android:widgetLayout="@layout/botonrestablecer"
+        app:title="Restablecer las opciones por defecto"
+        app:key="rb"
+        app:summary="This is a cool button"
         />
 </PreferenceScreen>
 

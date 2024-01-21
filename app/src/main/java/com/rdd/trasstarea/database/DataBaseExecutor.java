@@ -27,7 +27,6 @@ public class DataBaseExecutor {
 
     }
 
-
     public Future<List<Task>> obtenerTodasLasTareas() {
         return executor.submit(() -> {
             try {

@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -159,10 +158,10 @@ public class CreateSecondTaskFrag extends Fragment {
         audio.setOnClickListener(v -> onSelectAudioClick());
         imagen.setOnClickListener(v -> onSelectImgClick());
         video.setOnClickListener(v -> onSelectVideoClick());
-        borrarDocumento.setOnClickListener(v -> borrarDocumento(ruta_documento.getText().toString(),ruta_documento));
-        borrarImagen.setOnClickListener(v -> borrarDocumento(ruta_imagen.getText().toString(),ruta_imagen));
-        borrarAudio.setOnClickListener(v -> borrarDocumento(ruta_audio.getText().toString(),ruta_audio));
-        borrarVideo.setOnClickListener(v -> borrarDocumento(ruta_video.getText().toString(),ruta_video));
+        borrarDocumento.setOnClickListener(v -> borrarArchivo(ruta_documento.getText().toString(),ruta_documento));
+        borrarImagen.setOnClickListener(v -> borrarArchivo(ruta_imagen.getText().toString(),ruta_imagen));
+        borrarAudio.setOnClickListener(v -> borrarArchivo(ruta_audio.getText().toString(),ruta_audio));
+        borrarVideo.setOnClickListener(v -> borrarArchivo(ruta_video.getText().toString(),ruta_video));
 
         btnCreateTask.setOnClickListener(v -> {
             sendData();
@@ -242,7 +241,7 @@ public class CreateSecondTaskFrag extends Fragment {
     }
 
 
-    private void borrarDocumento(String ruta, TextView textView){
+    private void borrarArchivo(String ruta, TextView textView){
         pedirPermisos();
         if(SdManager.borrarArchivo(ruta)){
             textView.setText("");
@@ -312,7 +311,6 @@ public class CreateSecondTaskFrag extends Fragment {
      */
     public void guardarArchivoEnDirectorio(Uri uri, boolean guardarEnTarjetaSD) {
         try {
-            // Verificar y solicitar permisos si es necesario
 
             InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
 

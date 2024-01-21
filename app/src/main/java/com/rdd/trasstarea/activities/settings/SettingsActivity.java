@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,10 @@ public class SettingsActivity extends AppCompatActivity {
                 .commit();
     }
 
+    private void restablecerPreferencias(){
+
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -70,6 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference criterio = findPreference("criterio");
             Preference asc = findPreference("asc");
             Preference tarjetasd = findPreference("sd");
+            Preference restablecer = findPreference("rb");
             SeekBarPreference seekBarPreference = findPreference("borrado");
 
 
@@ -193,6 +199,17 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 });
 
+            }
+
+            if (restablecer != null) {
+                restablecer.setOnPreferenceClickListener(preference -> {
+                    SharedPreferences preferences =  PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    requireActivity().recreate();
+                    return true;
+                });
             }
 
         }

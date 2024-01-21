@@ -452,7 +452,6 @@ public class ListActivity extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
         });
-
         future.thenAccept(listTareas::addAll).join();
     }
 

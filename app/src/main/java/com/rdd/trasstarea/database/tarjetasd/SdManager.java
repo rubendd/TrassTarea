@@ -46,6 +46,18 @@ public class SdManager {
         }
     }
 
+    /**
+     * Este método, llamado debeBorrarArchivo, determina si un archivo
+     * debe ser eliminado según un número de días específico. Calcula
+     * la diferencia en días entre la fecha de creación del archivo y
+     * el tiempo actual, y devuelve true si esa diferencia es mayor o
+     * igual al número de días proporcionado como parámetro. En resumen,
+     * el método evalúa si el archivo es considerado "antiguo" según el
+     * criterio de días establecido y devuelve un resultado booleano.
+     * @param archivo
+     * @param numeroDias
+     * @return
+     */
     private static boolean debeBorrarArchivo(File archivo, int numeroDias) {
         long fechaCreacion = archivo.lastModified();
         long diferenciaEnMillis = System.currentTimeMillis() - fechaCreacion;
