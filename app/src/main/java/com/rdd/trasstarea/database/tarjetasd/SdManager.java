@@ -7,8 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
 
@@ -37,6 +35,12 @@ public class SdManager {
         return Environment.MEDIA_MOUNTED.equals(estado);
     }
 
+    /**
+     * Método que obtiene el nombre del archivo.
+     * @param context
+     * @param uri
+     * @return
+     */
     public static String obtenerNombreArchivoDesdeUri(Context context, Uri uri) {
         Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
         String nombreArchivo = "";
@@ -193,7 +197,7 @@ public class SdManager {
      */
 
 
-
+    /*
     public static String getPathFromUri(Context context, Uri uri) {
         if (uri == null) {
             return null;
@@ -210,6 +214,7 @@ public class SdManager {
         }
     }
 
+    /*
     private static String getPathFromDocumentUri(Context context, Uri uri) {
         String documentId = DocumentsContract.getDocumentId(uri);
         String[] split = documentId.split(":");
@@ -222,7 +227,7 @@ public class SdManager {
             return null;
         }
     }
-
+    /*
     private static String getPathFromContentUri(Context context, Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = null;
@@ -239,4 +244,5 @@ public class SdManager {
         }
         return null;
     }
+    */
 }
