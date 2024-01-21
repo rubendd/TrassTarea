@@ -414,15 +414,6 @@ public class ListActivity extends AppCompatActivity {
         getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
 
 
-        //TODO mejorar la parte del asc, ya que no se guarda bien.
-        boolean sd = preferences.getBoolean("sd", false);
-        System.out.println(sd);
-        if (sd) {
-          //  pedirPermisos();
-            //  guardarListaEnSd(); //TODO hacer guardado
-        }
-
-
         String criterio = preferences.getString("criterio", "b");
         switch (criterio) {
             case "a":
@@ -465,30 +456,5 @@ public class ListActivity extends AppCompatActivity {
         future.thenAccept(listTareas::addAll).join();
     }
 
-
-
-    // Register the permissions callback, which handles the user's response to the
-// system permissions dialog. Save the return value, an instance of
-// ActivityResultLauncher, as an instance variable.
-    private void pedirPermisos() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED) {
-
-        } else {
-            // Solicitar permisos si no los tienes
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            }, CODIGO_DE_SOLICITUD);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-    }
 }
 
