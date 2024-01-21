@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference criterio = findPreference("criterio");
             Preference asc = findPreference("asc");
             Preference tarjetasd = findPreference("sd");
-            SeekBarPreference seekBarPreference = findPreference("guardado");
+            SeekBarPreference seekBarPreference = findPreference("borrado");
 
 
             assert claro != null;
@@ -165,7 +165,7 @@ public class SettingsActivity extends AppCompatActivity {
             if (seekBarPreference != null) {
                 // Obtén el valor actual de las SharedPreferences y establece el resumen
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                int valorActual = preferences.getInt("guardado", 0);
+                int valorActual = preferences.getInt("borrado", 0);
 
                 if (valorActual == 0) {
                     seekBarPreference.setSummary("Duración de archivos guardados: (indefinido)");
@@ -187,7 +187,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                     // Guarda el nuevo valor en SharedPreferences
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putInt("guardado", nuevoValor);
+                    editor.putInt("borrado", nuevoValor);
                     editor.apply();
 
                     return true;

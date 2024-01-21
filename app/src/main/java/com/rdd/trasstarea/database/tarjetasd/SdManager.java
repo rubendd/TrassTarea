@@ -22,7 +22,8 @@ public class SdManager {
 
     public static void borrarArchivosPorTiempo(Context context) {
         // Lógica para obtener la preferencia y borrar archivos según la fecha de creación
-        SharedPreferences preferences = context.getSharedPreferences("borrado", Context.MODE_PRIVATE);
+        SharedPreferences  preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
         int numeroDias = preferences.getInt("borrado", 0);
 
         // Obtener el directorio donde se guardan los archivos
@@ -31,10 +32,10 @@ public class SdManager {
         // Iterar sobre los archivos en el directorio y aplicar la lógica de borrado
         File[] archivos = directorioApp.listFiles();
 
-        if (archivos != null) {
+        if (archivos != null && numeroDias != 0) {
             for (File archivo : archivos) {
                 // Aplicar la lógica de borrado para cada archivo
-                if (debeBorrarArchivo(archivo, numeroDias) && numeroDias != 0) {
+                if (debeBorrarArchivo(archivo, numeroDias)) {
                     if (archivo.delete()) {
                         Log.d("borrarArchivo", "Archivo borrado: " + archivo.getAbsolutePath());
                     } else {
@@ -53,7 +54,8 @@ public class SdManager {
     }
 
     private static File obtenerDirectorioApp(Context context) {
-        boolean guardarEnTarjetaSD = true;  // Indica si se debe guardar en la tarjeta SD
+        SharedPreferences  preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean guardarEnTarjetaSD = preferences.getBoolean("sd",false);  // Indica si se debe guardar en la tarjeta SD
         File directorioApp;
 
         if (guardarEnTarjetaSD && isTarjetaSDMontada()) {
@@ -73,7 +75,9 @@ public class SdManager {
         return directorioApp;
     }
 
-
+    /**
+     * ***************************************************************************************************
+     */
 
     /**
      * Método que comprueba si la preferencia de la sdCard está activada
