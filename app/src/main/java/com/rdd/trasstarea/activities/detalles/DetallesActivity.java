@@ -1,4 +1,4 @@
-package com.rdd.trasstarea.activities.editTaskActivity;
+package com.rdd.trasstarea.activities.detalles;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 import com.rdd.trasstarea.fragments.CreateSecondTaskFrag;
-import com.rdd.trasstarea.fragments.CreateTaskFragment;
 import com.rdd.trasstarea.model.Task;
 
-public class EditTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea {
+public class DetallesActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea {
 
     // Definición de constantes y variables de clase
     public static final String TAREA_NUEVA = "tareaNueva";
@@ -36,7 +35,7 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
 
         // Inicialización de la comunicación entre fragmentos
         comunicateFragments = new ViewModelProvider(this).get(ComunicateFragments.class);
-        CreateTaskFragment createTaskFragment = new CreateTaskFragment();
+        CreateSecondTaskFrag createTaskFragment = new CreateSecondTaskFrag();
 
         // Verifica si la actividad se está recreando debido a un cambio de configuración
         if (savedInstanceState == null) {
@@ -48,10 +47,10 @@ public class EditTaskActivity extends AppCompatActivity implements CreateSecondT
         comunicateFragments.setTask(editTask);
 
         // Agrega el fragmento de creación de tarea al contenedor si aún no está presente
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_task_create, createTaskFragment, "CreateTaskFragmentTag")
-                    .addToBackStack(null)
-                    .commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_task_create, createTaskFragment, "CreateTaskFragmentTag")
+                .addToBackStack(null)
+                .commit();
     }
 
     // Guarda el estado de la actividad, incluida la tarea editada

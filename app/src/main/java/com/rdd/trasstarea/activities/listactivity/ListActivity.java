@@ -1,9 +1,7 @@
 package com.rdd.trasstarea.activities.listactivity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,13 +18,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.createtaskactivity.CreateTaskActivity;
+import com.rdd.trasstarea.activities.detalles.DetallesActivity;
 import com.rdd.trasstarea.activities.editTaskActivity.EditTaskActivity;
 import com.rdd.trasstarea.activities.estadisticas.Estadisticas;
 import com.rdd.trasstarea.activities.listactivity.dialogs.AboutDialog;
@@ -35,7 +32,6 @@ import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.activities.settings.SettingsActivity;
 import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.database.TaskRepository;
-import com.rdd.trasstarea.database.tarjetasd.SdManager;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
@@ -126,6 +122,13 @@ public class ListActivity extends AppCompatActivity {
             // Iniciar la edición de la tarea
             positionTask = position;
             initEditTask(task);
+            lanzarMensajeNoTareas();
+        }
+
+        @Override
+        public void detalles(Task task, int position) {
+            positionTask = position;
+            initDetalles(task);
             lanzarMensajeNoTareas();
         }
     };
@@ -314,6 +317,7 @@ public class ListActivity extends AppCompatActivity {
                 }
             });
 
+
     private void handleTaskCreationResult(ActivityResult result) {
         // Obtener la tarea creada del Intent devuelto
         Intent intentDevuelto = result.getData();
@@ -385,6 +389,14 @@ public class ListActivity extends AppCompatActivity {
             editTaskLauncher.launch(intent);
         }
     }
+    private void initDetalles(Task task) {
+            // Iniciar la actividad para editar una tarea existente
+            Intent intent = new Intent(this, DetallesActivity.class);
+            if (editTaskLauncher != null) {
+                intent.putExtra(DetallesActivity.TAREA_EDITAR, task);
+                editTaskLauncher.launch(intent);
+            }
+        }
 
 
     //------------------------------Configuracion-------------------------------------------

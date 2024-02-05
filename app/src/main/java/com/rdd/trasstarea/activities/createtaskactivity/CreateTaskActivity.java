@@ -9,10 +9,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.editTaskActivity.EditTaskActivity;
-import com.rdd.trasstarea.fragments.ComunicateFragments;
+import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 import com.rdd.trasstarea.fragments.CreateSecondTaskFrag;
 import com.rdd.trasstarea.fragments.CreateTaskFragment;
-import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 public class CreateTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea {
 

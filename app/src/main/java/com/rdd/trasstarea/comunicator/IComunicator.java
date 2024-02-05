@@ -6,5 +6,6 @@ public interface IComunicator {
      void deleteList(Task task);
      void createTask();
      void editTask(Task task, int position);
+     void detalles(Task task, int position);
 }
 

@@ -31,6 +31,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.database.tarjetasd.SdManager;
 import com.rdd.trasstarea.model.Task;
+import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 
 import java.io.File;
 import java.io.FileOutputStream;

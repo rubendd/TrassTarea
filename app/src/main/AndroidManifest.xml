@@ -35,6 +35,7 @@
             android:screenOrientation="portrait"
             />
         <activity android:name=".activities.settings.SettingsActivity" android:theme="@style/ActionBarTheme"/>
+        <activity android:name=".activities.detalles.DetallesActivity"/>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

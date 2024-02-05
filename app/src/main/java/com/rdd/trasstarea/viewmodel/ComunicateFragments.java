@@ -1,4 +1,6 @@
-package com.rdd.trasstarea.fragments;
+package com.rdd.trasstarea.viewmodel;
+
+import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,6 +14,27 @@ import com.rdd.trasstarea.model.Task;
 public class ComunicateFragments extends ViewModel {
 
     private final MutableLiveData<Task> taskLiveData = new MutableLiveData<>();
+
+
+    /**
+     * AUDIO
+     */
+    private final MutableLiveData<Uri> mAudio;
+
+    public ComunicateFragments(MutableLiveData<Uri> mAudio) {
+        this.mAudio = mAudio;
+    }
+
+    public LiveData<Uri> getAudio() {
+        return mAudio;
+    }
+    public void setAudio(Uri audio){
+        mAudio.setValue(audio);
+    }
+
+
+
+
 
     public LiveData<Task> getTaskLiveData() {
         return taskLiveData;

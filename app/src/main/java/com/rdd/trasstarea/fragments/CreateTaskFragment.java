@@ -23,6 +23,7 @@ import com.rdd.trasstarea.activities.createtaskactivity.CheckTask;
 import com.rdd.trasstarea.activities.createtaskactivity.dialogs.datepicker.DatePickerHandle;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
+import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 
 import java.util.Calendar;
 public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSelectedListener {

@@ -1,7 +1,5 @@
 package com.rdd.trasstarea.activities.listactivity.recycler;
 
-import static java.security.AccessController.getContext;
-
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -173,6 +171,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
                 CustomAdapter.comunicator.editTask(task, position);
                 return true;
+            }
+            if (item.getItemId() == R.id.detalles){
+                int position = ((MyViewHolder) view.getTag()).getAdapterPosition();
+                CustomAdapter.comunicator.detalles(task, position);
             }
             return false;
         });
