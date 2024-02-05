@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -158,13 +161,15 @@ public class CreateSecondTaskFrag extends Fragment {
         ruta_documento = fragmento2.findViewById(R.id.labelDocumento);
         ruta_imagen = fragmento2.findViewById(R.id.labelImagen);
         ruta_video = fragmento2.findViewById(R.id.labelVideo);
+
         ruta_audio.setOnClickListener(v -> iniciarFragmentoAudio());
+        ruta_imagen.setOnClickListener(v -> iniciarFragmentoFoto());
 
         //Listener
         btnSalir.setOnClickListener(this::backFragment);
         documento.setOnClickListener(v -> onSelectDocumentClick());
         audio.setOnClickListener(v -> openAudioChooser());
-        imagen.setOnClickListener(v -> onSelectImgClick());
+        imagen.setOnClickListener(v -> lanzarSelectorFoto());
         video.setOnClickListener(v -> onSelectVideoClick());
         borrarDocumento.setOnClickListener(v -> borrarArchivo(ruta_documento.getText().toString(),ruta_documento));
         borrarImagen.setOnClickListener(v -> borrarArchivo(ruta_imagen.getText().toString(),ruta_imagen));
@@ -175,6 +180,18 @@ public class CreateSecondTaskFrag extends Fragment {
             sendData();
             comunicador.mandarTask();
         });
+    }
+
+    private void iniciarFragmentoFoto() {
+        if (!ruta_imagen.getText().toString().isEmpty()) {
+            comunicateFragments.setFoto(Uri.parse(ruta_audio.getText().toString()));
+            // Reemplaza el fragmento actual con el segundo fragmento y lo agrega a la pila de retroceso
+
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_task_create, audioFragment, "FotoFragmento")
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     private void iniciarFragmentoAudio(){
@@ -204,10 +221,61 @@ public class CreateSecondTaskFrag extends Fragment {
             result -> {
                 Uri audioUri = result.getData() != null ? result.getData().getData() : null;
                 if (audioUri != null) {
+                    guardarArchivoEnDirectorio(audioUri,SdManager.isSdChecked(requireContext()));
                     ruta_audio.setText(audioUri.toString());
                 }
             }
     );
+
+
+    private void lanzarSelectorFoto() {
+        ruta_imagen.setText(null);
+
+        Intent aFotos = new Intent();
+        aFotos.setType("image/*");
+        aFotos.setAction(Intent.ACTION_GET_CONTENT);
+
+        Intent aCamara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+        chooser.putExtra(Intent.EXTRA_TITLE, "Fotos");
+        chooser.putExtra(Intent.EXTRA_INTENT, aFotos);
+        Intent[] intentArray = {aCamara};
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+
+        lanzadorCamara.launch(chooser);
+    }
+
+    ActivityResultLauncher<Intent> lanzadorCamara = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> procesarResultadoCamara(result)
+    );
+
+    private void procesarResultadoCamara(ActivityResult result) {
+        Intent intentDevuelto = result.getData();
+        if (intentDevuelto != null) {
+            Uri fotoSeleccionada = intentDevuelto.getData();
+            if (fotoSeleccionada != null) {
+                comunicateFragments.setFoto(fotoSeleccionada);
+
+                // Guarda la ruta de la imagen seleccionada
+                String rutaImagen = obtenerRutaDeArchivoDesdeUri(fotoSeleccionada);
+                ruta_imagen.setText(rutaImagen);
+            } else {
+                Bitmap imagenCapturada = (Bitmap) intentDevuelto.getExtras().get("data");
+            }
+        }
+    }
+
+    private String obtenerRutaDeArchivoDesdeUri(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = requireContext().getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String filePath = cursor.getString(column_index);
+        cursor.close();
+        return filePath;
+    }
 
     // Método llamado al hacer clic en el botón para volver al fragmento anterior
     private void backFragment(View view) {

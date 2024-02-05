@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="com.github.axet.androidlibrary.services.permission.READ" />
+
 
 
     <application
@@ -16,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TrassTarea"
         tools:targetApi="s">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,10 +1,14 @@
 package com.rdd.trasstarea.fragments;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +22,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
+import com.rdd.trasstarea.listcontroller.FileHelper;
 import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -61,7 +69,15 @@ public class AudioFragment extends Fragment {
                 mediaPlayer.release();
             }
             //TODO solucionar uri.
-            mediaPlayer = MediaPlayer.create(requireActivity(), audioUri);
+            try {
+              String file =  FileHelper.readInputStream(requireActivity().getContentResolver().openInputStream(audioUri));
+              mediaPlayer = MediaPlayer.create(requireActivity(), Uri.parse(file));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
             if (mediaPlayer != null) {
                 progressBar.setMax(mediaPlayer.getDuration());
             } else {
@@ -139,6 +155,8 @@ public class AudioFragment extends Fragment {
             mediaPlayer.release();
         }
     }
+
+
 
 }
 

@@ -33,6 +33,22 @@ public class ComunicateFragments extends ViewModel {
         return mAudio;
     }
 
+
+    /**
+     * FOTO
+     */
+    private final MutableLiveData<Uri> mFoto = new MutableLiveData<>();
+
+    public LiveData<Uri> getFoto() {
+        return mFoto;
+    }
+    public void setFoto(Uri foto){
+        mFoto.setValue(foto);
+    }
+
+
+    /***********************/
+
     public LiveData<Task> getTaskLiveData() {
         return taskLiveData;
     }
