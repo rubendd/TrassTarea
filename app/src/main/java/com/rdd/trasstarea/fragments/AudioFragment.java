@@ -1,10 +1,13 @@
 package com.rdd.trasstarea.fragments;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,11 +20,14 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
+import com.rdd.trasstarea.database.tarjetasd.SdManager;
 import com.rdd.trasstarea.listcontroller.FileHelper;
 import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 
@@ -68,27 +74,28 @@ public class AudioFragment extends Fragment {
             if (mediaPlayer != null) {
                 mediaPlayer.release();
             }
-            //TODO solucionar uri.
-            try {
-              String file =  FileHelper.readInputStream(requireActivity().getContentResolver().openInputStream(audioUri));
-              mediaPlayer = MediaPlayer.create(requireActivity(), Uri.parse(file));
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+                // Utiliza la URI directamente después de otorgar permisos
+                mediaPlayer = MediaPlayer.create(requireActivity(), audioUri);
 
-            if (mediaPlayer != null) {
-                progressBar.setMax(mediaPlayer.getDuration());
-            } else {
-                // Manejar el caso en que la creación del MediaPlayer falle
-                Log.e("AudioFragment", "Error al crear MediaPlayer con la URI: " + audioUri);
-            }
+                if (mediaPlayer != null) {
+                    try {
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    progressBar.setMax(mediaPlayer.getDuration());
+                } else {
+                    // Manejar el caso en que la creación del MediaPlayer falle
+                    Log.e("AudioFragment", "Error al crear MediaPlayer con la URI: " + audioUri);
+                }
         } else {
             // Manejar el caso en que la URI sea nula
             Log.e("AudioFragment", "La URI del audio es nula");
         }
     }
+
+
+
 
 
 

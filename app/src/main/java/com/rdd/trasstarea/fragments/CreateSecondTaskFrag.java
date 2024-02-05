@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
@@ -219,14 +221,79 @@ public class CreateSecondTaskFrag extends Fragment {
     ActivityResultLauncher<Intent> lanzadorGrabadora = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                Uri audioUri = result.getData() != null ? result.getData().getData() : null;
-                if (audioUri != null) {
-                    guardarArchivoEnDirectorio(audioUri,SdManager.isSdChecked(requireContext()));
-                    ruta_audio.setText(audioUri.toString());
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Uri audioUri = data != null ? data.getData() : null;
+
+                    if (audioUri != null) {
+                        // Copia y guarda el archivo en la carpeta de tu aplicación
+                        try {
+                            copyAndSaveAudio(audioUri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            // Manejar errores, por ejemplo, mostrar un mensaje de error al usuario
+                            Toast.makeText(requireContext(), "Error al guardar el archivo de audio", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // Actualiza la interfaz de usuario con la nueva ruta o realiza otras acciones necesarias
+                    }
                 }
             }
     );
 
+
+    private void copyAndSaveAudio(Uri sourceUri) throws IOException {
+        // Abre un InputStream desde la URI de origen
+        InputStream inputStream = requireActivity().getContentResolver().openInputStream(sourceUri);
+
+        String sourceFileName = getFileNameFromUri(sourceUri);
+
+        // Crea una ruta de destino en la carpeta de tu aplicación (puedes personalizar la ruta según tus necesidades)
+        File destinationFile = new File(requireContext().getFilesDir(), sourceFileName);
+
+        // Abre un OutputStream para la ruta de destino
+        OutputStream outputStream = new FileOutputStream(destinationFile);
+
+        // Copia los datos desde el InputStream al OutputStream
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        // Cierra los flujos
+        inputStream.close();
+        outputStream.close();
+        ruta_audio.setText(destinationFile.getAbsolutePath());
+
+    }
+
+    private String getFileNameFromUri(Uri uri) {
+        String fileName = "nombre_desconocido"; // Nombre predeterminado en caso de que no se pueda obtener desde la Uri
+
+        if (uri != null) {
+            Cursor cursor = null;
+            try {
+                // Consulta el nombre del archivo usando la Uri
+                cursor = requireActivity().getContentResolver().query(uri, null, null, null, null);
+
+                if (cursor != null && cursor.moveToFirst()) {
+                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (displayNameIndex != -1) {
+                        // Obtiene el nombre del archivo desde el cursor
+                        fileName = cursor.getString(displayNameIndex);
+                    }
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+
+        return fileName;
+    }
 
     private void lanzarSelectorFoto() {
         ruta_imagen.setText(null);

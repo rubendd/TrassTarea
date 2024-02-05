@@ -32,7 +32,6 @@ import java.util.concurrent.Executors;
 public class FotoFragment extends Fragment {
 
 
-
     private ImageView contenedorFoto;
     private Executor executor;
     private Handler handler;
@@ -50,9 +49,6 @@ public class FotoFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
 
         setupFotoViewModel();
-
-
-
         return fotoFragment;
     }
 
