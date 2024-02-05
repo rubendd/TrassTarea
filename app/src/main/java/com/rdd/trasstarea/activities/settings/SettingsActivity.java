@@ -1,29 +1,21 @@
 package com.rdd.trasstarea.activities.settings;
 
-import android.Manifest;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android. content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 
 import com.rdd.trasstarea.R;
-
-import java.util.Objects;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -47,11 +39,6 @@ public class SettingsActivity extends AppCompatActivity {
                 //El recurso 'android.R.id.content' es la ventana activa de la aplicación
                 .replace(android.R.id.content, new SettingFragments())
                 .commit();
-    }
-
-    private void restablecerPreferencias(){
-
-
     }
 
     @Override

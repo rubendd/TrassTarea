@@ -1,11 +1,15 @@
 package com.rdd.trasstarea.activities.listactivity.recycler;
 
+import static java.security.AccessController.getContext;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -130,6 +134,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         holder.bindTask(tasksDataSet.get(position));
         // Establecer la etiqueta de la vista con el titular
         holder.view.setTag(holder);
+        Animation animation = AnimationUtils.loadAnimation(holder.view.getContext(), R.anim.recycler_view);
+        holder.itemView.startAnimation(animation);
     }
 
     // Devolver el número total de elementos en el conjunto de datos
