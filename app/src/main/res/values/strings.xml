@@ -33,20 +33,20 @@
     <string name="bd">bd</string>
     <string name="usuario">usuario</string>
     <string name="password" />
-    <string name="restablecer">Restablecer</string>
-    <string name="settings">Preferencias</string>
-    <string name="port">1001</string>
-    <string name="estadisticas">Estadisticas</string>
-    <string name="audio">audio</string>
-    <string name="documento">documento</string>
-    <string name="ruta_imagen">ruta/imagen</string>
-    <string name="ruta_del_documento">Ruta del Documento</string>
-    <string name="ruta_del_video">Ruta del Video</string>
-    <string name="ruta_del_audio">Ruta del Audio</string>
-    <string name="ruta_de_la_imagen">Ruta de la Imagen</string>
-    <string name="documentos">Documento</string>
-    <string name="audios">Audio</string>
-    <string name="imagens">Imagen</string>
-    <string name="videos">Video</string>
-    <string name="detalles">Detalles</string>
+    <string name="restablecer" translatable="false">Restablecer</string>
+    <string name="settings" translatable="false">Preferencias</string>
+    <string name="port" translatable="false">1001</string>
+    <string name="estadisticas" translatable="false">Estadisticas</string>
+    <string name="audio" translatable="false">audio</string>
+    <string name="documento" translatable="false">documento</string>
+    <string name="ruta_imagen" translatable="false">ruta/imagen</string>
+    <string name="ruta_del_documento" translatable="false">Ruta del Documento</string>
+    <string name="ruta_del_video" translatable="false">Ruta del Video</string>
+    <string name="ruta_del_audio" translatable="false">Ruta del Audio</string>
+    <string name="ruta_de_la_imagen" translatable="false">Ruta de la Imagen</string>
+    <string name="documentos" translatable="false">Documento</string>
+    <string name="audios" translatable="false">Audio</string>
+    <string name="imagens" translatable="false">Imagen</string>
+    <string name="videos" translatable="false">Video</string>
+    <string name="detalles" translatable="false">Detalles</string>
 </resources>

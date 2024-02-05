@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -53,6 +56,7 @@ public class CreateSecondTaskFrag extends Fragment {
     private String audio;
     private String imagen;
     private String documento;
+    private AudioFragment audioFragment;
 
 
 
@@ -91,7 +95,7 @@ public class CreateSecondTaskFrag extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        audioFragment = new AudioFragment();
         // Obtiene una referencia del ViewModel compartido
         comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
     }
@@ -113,6 +117,8 @@ public class CreateSecondTaskFrag extends Fragment {
             comunicateFragments.getTaskLiveData().observe(getViewLifecycleOwner(), task -> this.task = task);
         }
     }
+
+
 
     // Método llamado para crear la vista del fragmento
     @Override
@@ -152,11 +158,12 @@ public class CreateSecondTaskFrag extends Fragment {
         ruta_documento = fragmento2.findViewById(R.id.labelDocumento);
         ruta_imagen = fragmento2.findViewById(R.id.labelImagen);
         ruta_video = fragmento2.findViewById(R.id.labelVideo);
+        ruta_audio.setOnClickListener(v -> iniciarFragmentoAudio());
 
         //Listener
         btnSalir.setOnClickListener(this::backFragment);
         documento.setOnClickListener(v -> onSelectDocumentClick());
-        audio.setOnClickListener(v -> onSelectAudioClick());
+        audio.setOnClickListener(v -> openAudioChooser());
         imagen.setOnClickListener(v -> onSelectImgClick());
         video.setOnClickListener(v -> onSelectVideoClick());
         borrarDocumento.setOnClickListener(v -> borrarArchivo(ruta_documento.getText().toString(),ruta_documento));
@@ -169,6 +176,38 @@ public class CreateSecondTaskFrag extends Fragment {
             comunicador.mandarTask();
         });
     }
+
+    private void iniciarFragmentoAudio(){
+        if (!ruta_audio.getText().toString().isEmpty()) {
+            comunicateFragments.setAudio(Uri.parse(ruta_audio.getText().toString()));
+            // Reemplaza el fragmento actual con el segundo fragmento y lo agrega a la pila de retroceso
+
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_task_create, audioFragment, "AudioFragmento")
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
+    private void openAudioChooser() {
+        Intent recordSoundIntent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+        Intent getContentIntent = new Intent(Intent.ACTION_GET_CONTENT)
+                .setType("audio/*");
+        Intent chooserIntent = Intent.createChooser(getContentIntent, "Grabaciones");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{recordSoundIntent});
+
+        lanzadorGrabadora.launch(chooserIntent);
+    }
+
+    ActivityResultLauncher<Intent> lanzadorGrabadora = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                Uri audioUri = result.getData() != null ? result.getData().getData() : null;
+                if (audioUri != null) {
+                    ruta_audio.setText(audioUri.toString());
+                }
+            }
+    );
 
     // Método llamado al hacer clic en el botón para volver al fragmento anterior
     private void backFragment(View view) {
@@ -214,7 +253,7 @@ public class CreateSecondTaskFrag extends Fragment {
     private void sendData() {
         comunicateFragments.setDescription(descripcion.getText().toString());
         comunicateFragments.setUrl_doc(ruta_documento.getText().toString());
-        comunicateFragments.setUrl_audio(ruta_audio.getText().toString());
+        comunicateFragments.setAudio(Uri.parse(ruta_audio.getText().toString()));
         comunicateFragments.setUrl_video(ruta_video.getText().toString());
         comunicateFragments.setUrl_img(ruta_imagen.getText().toString());
     }
@@ -275,14 +314,7 @@ public class CreateSecondTaskFrag extends Fragment {
 
         seleccionarArchivo.launch(intent);
     }
-    private void onSelectAudioClick() {
-        pedirPermisos();
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");  // Todos los tipos de archivos
 
-        seleccionarArchivo.launch(intent);
-    }
 
     ActivityResultLauncher<Intent> seleccionarArchivo = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

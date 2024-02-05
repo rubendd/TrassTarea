@@ -64,7 +64,7 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         PRIORITAIO = Boolean.TRUE.equals(comunicateFragments.getPrioritario().getValue());
         DESCRIPTION = comunicateFragments.getDescription().getValue();
         URL_DOC = comunicateFragments.getUrl_doc().getValue();
-        URL_AUDIO = comunicateFragments.getUrl_audio().getValue();
+        URL_AUDIO = String.valueOf(comunicateFragments.getmAudio().getValue());
         URL_IMG = comunicateFragments.getUrl_img().getValue();
         URL_VIDEO = comunicateFragments.getUrl_video().getValue();
 

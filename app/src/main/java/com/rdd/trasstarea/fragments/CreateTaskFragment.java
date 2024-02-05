@@ -199,6 +199,7 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
             task1.setDateEnd(date2.getText().toString());
             task1.setProgresState(task1.setStatesNumber(Task.States.valueOf(select)));
             task1.setPrioritaria(prioritaria.isChecked());
+
         });
 
     }

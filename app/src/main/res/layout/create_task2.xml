@@ -56,10 +56,12 @@
             <TextView
                 android:id="@+id/labelImagen"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/ruta_de_la_imagen"
                 android:textColor="#000"
                 android:textSize="16sp" />
@@ -101,6 +103,9 @@
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="48dp"
                 android:text="@string/ruta_del_audio"
                 android:textColor="#000"
                 android:textSize="16sp" />
@@ -141,6 +146,9 @@
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="48dp"
                 android:text="@string/ruta_del_video"
                 android:textColor="#000"
                 android:textSize="16sp" />
@@ -181,6 +189,9 @@
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="48dp"
                 android:text="@string/ruta_del_documento"
                 android:textColor="#000"
                 android:textSize="16sp" />

@@ -19,11 +19,7 @@ public class ComunicateFragments extends ViewModel {
     /**
      * AUDIO
      */
-    private final MutableLiveData<Uri> mAudio;
-
-    public ComunicateFragments(MutableLiveData<Uri> mAudio) {
-        this.mAudio = mAudio;
-    }
+    private final MutableLiveData<Uri> mAudio = new MutableLiveData<>();
 
     public LiveData<Uri> getAudio() {
         return mAudio;
@@ -33,8 +29,9 @@ public class ComunicateFragments extends ViewModel {
     }
 
 
-
-
+    public MutableLiveData<Uri> getmAudio() {
+        return mAudio;
+    }
 
     public LiveData<Task> getTaskLiveData() {
         return taskLiveData;
