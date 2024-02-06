@@ -63,10 +63,10 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         STATE = comunicateFragments.getState().getValue();
         PRIORITAIO = Boolean.TRUE.equals(comunicateFragments.getPrioritario().getValue());
         DESCRIPTION = comunicateFragments.getDescription().getValue();
-        URL_DOC = comunicateFragments.getUrl_doc().getValue();
+        URL_DOC = String.valueOf(comunicateFragments.getDocumento().getValue());
         URL_AUDIO = String.valueOf(comunicateFragments.getmAudio().getValue());
-        URL_IMG = comunicateFragments.getUrl_img().getValue();
-        URL_VIDEO = comunicateFragments.getUrl_video().getValue();
+        URL_IMG = String.valueOf(comunicateFragments.getFoto().getValue());
+        URL_VIDEO = String.valueOf(comunicateFragments.getVideo().getValue());
 
 
         // Crea una nueva tarea con los valores proporcionados

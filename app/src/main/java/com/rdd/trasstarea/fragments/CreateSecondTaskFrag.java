@@ -2,12 +2,12 @@ package com.rdd.trasstarea.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +61,9 @@ public class CreateSecondTaskFrag extends Fragment {
     private String imagen;
     private String documento;
     private AudioFragment audioFragment;
+    private VideoFragment videoFragment;
+    private FotoFragment fotoFragment;
+    private DocumentoFragment documentoFragment;
 
 
 
@@ -101,6 +103,9 @@ public class CreateSecondTaskFrag extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         audioFragment = new AudioFragment();
+        videoFragment = new VideoFragment();
+        fotoFragment = new FotoFragment();
+        documentoFragment = new DocumentoFragment();
         // Obtiene una referencia del ViewModel compartido
         comunicateFragments = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
     }
@@ -166,13 +171,16 @@ public class CreateSecondTaskFrag extends Fragment {
 
         ruta_audio.setOnClickListener(v -> iniciarFragmentoAudio());
         ruta_imagen.setOnClickListener(v -> iniciarFragmentoFoto());
+        ruta_video.setOnClickListener(v -> iniciarFragmentoVideo());
+        ruta_documento.setOnClickListener(v -> iniciarFragmentoDocumento());
+
 
         //Listener
         btnSalir.setOnClickListener(this::backFragment);
         documento.setOnClickListener(v -> onSelectDocumentClick());
         audio.setOnClickListener(v -> openAudioChooser());
         imagen.setOnClickListener(v -> lanzarSelectorFoto());
-        video.setOnClickListener(v -> onSelectVideoClick());
+        video.setOnClickListener(v -> openVideoChooser());
         borrarDocumento.setOnClickListener(v -> borrarArchivo(ruta_documento.getText().toString(),ruta_documento));
         borrarImagen.setOnClickListener(v -> borrarArchivo(ruta_imagen.getText().toString(),ruta_imagen));
         borrarAudio.setOnClickListener(v -> borrarArchivo(ruta_audio.getText().toString(),ruta_audio));
@@ -186,11 +194,11 @@ public class CreateSecondTaskFrag extends Fragment {
 
     private void iniciarFragmentoFoto() {
         if (!ruta_imagen.getText().toString().isEmpty()) {
-            comunicateFragments.setFoto(Uri.parse(ruta_audio.getText().toString()));
+            comunicateFragments.setFoto(Uri.parse(ruta_imagen.getText().toString()));
             // Reemplaza el fragmento actual con el segundo fragmento y lo agrega a la pila de retroceso
 
             requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_task_create, audioFragment, "FotoFragmento")
+                    .replace(R.id.main_task_create, fotoFragment, "FotoFragmento")
                     .addToBackStack(null)
                     .commit();
         }
@@ -203,6 +211,29 @@ public class CreateSecondTaskFrag extends Fragment {
 
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main_task_create, audioFragment, "AudioFragmento")
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
+    private void iniciarFragmentoVideo(){
+        if (!ruta_video.getText().toString().isEmpty()) {
+            comunicateFragments.setVideo(Uri.parse(ruta_video.getText().toString()));
+            // Reemplaza el fragmento actual con el segundo fragmento y lo agrega a la pila de retroceso
+
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_task_create, videoFragment, "VideoFragmento")
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+    private void iniciarFragmentoDocumento(){
+        if (!ruta_documento.getText().toString().isEmpty()) {
+            comunicateFragments.setDocumento(Uri.parse(ruta_documento.getText().toString()));
+            // Reemplaza el fragmento actual con el segundo fragmento y lo agrega a la pila de retroceso
+
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_task_create, documentoFragment, "DocumentoFragmento")
                     .addToBackStack(null)
                     .commit();
         }
@@ -223,27 +254,75 @@ public class CreateSecondTaskFrag extends Fragment {
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
-                    Uri audioUri = data != null ? data.getData() : null;
-
-                    if (audioUri != null) {
-                        // Copia y guarda el archivo en la carpeta de tu aplicación
+                    if (data == null || data.getData() == null) {
+                        // La URI es nula, no hacer nada
+                        return;
+                    }
+                    Uri audioUri = data.getData();
+                    if (isContentUri(audioUri)) {
+                        // Es una URI de contenido, copia y guarda el archivo en la carpeta de tu aplicación
                         try {
-                            copyAndSaveAudio(audioUri);
+                            copyAndSaveArchivo(audioUri,"audio");
                         } catch (IOException e) {
                             e.printStackTrace();
                             // Manejar errores, por ejemplo, mostrar un mensaje de error al usuario
                             Toast.makeText(requireContext(), "Error al guardar el archivo de audio", Toast.LENGTH_SHORT).show();
-                            return;
                         }
-
-                        // Actualiza la interfaz de usuario con la nueva ruta o realiza otras acciones necesarias
+                    } else {
+                        ruta_audio.setText(audioUri.toString());
                     }
                 }
             }
     );
 
+    private void openVideoChooser() {
+        Intent aVideos = new Intent();
+        aVideos.setType("video/*");
+        aVideos.setAction(Intent.ACTION_GET_CONTENT);
 
-    private void copyAndSaveAudio(Uri sourceUri) throws IOException {
+        Intent aCamaraVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+        chooser.putExtra(Intent.EXTRA_TITLE, "Vídeos");
+        chooser.putExtra(Intent.EXTRA_INTENT, aVideos);
+        Intent[] intentarray = {aCamaraVideo};
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentarray);
+
+        lanzadorCamaraVideo.launch(chooser);
+    }
+
+
+    ActivityResultLauncher<Intent> lanzadorCamaraVideo = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Uri video = result.getData() != null ? result.getData().getData() : null;
+                    if (video != null) {
+                        if (isContentUri(video)) {
+                            // Es una URI de contenido, copia y guarda el archivo en la carpeta de tu aplicación
+                            try {
+                                copyAndSaveArchivo(video,"video");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                // Manejar errores, por ejemplo, mostrar un mensaje de error al usuario
+                                Toast.makeText(requireContext(), "Error al guardar el archivo de audio", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            ruta_audio.setText(video.toString());
+                        }
+                    }
+                }
+            }
+    );
+
+    private boolean isContentUri(Uri uri) {
+        // Verifica si la URI es un proveedor de contenido
+        return ContentResolver.SCHEME_CONTENT.equals(uri.getScheme());
+    }
+
+
+
+    private void copyAndSaveArchivo(Uri sourceUri, String tipo) throws IOException {
         // Abre un InputStream desde la URI de origen
         InputStream inputStream = requireActivity().getContentResolver().openInputStream(sourceUri);
 
@@ -265,7 +344,20 @@ public class CreateSecondTaskFrag extends Fragment {
         // Cierra los flujos
         inputStream.close();
         outputStream.close();
-        ruta_audio.setText(destinationFile.getAbsolutePath());
+        if (tipo.equals("audio")){
+            ruta_audio.setText(destinationFile.getAbsolutePath());
+        }
+        if (tipo.equals("video")){
+            ruta_video.setText(destinationFile.getAbsolutePath());
+        }
+        if (tipo.equals("foto")){
+            ruta_imagen.setText(destinationFile.getAbsolutePath());
+        }
+        if (tipo.equals("documento")) {
+            ruta_documento.setText(destinationFile.getAbsolutePath());
+        }
+
+
 
     }
 
@@ -315,34 +407,80 @@ public class CreateSecondTaskFrag extends Fragment {
 
     ActivityResultLauncher<Intent> lanzadorCamara = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            result -> procesarResultadoCamara(result)
+            this::procesarResultadoCamara
     );
 
     private void procesarResultadoCamara(ActivityResult result) {
         Intent intentDevuelto = result.getData();
-        if (intentDevuelto != null) {
-            Uri fotoSeleccionada = intentDevuelto.getData();
-            if (fotoSeleccionada != null) {
-                comunicateFragments.setFoto(fotoSeleccionada);
+        Uri fotoSeleccionada = obtenerUriFotoSeleccionada(intentDevuelto);
 
-                // Guarda la ruta de la imagen seleccionada
-                String rutaImagen = obtenerRutaDeArchivoDesdeUri(fotoSeleccionada);
-                ruta_imagen.setText(rutaImagen);
+        if (fotoSeleccionada != null) {
+            if (isContentUri(fotoSeleccionada)) {
+                guardarImagenDesdeUri(fotoSeleccionada);
             } else {
-                Bitmap imagenCapturada = (Bitmap) intentDevuelto.getExtras().get("data");
+                mostrarUriImagen(fotoSeleccionada);
             }
+        } else {
+            guardarImagenTemporal(intentDevuelto);
         }
     }
 
-    private String obtenerRutaDeArchivoDesdeUri(Uri uri) {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = requireContext().getContentResolver().query(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String filePath = cursor.getString(column_index);
-        cursor.close();
-        return filePath;
+    private Uri obtenerUriFotoSeleccionada(Intent intentDevuelto) {
+        if (intentDevuelto != null) {
+            return intentDevuelto.getData();
+        }
+        return null;
     }
+
+    private void guardarImagenDesdeUri(Uri fotoSeleccionada) {
+        try {
+            copyAndSaveArchivo(fotoSeleccionada, "foto");
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarMensajeError("Error al guardar la imagen");
+        }
+    }
+
+    private void mostrarUriImagen(Uri fotoSeleccionada) {
+        ruta_imagen.setText(fotoSeleccionada.toString());
+    }
+
+    private void guardarImagenTemporal(Intent intentDevuelto) {
+        FileOutputStream fos = null;
+        File file = new File(getActivity().getCacheDir(), "imagen_tem.jpg");
+
+        try {
+            Bitmap imagenCapturada = (Bitmap) intentDevuelto.getExtras().get("data");
+
+            fos = new FileOutputStream(file);
+            imagenCapturada.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
+            fos.flush();
+            fos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Uri fotoUri = Uri.fromFile(file);
+        ruta_imagen.setText(fotoUri.toString());
+    }
+
+    private void mostrarMensajeError(String mensaje) {
+        Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
 
     // Método llamado al hacer clic en el botón para volver al fragmento anterior
     private void backFragment(View view) {
@@ -387,10 +525,10 @@ public class CreateSecondTaskFrag extends Fragment {
     // Método para enviar datos al ViewModel compartido
     private void sendData() {
         comunicateFragments.setDescription(descripcion.getText().toString());
-        comunicateFragments.setUrl_doc(ruta_documento.getText().toString());
+        comunicateFragments.setDocumento(Uri.parse(ruta_documento.getText().toString()));
         comunicateFragments.setAudio(Uri.parse(ruta_audio.getText().toString()));
-        comunicateFragments.setUrl_video(ruta_video.getText().toString());
-        comunicateFragments.setUrl_img(ruta_imagen.getText().toString());
+        comunicateFragments.setVideo(Uri.parse(ruta_video.getText().toString()));
+        comunicateFragments.setFoto(Uri.parse(ruta_imagen.getText().toString()));
     }
 
     private void pedirPermisos(){
@@ -433,22 +571,7 @@ public class CreateSecondTaskFrag extends Fragment {
 
         seleccionarArchivo.launch(intent);
     }
-    private void onSelectImgClick() {
-        pedirPermisos();
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");  // Todos los tipos de archivos
 
-        seleccionarArchivo.launch(intent);
-    }
-    private void onSelectVideoClick() {
-        pedirPermisos();
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");  // Todos los tipos de archivos
-
-        seleccionarArchivo.launch(intent);
-    }
 
 
     ActivityResultLauncher<Intent> seleccionarArchivo = registerForActivityResult(
@@ -456,7 +579,11 @@ public class CreateSecondTaskFrag extends Fragment {
             result -> {
                 // Manejar el resultado de la selección de archivos
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    handleFileSelectionResult(result.getData());
+                    try {
+                        handleFileSelectionResult(result.getData());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
 
@@ -464,11 +591,11 @@ public class CreateSecondTaskFrag extends Fragment {
      * Método que coge el intent y guarda la uri del intent tambien comprueba la preferencia de la SdCard.
      * @param data
      */
-    private void handleFileSelectionResult(Intent data) {
+    private void handleFileSelectionResult(Intent data) throws IOException {
         if (data != null) {
             Uri uri = data.getData();
             if (uri != null) {
-                guardarArchivoEnDirectorio(uri,SdManager.isSdChecked(requireContext()));
+                copyAndSaveArchivo(uri,"documento");
             }
         }
     }
@@ -482,10 +609,8 @@ public class CreateSecondTaskFrag extends Fragment {
 
             InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
 
-            // Obtener el nombre del archivo original desde la URI
             String nombreArchivoOriginal = SdManager.obtenerNombreArchivoDesdeUri(requireContext(), uri);
 
-            // Define la ruta de destino en tu directorio específico
             File directorioApp;
 
             if (guardarEnTarjetaSD && SdManager.isTarjetaSDMontada()) {

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <VideoView
+        android:id="@+id/contenedor_video"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBarVideo"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contenedor_video" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbVideo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBarVideo" />
+
+    <ImageButton
+        android:id="@+id/ibReproducir"
+        android:layout_width="49dp"
+        android:layout_height="48dp"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toBottomOf="@+id/tbVideo"
+        app:layout_constraintEnd_toStartOf="@+id/ibPausar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBarVideo"
+        app:srcCompat="@drawable/baseline_play_arrow_24" />
+
+    <ImageButton
+        android:id="@+id/ibPausar"
+        android:layout_width="49dp"
+        android:layout_height="48dp"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toBottomOf="@+id/tbVideo"
+        app:layout_constraintEnd_toStartOf="@+id/ibParar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ibReproducir"
+        app:layout_constraintTop_toBottomOf="@+id/progressBarVideo"
+        app:srcCompat="@drawable/baseline_pause_circle_24" />
+
+    <ImageButton
+        android:id="@+id/ibParar"
+        android:layout_width="50dp"
+        android:layout_height="48dp"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toBottomOf="@+id/tbVideo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ibPausar"
+        app:layout_constraintTop_toBottomOf="@+id/progressBarVideo"
+        app:srcCompat="@drawable/baseline_stop_circle_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

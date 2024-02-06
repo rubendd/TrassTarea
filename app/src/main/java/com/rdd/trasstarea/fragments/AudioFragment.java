@@ -71,31 +71,27 @@ public class AudioFragment extends Fragment {
 
     private void setupMediaPlayer(Uri audioUri, ProgressBar progressBar) {
         if (audioUri != null) {
+            // Liberar el MediaPlayer existente si hay uno creado
             if (mediaPlayer != null) {
                 mediaPlayer.release();
+                mediaPlayer = null;
             }
-                // Utiliza la URI directamente después de otorgar permisos
-                mediaPlayer = MediaPlayer.create(requireActivity(), audioUri);
 
-                if (mediaPlayer != null) {
-                    try {
-                        mediaPlayer.prepare();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    progressBar.setMax(mediaPlayer.getDuration());
-                } else {
-                    // Manejar el caso en que la creación del MediaPlayer falle
-                    Log.e("AudioFragment", "Error al crear MediaPlayer con la URI: " + audioUri);
-                }
+            // Crear un nuevo MediaPlayer
+            mediaPlayer = new MediaPlayer();
+            try {
+                mediaPlayer.setDataSource(requireActivity(), audioUri);
+                mediaPlayer.prepare();
+                progressBar.setMax(mediaPlayer.getDuration());
+            } catch (IOException e) {
+                Log.e("AudioFragment", "Error al configurar la fuente de datos del MediaPlayer", e);
+                e.printStackTrace();
+            }
         } else {
             // Manejar el caso en que la URI sea nula
             Log.e("AudioFragment", "La URI del audio es nula");
         }
     }
-
-
-
 
 
 

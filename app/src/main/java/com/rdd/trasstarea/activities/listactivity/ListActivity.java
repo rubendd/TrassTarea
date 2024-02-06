@@ -32,6 +32,7 @@ import com.rdd.trasstarea.activities.listactivity.recycler.CustomAdapter;
 import com.rdd.trasstarea.activities.settings.SettingsActivity;
 import com.rdd.trasstarea.comunicator.IComunicator;
 import com.rdd.trasstarea.database.TaskRepository;
+import com.rdd.trasstarea.listcontroller.FileHelper;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
 
@@ -93,6 +94,7 @@ public class ListActivity extends AppCompatActivity {
         @Override
         public void deleteList(Task task) {
             // Eliminar tarea y notificar al adaptador
+            FileHelper.deleteAttachments(task);
             listTareas.remove(task);
             taskRepository.deleteTask(task); //Borrar de la base de datos
             customAdapter.updateData(listTareas);
@@ -114,7 +116,6 @@ public class ListActivity extends AppCompatActivity {
                 filtrarFavoritos();
             }
             lanzarMensajeNoTareas();
-          //  SdManager.escribirSD(listTareas, getApplicationContext());
         }
 
         @Override

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,11 +27,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class FotoFragment extends Fragment {
-
 
     private ImageView contenedorFoto;
     private Executor executor;
@@ -53,52 +55,33 @@ public class FotoFragment extends Fragment {
     }
 
     private void setupFotoViewModel() {
-        fotoViewModel.getFoto().observe(getViewLifecycleOwner(), uri -> executor.execute(() -> {
-            String filePath = obtenerRutaDeArchivoDesdeUri(uri);
-            Bitmap bitmap = cargarBitmapReducido(filePath);
-            mostrarFotoEnContenedor(bitmap);
-        }));
+        fotoViewModel.getFoto().observe(getViewLifecycleOwner(), uri -> {
+            executor.execute(() -> {
+                Bitmap bitmap = cargarBitmapDesdeUri(uri);
+                mostrarFotoEnContenedor(bitmap);
+            });
+        });
     }
 
-    private Bitmap cargarBitmapReducido(String filePath) {
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filePath, bmOptions);
-
-        int anchoContenedor = contenedorFoto.getWidth();
-        int altoContenedor = contenedorFoto.getHeight();
-
-        int anchoFoto = bmOptions.outWidth;
-        int altoFoto = bmOptions.outHeight;
-
-        int scaleFactor = 1;
-        if ((anchoContenedor > 0) || (altoContenedor > 0)) {
-            scaleFactor = Math.min(anchoFoto / anchoContenedor, altoFoto / altoContenedor);
+    private Bitmap cargarBitmapDesdeUri(Uri uri) {
+        try {
+            return BitmapFactory.decodeFile(uri.getPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        return BitmapFactory.decodeFile(filePath, bmOptions);
     }
 
     private void mostrarFotoEnContenedor(Bitmap bitmap) {
         handler.post(() -> {
-            contenedorFoto.setImageBitmap(bitmap);
-            contenedorFoto.setVisibility(View.VISIBLE);
+            if (bitmap != null) {
+                contenedorFoto.setImageBitmap(bitmap);
+                contenedorFoto.setVisibility(View.VISIBLE);
+            } else {
+                // Manejar el caso de que la imagen no se cargue correctamente
+                Toast.makeText(requireContext(), "No se pudo cargar la imagen", Toast.LENGTH_SHORT).show();
+            }
         });
-    }
-
-
-
-    private String obtenerRutaDeArchivoDesdeUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = requireContext().getContentResolver().query(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String filePath = cursor.getString(column_index);
-        cursor.close();
-        return filePath;
     }
 
     @Override

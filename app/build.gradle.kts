@@ -41,6 +41,8 @@ dependencies {
     implementation("androidx.room:room-rxjava2:$room_version")
     implementation("androidx.room:room-rxjava3:$room_version")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("com.github.barteksc:android-pdf-viewer:3.1.0-beta.1")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

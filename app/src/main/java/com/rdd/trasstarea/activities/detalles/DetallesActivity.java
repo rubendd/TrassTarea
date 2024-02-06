@@ -74,10 +74,10 @@ public class DetallesActivity extends AppCompatActivity implements CreateSecondT
     public void mandarTask() {
         // Obtiene los valores del formulario a través del ViewModel
         DESCRIPTION = comunicateFragments.getDescription().getValue();
-        URL_AUDIO = comunicateFragments.getUrl_audio().getValue();
-        URL_DOC = comunicateFragments.getUrl_doc().getValue();
-        URL_IMG = comunicateFragments.getUrl_img().getValue();
-        URL_VIDEO = comunicateFragments.getUrl_video().getValue();
+        URL_AUDIO = String.valueOf(comunicateFragments.getmAudio().getValue());
+        URL_DOC = String.valueOf(comunicateFragments.getDocumento().getValue());
+        URL_IMG = String.valueOf(comunicateFragments.getFoto().getValue());
+        URL_VIDEO = String.valueOf(comunicateFragments.getVideo().getValue());
 
         // Crea una nueva tarea
         editTask = comunicateFragments.getTaskLiveData().getValue();

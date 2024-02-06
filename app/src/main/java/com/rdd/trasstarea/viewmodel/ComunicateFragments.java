@@ -47,6 +47,38 @@ public class ComunicateFragments extends ViewModel {
     }
 
 
+    /**
+     * VIDEO
+     */
+
+    private final MutableLiveData<Uri> mVideo = new MutableLiveData<>();
+
+
+    public LiveData<Uri> getVideo() {
+        return mVideo;
+    }
+    public void setVideo(Uri video){
+        mVideo.setValue(video);
+    }
+
+    /**
+     * DOCUMENTO
+     */
+
+    private final MutableLiveData<Uri> mDocumento = new MutableLiveData<>();
+
+
+    public LiveData<Uri> getDocumento() {
+        return mDocumento;
+    }
+
+    public void setDocumento(Uri documento){
+        mDocumento.setValue(documento);
+    }
+
+
+
+
     /***********************/
 
     public LiveData<Task> getTaskLiveData() {
