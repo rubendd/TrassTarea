@@ -61,7 +61,7 @@ public class FondoPersonalizado extends View {
         }
 
         // Iniciar el bucle de animación
-        startAnimation();
+        empezarAnimacion();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class FondoPersonalizado extends View {
         init();
     }
 
-    public void startAnimation() {
+    public void empezarAnimacion() {
         post(new Runnable() {
             @Override
             public void run() {
@@ -83,7 +83,7 @@ public class FondoPersonalizado extends View {
 
     private void moveShapes() {
         for (Forma shape : formas) {
-            shape.move();
+            shape.mover();
             manejarMargenes(shape);
         }
     }

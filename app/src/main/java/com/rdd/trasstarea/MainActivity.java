@@ -3,7 +3,6 @@ package com.rdd.trasstarea;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.animation.Animation;
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(v -> start());
 
         FondoPersonalizado fondoPersonalizado = findViewById(R.id.fondo);
-        fondoPersonalizado.startAnimation();
+        fondoPersonalizado.empezarAnimacion();
 
         ImageView logo = findViewById(R.id.imageView);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.animacion_logotipo);

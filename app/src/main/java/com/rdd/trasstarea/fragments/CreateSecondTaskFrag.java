@@ -177,10 +177,13 @@ public class CreateSecondTaskFrag extends Fragment {
 
         //Listener
         btnSalir.setOnClickListener(this::backFragment);
+
         documento.setOnClickListener(v -> onSelectDocumentClick());
         audio.setOnClickListener(v -> openAudioChooser());
         imagen.setOnClickListener(v -> lanzarSelectorFoto());
         video.setOnClickListener(v -> openVideoChooser());
+
+
         borrarDocumento.setOnClickListener(v -> borrarArchivo(ruta_documento.getText().toString(),ruta_documento));
         borrarImagen.setOnClickListener(v -> borrarArchivo(ruta_imagen.getText().toString(),ruta_imagen));
         borrarAudio.setOnClickListener(v -> borrarArchivo(ruta_audio.getText().toString(),ruta_audio));
@@ -255,12 +258,10 @@ public class CreateSecondTaskFrag extends Fragment {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
                     if (data == null || data.getData() == null) {
-                        // La URI es nula, no hacer nada
                         return;
                     }
                     Uri audioUri = data.getData();
                     if (isContentUri(audioUri)) {
-                        // Es una URI de contenido, copia y guarda el archivo en la carpeta de tu aplicación
                         try {
                             copyAndSaveArchivo(audioUri,"audio");
                         } catch (IOException e) {
@@ -299,7 +300,6 @@ public class CreateSecondTaskFrag extends Fragment {
                     Uri video = result.getData() != null ? result.getData().getData() : null;
                     if (video != null) {
                         if (isContentUri(video)) {
-                            // Es una URI de contenido, copia y guarda el archivo en la carpeta de tu aplicación
                             try {
                                 copyAndSaveArchivo(video,"video");
                             } catch (IOException e) {

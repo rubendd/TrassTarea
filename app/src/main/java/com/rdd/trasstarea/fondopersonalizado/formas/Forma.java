@@ -46,7 +46,7 @@ public abstract class Forma {
         direction = (-direction) % 360;
     }
 
-    public void move() {
+    public void mover() {
         float radians = (float) Math.toRadians(direction);
         posX += speed * Math.cos(radians);
         posY += speed * Math.sin(radians);
