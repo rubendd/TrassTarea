@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Botón con Etiqueta para Imagen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <Button
+                android:id="@+id/imagen"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="99dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/imagens"
+                android:textColor="#00796B" />
+
+            <TextView
+                android:id="@+id/labelImagen"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:text="@string/ruta_de_la_imagen"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/borrarimagen"
+                android:layout_width="63dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/aceptar"
+                android:onClick="onSelectDocumentClick"
+                android:padding="16dp"
+                android:src="@drawable/baseline_restore_from_trash_24"
+                tools:ignore="TouchTargetSizeCheck" />
+
+        </LinearLayout>
+
+        <!-- Botón con Etiqueta para Audio -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <Button
+                android:id="@+id/audio"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:text="@string/audios"
+                android:textColor="#00796B" />
+
+            <TextView
+                android:id="@+id/labelAudio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:text="@string/ruta_del_audio"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/borraraudio"
+                android:layout_width="63dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/aceptar"
+                android:onClick="onSelectDocumentClick"
+                android:padding="16dp"
+                android:src="@drawable/baseline_restore_from_trash_24"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <!-- Botón con Etiqueta para Video -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <Button
+                android:id="@+id/video"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="2dp"
+                android:text="@string/videos"
+                android:textColor="#00796B" />
+
+            <TextView
+                android:id="@+id/labelVideo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:text="@string/ruta_del_video"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/borrarvideo"
+                android:layout_width="63dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/aceptar"
+                android:onClick="onSelectDocumentClick"
+                android:padding="16dp"
+                android:src="@drawable/baseline_restore_from_trash_24"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <!-- Botón con Etiqueta para Documento -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <Button
+                android:id="@+id/documento"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="112dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="2dp"
+                android:onClick="onSelectDocumentClick"
+                android:text="@string/documentos" />
+
+            <TextView
+                android:id="@+id/labelDocumento"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:text="@string/ruta_del_documento"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/borrardocumento"
+                android:layout_width="63dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/aceptar"
+                android:padding="16dp"
+                android:src="@drawable/baseline_restore_from_trash_24"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/back"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="130dp"
+            android:text="@string/volver"
+            android:textColor="#00796B" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/create"
+            android:layout_width="91dp"
+            android:layout_height="74dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/button" />
+
+    </LinearLayout>
+</LinearLayout>

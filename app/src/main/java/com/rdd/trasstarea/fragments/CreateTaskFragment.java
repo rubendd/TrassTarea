@@ -23,58 +23,67 @@ import com.rdd.trasstarea.activities.createtaskactivity.CheckTask;
 import com.rdd.trasstarea.activities.createtaskactivity.dialogs.datepicker.DatePickerHandle;
 import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
+import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 
-import java.util.Arrays;
 import java.util.Calendar;
-
 public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-    private ComunicateFragments compartirViewModel;
-    private CreateSecondTaskFrag createSecondTaskFrag;
+    private ComunicateFragments compartirViewModel;  // ViewModel compartido entre fragmentos
+    private CreateSecondTaskFrag createSecondTaskFrag;  // Segundo fragmento para la creación de tareas
 
     private Spinner spinner;
-    private EditText titulo,date1,date2;
+    private EditText titulo, date1, date2;
     private CheckBox prioritaria;
     private TextView text;
-    String select;
+    private String select;  // Variable para almacenar la selección del Spinner
 
+    // Constructor por defecto del fragmento
     public CreateTaskFragment() {
     }
 
+    // Método llamado para guardar el estado del fragmento antes de ser destruido y recreado
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (compartirViewModel.getTaskLiveData().isInitialized()){
-            text.setText("Editar tarea");
-            compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
-                if (task != null) {
-                    titulo.setText(task.getTitulo());
-                    date1.setText(ListController.calendarToText(Calendar.getInstance()));
-                    date2.setText(ListController.calendarToText(task.getDateEnd()));
-                    prioritaria.setChecked(task.isPrioritaria());
-                    obtenerState(task);
-                    outState.putSerializable("task", task);
-                }
-            });
-        }
+        // Verifica si la vista del fragmento es nula
+        if (getView() != null) {
+            // Verifica si el LiveData de la tarea está inicializado
+            if (compartirViewModel.getTaskLiveData().isInitialized()) {
+                text.setText("Editar tarea");
 
+                // Observa cambios en la tarea y actualiza la interfaz de usuario en consecuencia
+                compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
+                    if (task != null) {
+                        titulo.setText(task.getTitulo());
+                        date1.setText(ListController.calendarToText(Calendar.getInstance()));
+                        date2.setText(task.getDateEnd());
+                        prioritaria.setChecked(task.isPrioritaria());
+
+                        obtenerState(task);
+
+                        outState.putSerializable("task", task);  // Guarda la tarea en el Bundle
+                    }
+                });
+            }
+        }
     }
 
 
-
-
+    // Método llamado al crear el fragmento
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createSecondTaskFrag = new CreateSecondTaskFrag();
         compartirViewModel = new ViewModelProvider(requireActivity()).get(ComunicateFragments.class);
+
     }
 
+    // Método llamado para crear la vista del fragmento
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmento1 = inflater.inflate(R.layout.create_task, container, false);
 
-        //Configure
+        // Configuración de componentes y manejo de datos
         initComponents(fragmento1);
         initSpinner();
         onClickDate();
@@ -87,44 +96,35 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         return fragmento1;
     }
 
-    private void addDatosDelBundle(Bundle savedInstance){
-        // Retrieve the Task object directly
+    // Método para agregar datos desde el Bundle al restaurar el estado del fragmento
+    private void addDatosDelBundle(Bundle savedInstance) {
         Task task = (Task) savedInstance.getSerializable("task");
 
+        // Actualiza la interfaz de usuario con los datos de la tarea
         if (task != null) {
             titulo.setText(task.getTitulo());
-            date1.setText(ListController.calendarToText(task.getFechaInicio()));
-            date2.setText(ListController.calendarToText(task.getDateEnd()));
+            date1.setText(task.getFechaInicio());
+            date2.setText(task.getDateEnd());
             prioritaria.setChecked(task.isPrioritaria());
             obtenerState(task);
         }
-
     }
 
 
-   /* private void saveData(Bundle savedInstanceState){
-        // Restaurar datos si hay un estado guardado
-        if (savedInstanceState != null) {
-            titulo.setText(savedInstanceState.getString("titulo", ""));
-            date1.setText(savedInstanceState.getString("date1", ""));
-            date2.setText(savedInstanceState.getString("date2", ""));
-            prioritaria.setChecked(savedInstanceState.getBoolean("prioritaria", false));
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 
-            // También restaura la selección del Spinner
-            select = savedInstanceState.getString("select", "");
-            int position = Arrays.asList(getResources().getStringArray(R.array.progress)).indexOf(select);
-            spinner.setSelection(position);
-        }
-    }*/
-
-    private void putDataTask(){
-        if (compartirViewModel.getTaskLiveData().isInitialized()){
+    // Método para obtener datos de la tarea y actualizar la interfaz de usuario
+    private void putDataTask() {
+        if (compartirViewModel.getTaskLiveData().isInitialized()) {
             text.setText("Editar tarea");
             compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task -> {
                 if (task != null) {
                     titulo.setText(task.getTitulo());
                     date1.setText(ListController.calendarToText(Calendar.getInstance()));
-                    date2.setText(ListController.calendarToText(task.getDateEnd()));
+                    date2.setText(task.getDateEnd());
                     prioritaria.setChecked(task.isPrioritaria());
                     obtenerState(task);
                 }
@@ -132,33 +132,28 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         }
     }
 
-    private void obtenerState(Task task){
-        // Obtener el array de opciones del Spinner
-        String[] options = getResources().getStringArray(R.array.progress);
-
-        // Encontrar la posición del estado en el array
-        int position = Arrays.asList(options).indexOf(task.getProgresState());
-
-        // Establecer la selección en el Spinner
-        spinner.setSelection(position);
+    // Método para obtener el estado de la tarea y actualizar el Spinner
+    private void obtenerState(Task task) {
+        spinner.setSelection(Task.setSpinnerEnum(task.getProgresState()));
     }
 
-    private void recuperarDatos(){
-            if (compartirViewModel.getTitulo().isInitialized()) {
-                compartirViewModel.getTitulo().observe(getViewLifecycleOwner(), nuevoTitulo -> {
-                    // Actualiza la interfaz de usuario con el nuevo título
-                    titulo.setText(nuevoTitulo);
-                });
-               compartirViewModel.getDate1().observe(getViewLifecycleOwner(), da -> date1.setText(da));
-               compartirViewModel.getDate2().observe(getViewLifecycleOwner(), da -> date2.setText(da));
-               compartirViewModel.getPrioritario().observe(getViewLifecycleOwner(), da -> prioritaria.setChecked(da));
+    // Método para recuperar datos del ViewModel compartido
+    private void recuperarDatos() {
+        if (compartirViewModel.getTitulo().isInitialized()) {
+            compartirViewModel.getTitulo().observe(getViewLifecycleOwner(), nuevoTitulo -> {
+                // Actualiza la interfaz de usuario con el nuevo título
+                titulo.setText(nuevoTitulo);
+            });
+            compartirViewModel.getDate1().observe(getViewLifecycleOwner(), da -> date1.setText(da));
+            compartirViewModel.getDate2().observe(getViewLifecycleOwner(), da -> date2.setText(da));
+            compartirViewModel.getPrioritario().observe(getViewLifecycleOwner(), da -> prioritaria.setChecked(da));
+
         }
     }
 
-
-
-
-    private void initComponents(View fragmento1){
+    // Método para inicializar los componentes de la interfaz de usuario
+    private void initComponents(View fragmento1) {
+        // Inicialización de vistas y configuración de listeners
         titulo = fragmento1.findViewById(R.id.tituloAdd);
         date1 = fragmento1.findViewById(R.id.date1);
         date2 = fragmento1.findViewById(R.id.date2);
@@ -168,75 +163,94 @@ public class CreateTaskFragment extends Fragment implements AdapterView.OnItemSe
         prioritaria = fragmento1.findViewById(R.id.prioritaria);
         text = fragmento1.findViewById(R.id.texto);
 
+        // Configuración de listeners
         siguiente.setOnClickListener(this::nextActivity);
         cancelar.setOnClickListener(view -> requireActivity().finish());
         spinner.setOnItemSelectedListener(this);
-
     }
 
-
-    private void nextActivity(View view){
+    // Método llamado al hacer clic en el botón siguiente
+    private void nextActivity(View view) {
         if (nextPageCheck()) {
             sendData();
-            if (requireActivity().getSupportFragmentManager().findFragmentByTag("CreateSecond") == null) {
+            // Reemplaza el fragmento actual con el segundo fragmento y lo agrega a la pila de retroceso
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_task_create, createSecondTaskFrag, "CreateSecond")
                         .addToBackStack(null)
                         .commit();
-            }
+
         }
     }
 
-    private void sendData(){
+    // Método para enviar datos al ViewModel compartido
+    private void sendData() {
+
+        //Crear
         compartirViewModel.setTitulo(titulo.getText().toString());
         compartirViewModel.setDate2(date2.getText().toString());
         compartirViewModel.setDate1(date1.getText().toString());
         compartirViewModel.setState(select);
         compartirViewModel.setPrioritario(prioritaria.isChecked());
+
+        //Editar
+        compartirViewModel.getTaskLiveData().observe(getViewLifecycleOwner(), task1 -> {
+            task1.setTitulo(titulo.getText().toString());
+            task1.setFechaInicio(date1.getText().toString());
+            task1.setDateEnd(date2.getText().toString());
+            task1.setProgresState(task1.setStatesNumber(Task.States.valueOf(select)));
+            task1.setPrioritaria(prioritaria.isChecked());
+
+        });
+
     }
 
-    private boolean nextPageCheck(){
-        if (CheckTask.checkEditText(titulo)){
-            Toast.makeText(getActivity(), "Debes insertar un titulo", Toast.LENGTH_SHORT).show();
+    // Método para verificar si los campos obligatorios están completos antes de pasar a la siguiente página
+    private boolean nextPageCheck() {
+        if (CheckTask.checkEditText(titulo)) {
+            Toast.makeText(getActivity(), "Debes insertar un título", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (CheckTask.checkEditText(date1)){
-            Toast.makeText(getActivity(), "Debes insertar una fecha de creacion", Toast.LENGTH_SHORT).show();
+        if (CheckTask.checkEditText(date1)) {
+            Toast.makeText(getActivity(), "Debes insertar una fecha de creación", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (CheckTask.checkEditText(date2)){
+        if (CheckTask.checkEditText(date2)) {
             Toast.makeText(getActivity(), "Debes insertar una fecha objetivo", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    private void onClickDate(){
+    // Método llamado al hacer clic en una fecha para mostrar el selector de fecha
+    private void onClickDate() {
         date1.setOnClickListener(this::initDatePicker);
         date2.setOnClickListener(this::initDatePicker);
     }
 
-    private void initDatePicker(View view){
+    // Método para inicializar el selector de fecha
+    private void initDatePicker(View view) {
         DatePickerHandle datePickerHandler1 = new DatePickerHandle((EditText) view, getParentFragmentManager());
         datePickerHandler1.showDatePicker(getParentFragmentManager());
     }
 
-    private void initSpinner(){
+    // Método para inicializar el Spinner con las opciones de estado de la tarea
+    private void initSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.progress, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
     }
 
+    // Método llamado cuando se selecciona un elemento en el Spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-         select = parent.getItemAtPosition(position).toString();
+        select = parent.getItemAtPosition(position).toString();
     }
 
+    // Método llamado cuando no se selecciona ningún elemento en el Spinner
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
+        // No se realiza ninguna acción en este caso
     }
 }
+

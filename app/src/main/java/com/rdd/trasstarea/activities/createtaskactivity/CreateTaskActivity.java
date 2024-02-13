@@ -9,27 +9,28 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.rdd.trasstarea.R;
 import com.rdd.trasstarea.activities.editTaskActivity.EditTaskActivity;
-import com.rdd.trasstarea.fragments.ComunicateFragments;
+import com.rdd.trasstarea.viewmodel.ComunicateFragments;
 import com.rdd.trasstarea.fragments.CreateSecondTaskFrag;
 import com.rdd.trasstarea.fragments.CreateTaskFragment;
-import com.rdd.trasstarea.listcontroller.ListController;
 import com.rdd.trasstarea.model.Task;
+public class CreateTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea {
 
-public class CreateTaskActivity extends AppCompatActivity implements CreateSecondTaskFrag.mandarTarea{
-
-
-    public  String TITULO = "titulo";
-    public   String DATE2 = "fecha2";
+    // Variables de instancia para los datos de la tarea
+    public String TITULO = "titulo";
+    public String DATE2 = "fecha2";
     public String DATE1;
-    public   String STATE = "estado";
-    public  boolean PRIORITAIO = true;
-
+    public String STATE = "estado";
+    public boolean PRIORITAIO = true;
     public String DESCRIPTION = "";
+    public String URL_DOC = "";
+    public String URL_IMG = "";
+    public String URL_AUDIO = "";
+    public String URL_VIDEO = "";
 
-
+    // ViewModel para la comunicación entre fragmentos
     private ComunicateFragments comunicateFragments;
 
-
+    // Constructor vacío
     public CreateTaskActivity() {
 
     }
@@ -39,29 +40,45 @@ public class CreateTaskActivity extends AppCompatActivity implements CreateSecon
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_create_task);
 
+        // Inicialización del ViewModel para la comunicación entre fragmentos
         comunicateFragments = new ViewModelProvider(this).get(ComunicateFragments.class);
+
+        // Creación del fragmento de creación de tarea
         CreateTaskFragment createTaskFragment = new CreateTaskFragment();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_task_create, createTaskFragment).addToBackStack(null).commit();
-
+        // Reemplaza el contenido del contenedor con el fragmento y agrega la transacción a la pila de retroceso
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_task_create, createTaskFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
-
+    // Método de la interfaz para enviar la tarea creada al fragmento anterior
     @Override
     public void mandarTask() {
+        // Obtiene los valores del formulario a través del ViewModel
         TITULO = comunicateFragments.getTitulo().getValue();
         DATE1 = comunicateFragments.getDate1().getValue();
         DATE2 = comunicateFragments.getDate2().getValue();
         STATE = comunicateFragments.getState().getValue();
         PRIORITAIO = Boolean.TRUE.equals(comunicateFragments.getPrioritario().getValue());
         DESCRIPTION = comunicateFragments.getDescription().getValue();
+        URL_DOC = String.valueOf(comunicateFragments.getDocumento().getValue());
+        URL_AUDIO = String.valueOf(comunicateFragments.getmAudio().getValue());
+        URL_IMG = String.valueOf(comunicateFragments.getFoto().getValue());
+        URL_VIDEO = String.valueOf(comunicateFragments.getVideo().getValue());
 
-        Task task = new Task(TITULO, PRIORITAIO, ListController.convertirFecha(DATE2), Task.States.valueOf(STATE), DESCRIPTION, ListController.convertirFecha(String.valueOf(DATE1)));
 
+        // Crea una nueva tarea con los valores proporcionados
+        Task task = new Task(TITULO, PRIORITAIO, DATE2,
+                Task.States.valueOf(STATE), DESCRIPTION, DATE1, URL_DOC, URL_AUDIO, URL_IMG, URL_VIDEO);
+
+        // Prepara la intención para devolver la tarea al fragmento anterior
         Intent intent = new Intent();
-        intent.putExtra(EditTaskActivity.TAREA_NUEVA,task);
+        intent.putExtra(EditTaskActivity.TAREA_NUEVA, task);
         setResult(RESULT_OK, intent);
 
+        // Finaliza la actividad
         finish();
     }
 }

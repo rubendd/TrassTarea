@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:icon="@drawable/baseline_color_lens_24"
+    android:title="Preferencias">
+
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Tema">
+
+        <SwitchPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_color_lens_24"
+            android:title="Claro"
+            android:summary="Cambia el tema a oscuro y claro"
+            app:key="claro" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Fuente">
+
+        <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="2"
+            android:entries="@array/dificultades"
+            android:entryValues="@array/valores"
+            android:icon="@drawable/baseline_sort_by_alpha_24"
+            android:title="Tamaño Letra"
+            android:summary="Ajusta el tamaño de la letra"
+            app:key="fuente" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Ordenación">
+
+        <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="2"
+            android:entries="@array/criterio"
+            android:entryValues="@array/valores"
+            android:icon="@drawable/baseline_casino_24"
+            android:title="Criterio"
+            android:summary="Ajusta el criterio de ordenacion"
+            app:key="criterio" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Orden">
+
+        <SwitchPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_color_lens_24"
+            android:title="Asc"
+            android:summary="Ajusta el orden en el que apareceran las listas"
+            app:key="asc" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Almacenamiento">
+        <SwitchPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="false"
+            android:icon="@drawable/baseline_save_as_24"
+            android:title="Tarjeta SD"
+            android:summary="Decide si quieres almacenar las tareas en la tarjeta sd"
+            app:key="sd" />
+        <SeekBarPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="0"
+            android:icon="@drawable/baseline_send_and_archive_24"
+            android:title="Limpieza de archivos"
+            android:summary="Ajusta el tiempo que duraran los archivos guardados"
+            android:max="365"
+            app:key="borrado" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Nombre de la base de datos">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="@string/bd"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/bd"
+            android:summary="Nombre de la base de datos"
+            app:key="nombrebd" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="IP">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="@string/IP"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/IP"
+            android:summary="Ip a la que se conectará la base de datos"
+            app:key="ip" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Puerto">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="@string/port"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="1001"
+            android:summary="Puerto"
+            app:key="puerto" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Usuario">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:selectAllOnFocus="true"
+            app:key="usuario"
+            android:singleLine="true"
+            android:summary="Nombre de usuario de la base de datos"
+            android:title="@string/usuario" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Contraseña">
+
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Password"
+            app:key="password"
+            android:summary="Contraseña de la base de datos"/>
+    </PreferenceCategory>
+
+    <Preference
+        app:title="Restablecer las opciones por defecto"
+        app:key="rb"
+        app:summary="This is a cool button"
+        />
+</PreferenceScreen>
+

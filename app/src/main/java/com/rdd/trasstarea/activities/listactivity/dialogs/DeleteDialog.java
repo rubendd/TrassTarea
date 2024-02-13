@@ -5,6 +5,9 @@ import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * De momento no se usa :)
+ */
 public class DeleteDialog extends DialogFragment {
 
     public interface DeleteDialogListener{

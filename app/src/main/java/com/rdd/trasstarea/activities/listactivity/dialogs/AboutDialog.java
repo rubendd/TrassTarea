@@ -1,11 +1,7 @@
 package com.rdd.trasstarea.activities.listactivity.dialogs;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
@@ -15,19 +11,22 @@ public class AboutDialog extends DialogFragment {
     AlertDialog.Builder builder;
     AlertDialog dialog;
 
+    // Constructor que recibe el contexto de la actividad y la información "about" para mostrar
     public AboutDialog(Context activity, String about) {
-        // 1. Instantiate an AlertDialog.Builder with its constructor.
+        // 1. Instanciar un AlertDialog.Builder con su constructor.
          builder = new AlertDialog.Builder(activity);
 
-        // 2. Chain together various setter methods to set the dialog characteristics.
+        // 2. Encadenar varios métodos setter para establecer las características del diálogo.
         builder.setMessage(about)
                 .setTitle(R.string.app_name);
 
+        // Configurar un botón positivo (aceptar) y su acción
         builder.setPositiveButton(R.string.aceptar,(dialog1, which) -> {
-            dialog.dismiss(); // Cierra el diálogo y libera los recursos asociados
+            // Cerrar el diálogo y liberar los recursos asociados
+            dialog.dismiss();
         });
 
-        // 3. Get the AlertDialog.
+        // 3. Obtiene el AlertDialog y lo muestra
         dialog = builder.create();
         dialog.show();
     }

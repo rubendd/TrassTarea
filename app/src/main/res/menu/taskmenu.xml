@@ -8,5 +8,7 @@
             android:title="@string/edit" />
         <item android:id="@+id/delete"
             android:title="@string/borrar" />
+        <item android:id="@+id/detalles"
+            android:title="@string/detalles" />
     </group>
 </menu>
